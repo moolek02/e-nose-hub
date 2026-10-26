@@ -317,7 +317,7 @@ function drawChart(c){var cv=c.cv,dpr=Math.min(window.devicePixelRatio||1,2),W=c
 var canvas=$('three'),stage=$('stage');
 if(!window.THREE){$('labels').innerHTML='<p style="padding:40px;color:#ffe3a3">โหลด Three.js ไม่ได้ ต้องต่ออินเทอร์เน็ต กราฟด้านล่างยังทำงาน</p>';}
 var T=window.THREE,renderer,scene,camera,controls,pickables=[],labelDefs=[],shellGroup,wireGroup,fruit={},tubes={},inst={},valveMat,pumpMat;
-var DEF_CAM=[3.6,3.4,4.8],DEF_TGT=[0.1,0.85,0];
+var DEF_CAM=[3.3,3.1,4.4],DEF_TGT=[0.2,0.75,0];
 if(T){
 renderer=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
 scene=new T.Scene();
@@ -381,7 +381,7 @@ valveMat=mat(0xba7517,{r:0.5});cyl(0.1,0.2,0xba7517,[-0.1,0.68,-0.75],'valve',{n
 var fil=cyl(0.15,0.8,0x3d3d3a,[1.0,0.47,-0.85],'filter',{n:20});fil.rotation.z=Math.PI/2;
 var fil2=cyl(0.16,0.04,0x888780,[1.42,0.47,-0.85],'filter',{n:20});fil2.rotation.z=Math.PI/2;
 /* BME688 #2 reference air — position is a concept */
-box([0.2,0.03,0.2],0x534ab7,[0.55,0.33,-1.08],'bme2');box([0.06,0.02,0.06],0xb9b4f0,[0.55,0.35,-1.08],'bme2');
+box([0.2,0.03,0.2],0x534ab7,[1.75,0.33,-0.85],'bme2');box([0.06,0.02,0.06],0xb9b4f0,[1.75,0.35,-0.85],'bme2');
 
 /* electronics: ESP32-S3 board, ADS1115, two MOSFET drivers */
 box([1.0,0.05,0.45],0x0f6e56,[0.45,0.33,0.85],'esp');
@@ -406,7 +406,7 @@ wire([[0.3,0.36,0.05],[0.3,0.36,0.4],[0.9,0.36,0.75],[1.2,0.36,0.82]],0x4cc28b);
 wire([[0.58,0.36,0.05],[0.58,0.36,0.42],[1.0,0.36,0.78],[1.28,0.36,0.85]],0x4cc28b);
 wire([[0.88,0.37,0.05],[0.88,0.37,0.4],[0.5,0.37,0.7],[0.4,0.41,0.8]],0x6aa3ef);
 wire([[1.2,0.36,0.9],[0.9,0.38,0.92],[0.45,0.41,0.88]],0x6aa3ef);
-wire([[0.55,0.34,-1.0],[0.0,0.34,-0.4],[0.0,0.34,0.5],[0.3,0.41,0.8]],0x6aa3ef);
+wire([[1.75,0.34,-0.72],[1.95,0.34,0.3],[1.2,0.34,0.62],[0.4,0.41,0.8]],0x6aa3ef);
 wire([[0.8,0.37,0.72],[1.2,0.34,0.45],[1.55,0.34,0.2]],0xf0954a);
 wire([[0.78,0.37,0.98],[-0.3,0.34,0.98],[-0.4,0.34,-0.2],[-0.1,0.34,-0.6]],0xf0954a);
 
@@ -482,8 +482,8 @@ var INFO={
  ads:{t:'ADS1115',s:'ADC 16 บิต · I²C 0x48 · ADDR → GND',x:'อ่านแรงดันจากตัวแบ่งแรงดันของ TGS2602 (A0) และ TGS2603 (A1) ใช้ไฟ 3.3V'},
  mosfet:{t:'MOSFET AO3400 ×2',s:'100Ω ที่ Gate + 10k ดึงลง GND',x:'ขับปั๊มและวาล์วจากขา GPIO4 / GPIO5'},
  tube:{t:'ท่อลม',s:'สีส้ม = รอบดม · สีเขียว = รอบล้าง',x:'ไส้กรอง → วาล์ว → (ดม: ห้องดม →) ห้องเซนเซอร์ → ปั๊ม → ปล่อยทิ้ง'}};
-var LABELS=[['jar',[-1.1,2.0,-0.5]],['fruit',[-1.55,0.95,0.4]],['chamber',[0.6,0.95,0.3]],['tgs2602',[0.3,0.5,-0.3]],['tgs2603',[0.58,0.5,-0.3]],['bme1',[0.95,0.45,-0.3]],
- ['pump',[1.6,0.85,0.3]],['valve',[-0.1,0.85,-0.75]],['filter',[1.0,0.66,-0.85]],['bme2',[0.55,0.4,-1.1]],['esp',[0.3,0.48,0.95]],['ads',[1.3,0.42,0.95]],['housing',[-2.0,2.5,-1.25]]];
+var LABELS=[['jar',[-1.1,2.0,-0.5]],['fruit',[-1.55,0.95,0.4]],['chamber',[0.6,1.0,-0.2]],['tgs2602',[0.3,0.52,0.3]],['tgs2603',[0.58,0.52,0.3]],['bme1',[0.9,0.45,0.3]],
+ ['pump',[1.6,0.85,0.3]],['valve',[-0.1,0.85,-0.75]],['filter',[1.0,0.72,-0.85]],['bme2',[1.75,0.42,-0.85]],['esp',[0.3,0.48,0.95]],['ads',[1.3,0.42,0.95]],['housing',[-2.0,2.5,-1.25]]];
 var NAMES={jar:'ห้องดม',fruit:'ผลไม้',chamber:'ห้องเซนเซอร์',tgs2602:'TGS2602',tgs2603:'TGS2603',bme1:'BME688 #1',pump:'ปั๊มลม',valve:'วาล์ว 3 ทาง',filter:'ไส้กรอง',bme2:'BME688 #2 (แนวคิด)',esp:'ESP32-S3',ads:'ADS1115',housing:'กล่อง (แนวคิด)'};
 var selKey=null,labelsOn=true;
 LABELS.forEach(function(L){var d=document.createElement('div');d.className='lbl'+(INFO[L[0]].c?' concept':'');d.textContent=NAMES[L[0]];d.addEventListener('click',function(){select(L[0]);});$('labels').appendChild(d);labelDefs.push({k:L[0],p:L[1],el:d});});
@@ -506,7 +506,11 @@ function resize(){if(!T)return;var w=canvas.clientWidth,h=canvas.clientHeight;if
 var V3=T?new T.Vector3():null;
 function placeLabels(){var w=canvas.clientWidth,h=canvas.clientHeight;labelDefs.forEach(function(L){
   var hide=!labelsOn||(L.k==='housing'&&!shellGroup.visible);if(hide){L.el.hidden=true;return;}
-  V3.set(L.p[0],L.p[1],L.p[2]).project(camera);if(V3.z>1){L.el.hidden=true;return;}L.el.hidden=false;L.el.style.left=((V3.x+1)/2*w)+'px';L.el.style.top=((1-V3.y)/2*h)+'px';});}
+  V3.set(L.p[0],L.p[1],L.p[2]).project(camera);if(V3.z>1){L.el.hidden=true;return;}L.el.hidden=false;L.x=(V3.x+1)/2*w;L.y=(1-V3.y)/2*h;});
+  /* simple de-overlap: push later labels upward until they clear earlier ones */
+  var placed=[];labelDefs.forEach(function(L){if(L.el.hidden)return;var bw=L.el.offsetWidth+4,bh=L.el.offsetHeight+2,y=L.y;
+    for(var it=0;it<8;it++){var hit=false;for(var k=0;k<placed.length;k++){var q=placed[k];if(Math.abs(L.x-q.x)<(bw+q.w)/2&&Math.abs(y-q.y)<(bh+q.h)/2){y=q.y-(bh+q.h)/2-1;hit=true;}}if(!hit)break;}
+    placed.push({x:L.x,y:y,w:bw,h:bh});L.el.style.left=L.x+'px';L.el.style.top=y+'px';});}
 
 var SNIFF_C=T?new T.Color(css('--sniff')):null,PURGE_C=T?new T.Color(css('--purge')):null,IDLE_C=T?new T.Color(0xdedcd2):null;
 function updateScene(now){var sniff=st.phase==='sniff',active=sniff?{A:1,B:1,D:1,E:1,F:1}:{A:1,C:1,E:1,F:1},mc=sniff?SNIFF_C:PURGE_C;
