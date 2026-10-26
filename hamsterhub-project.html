@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light dark}body{margin:0;font:14px system-ui,sans-serif}</style>
+<title>จมูกแมลงหวี่ 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column — 3D stage with numbered pins, part card right under it, airflow steps, part list */
+:root{
+  --bg:#f3f4ef;--panel:#ffffff;--fg:#1f2418;--muted:#5d6452;--line:#d7dacd;
+  --accent:#5f7a1e;--accent-bg:#e8efd4;--on-accent:#ffffff;--sniff:#d98b16;--purge:#1d9e75;
+  --stage:#e9ebe2;--tube-in:#f6f5ef;--tube-out:#8f8d86;
+  --display:"IBM Plex Sans Thai",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14170f;--panel:#1d2117;--fg:#e7eadc;--muted:#a3a993;--line:#33392a;
+  --accent:#b6cf6a;--accent-bg:#2b3419;--on-accent:#14170f;--sniff:#efa53a;--purge:#3fc196;
+  --stage:#1a1e14;--tube-in:#d8d6cc;--tube-out:#6a6862;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14170f;--panel:#1d2117;--fg:#e7eadc;--muted:#a3a993;--line:#33392a;
+  --accent:#b6cf6a;--accent-bg:#2b3419;--on-accent:#14170f;--sniff:#efa53a;--purge:#3fc196;
+  --stage:#1a1e14;--tube-in:#d8d6cc;--tube-out:#6a6862;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--display);font-size:15px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+header{display:flex;flex-direction:column;gap:2px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent)}
+h1{font-size:26px;font-weight:600;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0;font-size:14px}
+.stage{position:relative;background:var(--stage);border:1px solid var(--line);border-radius:14px;overflow:hidden;touch-action:pan-y}
+canvas{display:block;width:100%;height:300px;cursor:grab}
+canvas.dragging{cursor:grabbing}
+.hint{position:absolute;top:10px;left:12px;font-size:12px;color:var(--muted);pointer-events:none}
+.tools{position:absolute;top:8px;right:8px;display:flex;gap:6px}
+.tools button{padding:5px 10px;font-size:12px;border-radius:8px;text-align:center;background:var(--panel)}
+button{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;text-align:left}
+button:hover{border-color:var(--muted)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{border-color:var(--accent);background:var(--accent-bg)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;min-height:72px}
+.num{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:500 14px var(--mono);background:var(--accent);color:var(--on-accent)}
+.num.idle{background:var(--line);color:var(--muted)}
+.card-body{min-width:0;display:flex;flex-direction:column;gap:2px}
+.card-title{font-weight:600;font-size:16px}
+.card-spec{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.card-text{font-size:14px}
+.card-nav{margin-left:auto;display:flex;gap:6px;flex:none}
+.card-nav button{min-width:40px;min-height:40px;padding:6px 10px;text-align:center;font-size:18px;line-height:1}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{text-align:center;font-weight:500}
+.seg button::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;background:var(--c)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.flow button{padding:4px 10px;font-size:13px;border-radius:999px}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+.parts button{display:flex;gap:10px;align-items:center;font-size:14px}
+.parts button .num{width:24px;height:24px;font-size:12px}
+.parts small{display:block;font-family:var(--mono);font-size:11px;color:var(--muted)}
+#mode-note{margin:-6px 0 0;font-size:13px;color:var(--muted)}
+h2{font-size:13px;font-weight:500;color:var(--muted);margin:6px 0 -6px;letter-spacing:.02em}
+footer{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="eyebrow">E-NOSE · ชุด A · ESP32-S3 + FlyHash</div>
+<h1>จมูกแมลงหวี่: เครื่องดมทุเรียน</h1>
+<p class="sub">โมเดล 3 มิติแบบคร่าว (สัดส่วนยังไม่ใช่ขนาดจริง) สำหรับทีม Internet of Thailand</p>
+</header>
+<div class="stage" id="wrap">
+<canvas id="c" aria-label="โมเดล 3 มิติของเครื่องดมทุเรียน แตะตัวเลขหรือชิ้นส่วนเพื่อดูรายละเอียด"></canvas>
+<div class="hint">ลากเพื่อหมุน · แตะตัวเลขเพื่อดูชิ้นส่วน</div>
+<div class="tools"><button id="btn-reset" type="button">มุมเริ่มต้น</button></div>
+</div>
+<div class="card" id="card" aria-live="polite">
+<div class="num idle" id="card-num">?</div>
+<div class="card-body">
+<div class="card-title" id="card-title">เลือกชิ้นส่วน</div>
+<div class="card-spec" id="card-spec">แตะตัวเลขบนโมเดล หรือกดถัดไปเพื่อไล่ดูทีละชิ้นตามทางลม</div>
+<div class="card-text" id="card-text"></div>
+</div>
+<div class="card-nav"><button id="prev" type="button" aria-label="ชิ้นก่อนหน้า">‹</button><button id="next" type="button" aria-label="ชิ้นถัดไป">›</button></div>
+</div>
+<div class="seg">
+<button id="m-sniff" type="button" class="on" aria-pressed="true" style="--c:var(--sniff)">รอบดม</button>
+<button id="m-purge" type="button" aria-pressed="false" style="--c:var(--purge)">รอบล้าง</button>
+</div>
+<div class="flow" id="flow"></div>
+<p class="mode-note" id="mode-note"></p>
+<h2>ชิ้นส่วนทั้งหมด</h2>
+<div class="parts" id="parts"></div>
+<footer>ข้อมูลส่งผ่าน MQTT ขึ้นแดชบอร์ด (NETPIE / Node-RED) และแจ้งเตือนผ่าน LINE Messaging API</footer>
+</div>
+<script>
+(function(){
+var PARTS=[
+{k:'filter',name:'ไส้กรองคาร์บอน',spec:'ถ่านกัมมันต์ (ของตู้ปลาใช้ได้)',text:'ทำอากาศสะอาดไว้เป็นเส้นฐาน ใช้ทั้งตอนวัดค่าอ้างอิงและตอนล้างกลิ่นค้าง',a:[1.0,0.72,-0.85]},
+{k:'valve',name:'วาล์ว 3 ทาง',spec:'โซลินอยด์ สั่งเปิด-ปิดด้วยไฟฟ้า',text:'สลับทางลม: รอบดมส่งลมผ่านโหล รอบล้างส่งอากาศสะอาดตรงเข้าห้องเซนเซอร์',a:[-0.1,0.9,-0.75]},
+{k:'jar',name:'ห้องดม',spec:'โหลแก้ว / หม้อสแตนเลส ฝาซีล',text:'ใส่ทุเรียน 1 ลูก ฝามีรูลมเข้าและออก ลมพากลิ่นจากผลไปห้องเซนเซอร์',a:[-1.1,2.0,0]},
+{k:'sensor',name:'ห้องเซนเซอร์',spec:'TGS2602 · TGS2603 · BME688',text:'กล่องเล็กแยกจากผล ปริมาตรน้อยจึงตอบสนองเร็ว เซนเซอร์วัดความต้านทานที่เปลี่ยนตามกลิ่น',a:[0.6,0.98,0]},
+{k:'pump',name:'ปั๊มลม',spec:'ปั๊มไดอะแฟรม 5V DC',text:'ดูดอากาศผ่านห้องเซนเซอร์ด้วยอัตราคงที่ แล้วปล่อยทิ้งออกนอกเครื่อง',a:[1.6,0.95,0]},
+{k:'esp',name:'ตัวประมวลผล',spec:'ESP32-S3 + ADS1115',text:'อ่านค่าเซนเซอร์ คุมปั๊มและวาล์ว รัน FlyHash เทียบคลังกลิ่น แล้วส่งผลขึ้นคลาวด์ผ่าน MQTT',a:[0.45,0.6,0.85]}];
+var byK={};PARTS.forEach(function(p,i){p.i=i;byK[p.k]=p;});
+var FLOW={sniff:['filter','valve','jar','sensor','pump'],purge:['filter','valve','sensor','pump']};
+var wrap=document.getElementById('wrap'),cv=document.getElementById('c'),ctx=cv.getContext('2d');
+var H=300,W=0,dpr=Math.min(window.devicePixelRatio||1,2);
+function size(){var w=wrap.clientWidth||360;if(w===W)return;W=w;H=Math.round(Math.max(235,Math.min(400,W*0.62)));cv.style.height=H+'px';cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);FIT=null;}
+function tok(n,f){var v=getComputedStyle(document.documentElement).getPropertyValue(n).trim();return v||f;}
+function hex(h){return [parseInt(h.substr(1,2),16),parseInt(h.substr(3,2),16),parseInt(h.substr(5,2),16)];}
+var items=[];
+function poly(pts,col,key,o){o=o||{};items.push({t:'p',pts:pts,col:hex(col),key:key,alpha:o.alpha||1,layer:o.layer||1,glass:o.glass});}
+function box(c,s,col,key,o){var x=c[0],y=c[1],z=c[2],a=s[0]/2,b=s[1]/2,d=s[2]/2;
+var v=[[x-a,y-b,z-d],[x+a,y-b,z-d],[x+a,y+b,z-d],[x-a,y+b,z-d],[x-a,y-b,z+d],[x+a,y-b,z+d],[x+a,y+b,z+d],[x-a,y+b,z+d]];
+[[0,1,2,3],[4,5,6,7],[0,1,5,4],[3,2,6,7],[0,3,7,4],[1,2,6,5]].forEach(function(f){poly(f.map(function(i){return v[i];}),col,key,o);});}
+function cyl(c,r,h,col,key,o){o=o||{};var n=o.n||16,ax=o.ax||'y',top=[],bot=[];
+function pt(t,ang){var u=r*Math.cos(ang),w=r*Math.sin(ang);return ax==='y'?[c[0]+u,c[1]+t,c[2]+w]:[c[0]+t,c[1]+u,c[2]+w];}
+for(var i=0;i<n;i++){var a0=i/n*Math.PI*2,a1=(i+1)/n*Math.PI*2;poly([pt(-h/2,a0),pt(-h/2,a1),pt(h/2,a1),pt(h/2,a0)],col,key,o);top.push(pt(h/2,a0));bot.push(pt(-h/2,a0));}
+if(!o.open){poly(top,col,key,o);poly(bot,col,key,o);}}
+function sphere(c,r,col,key){var la=7,lo=12;function p(i,j){var th=i/la*Math.PI,ph=j/lo*Math.PI*2;return [c[0]+r*Math.sin(th)*Math.cos(ph),c[1]+r*Math.cos(th),c[2]+r*Math.sin(th)*Math.sin(ph)];}
+for(var i=0;i<la;i++)for(var j=0;j<lo;j++)poly([p(i,j),p(i,j+1),p(i+1,j+1),p(i+1,j)],(i+j)%2?col:'#8a9640',key);
+for(var k=0;k<70;k++){var y=1-2*(k+0.5)/70,rr=Math.sqrt(1-y*y),ph=k*2.39996;items.push({t:'d',key:key,p:[c[0]+Math.cos(ph)*rr*r*1.03,c[1]+y*r*1.03,c[2]+Math.sin(ph)*rr*r*1.03],col:'#4f5a1c',rad:2.2,layer:1});}}
+box([0,0.15,0],[4.2,0.3,2.6],'#c9c7bd',null,{layer:0});
+cyl([-1.1,0.33,0],0.66,0.04,'#bfe3f0','jar',{n:20,alpha:0.35,glass:1});
+sphere([-1.1,0.8,0],0.42,'#97a34a','jar');
+cyl([-1.1,1.28,0],0.03,0.16,'#854f0b','jar',{n:6});
+cyl([-1.1,1.0,0],0.66,1.4,'#bfe3f0','jar',{n:20,open:1,alpha:0.22,glass:1});
+cyl([-1.1,1.75,0],0.7,0.1,'#b4b2a9','jar',{n:20});
+cyl([-1.3,1.86,-0.15],0.05,0.14,'#888780','jar',{n:8});
+cyl([-0.9,1.86,0.15],0.05,0.14,'#888780','jar',{n:8});
+box([0.6,0.5,0],[1.0,0.4,0.6],'#b4b2a9','sensor');
+cyl([0.33,0.75,0],0.1,0.1,'#d3d1c7','sensor',{n:12});cyl([0.33,0.81,0],0.07,0.02,'#5f5e5a','sensor',{n:12});
+cyl([0.6,0.75,0],0.1,0.1,'#d3d1c7','sensor',{n:12});cyl([0.6,0.81,0],0.07,0.02,'#5f5e5a','sensor',{n:12});
+box([0.88,0.715,0],[0.22,0.03,0.22],'#534ab7','sensor');
+box([0.45,0.33,0.85],[1.0,0.05,0.45],'#0f6e56','esp');
+box([0.35,0.38,0.85],[0.32,0.05,0.26],'#888780','esp');
+box([1.25,0.33,0.85],[0.28,0.04,0.22],'#185fa5','esp');
+cyl([1.6,0.53,0],0.2,0.45,'#3d3d3a','pump',{n:16});
+box([-0.1,0.44,-0.75],[0.3,0.28,0.3],'#5f5e5a','valve');
+cyl([-0.1,0.68,-0.75],0.1,0.2,'#ba7517','valve',{n:12});
+cyl([1.0,0.47,-0.85],0.15,0.8,'#3d3d3a','filter',{n:14,ax:'x'});
+cyl([1.42,0.47,-0.85],0.16,0.04,'#888780','filter',{n:14,ax:'x'});
+function cr(P){var p=[P[0]].concat(P,[P[P.length-1]]),out=[];
+for(var i=1;i<p.length-2;i++)for(var s=0;s<10;s++){var t=s/10,q=[];for(var k=0;k<3;k++){var a=p[i-1][k],b=p[i][k],c=p[i+1][k],d=p[i+2][k];q.push(0.5*(2*b+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t));}out.push(q);}
+out.push(P[P.length-1]);return out;}
+var paths={A:[[0.6,0.47,-0.85],[0.35,0.5,-0.8],[0.05,0.47,-0.75]],B:[[-0.25,0.47,-0.75],[-0.85,0.9,-0.85],[-1.3,2.15,-0.45],[-1.3,1.93,-0.15]],C:[[-0.1,0.44,-0.6],[0.0,0.48,-0.35],[0.1,0.5,-0.15]],D:[[-0.9,1.93,0.15],[-0.8,2.2,0.45],[-0.2,1.0,0.45],[0.1,0.5,0.15]],E:[[1.1,0.5,0],[1.25,0.52,0],[1.4,0.5,0]],F:[[1.6,0.76,0],[1.6,1.0,0],[1.95,1.05,0]]};
+var ACTIVE={sniff:{A:1,B:1,D:1,E:1,F:1},purge:{A:1,C:1,E:1,F:1}};
+var curves={};Object.keys(paths).forEach(function(k){var c=cr(paths[k]);curves[k]=c;for(var i=0;i<c.length-1;i++)items.push({t:'l',pk:k,a:c[i],b:c[i+1],layer:1});});
+var dots=[],mode='sniff',sel=-1;
+var DEF_ANG=-0.5,ang=DEF_ANG,tgt=null,tilt=0.5,Dc=8;
+var reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches),auto=!reduce;
+function $(id){return document.getElementById(id);}
+function setMode(m){mode=m;dots=[];Object.keys(ACTIVE[m]).forEach(function(k){for(var j=0;j<3;j++)dots.push({c:curves[k],t:j/3});});
+['sniff','purge'].forEach(function(x){var b=$('m-'+x);b.classList.toggle('on',x===m);b.setAttribute('aria-pressed',x===m?'true':'false');});
+var f=$('flow');f.innerHTML='';
+FLOW[m].forEach(function(k,i){var p=byK[k],b=document.createElement('button');b.type='button';b.textContent=(p.i+1)+' '+p.name;b.onclick=function(){select(p.i);};b.classList.toggle('on',p.i===sel);f.appendChild(b);if(i<FLOW[m].length-1){var s=document.createElement('span');s.textContent='→';s.setAttribute('aria-hidden','true');f.appendChild(s);}});
+var out=document.createElement('span');out.style.whiteSpace='nowrap';out.textContent='→ ปล่อยทิ้ง';f.appendChild(out);
+$('mode-note').textContent=m==='sniff'?'ดม 60–120 วินาที: ลมพากลิ่นจากทุเรียนไปให้เซนเซอร์อ่าน':'ล้างจนค่าเซนเซอร์กลับเส้นฐาน แล้วจึงดมลูกถัดไป กันกลิ่นค้างปนกัน';}
+$('m-sniff').onclick=function(){setMode('sniff');};
+$('m-purge').onclick=function(){setMode('purge');};
+var pl=$('parts');
+PARTS.forEach(function(p){var b=document.createElement('button');b.type='button';b.id='part-'+p.k;b.innerHTML='<span class="num idle">'+(p.i+1)+'</span><span>'+p.name+'<small>'+p.spec+'</small></span>';b.onclick=function(){select(p.i);};pl.appendChild(b);});
+function faceAngle(p){return -Math.atan2(p.a[0],p.a[2]);}
+function select(i){sel=i;var p=PARTS[i];
+$('card-num').textContent=i+1;$('card-num').classList.remove('idle');
+$('card-title').textContent=p.name;$('card-spec').textContent=p.spec;$('card-text').textContent=p.text;
+PARTS.forEach(function(q){var b=$('part-'+q.k);b.classList.toggle('on',q.i===i);b.firstChild.classList.toggle('idle',q.i!==i);});
+Array.prototype.forEach.call($('flow').querySelectorAll('button'),function(b){b.classList.toggle('on',b.textContent.indexOf((i+1)+' ')===0);});
+var t=faceAngle(p),d=t-ang;d=Math.atan2(Math.sin(d),Math.cos(d));tgt=ang+d;auto=false;}
+document.addEventListener('keydown',function(e){if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='ArrowRight'){select((sel+1)%PARTS.length);}else if(e.key==='ArrowLeft'){select((sel-1+PARTS.length)%PARTS.length);}});
+$('next').onclick=function(){select((sel+1)%PARTS.length);};
+$('prev').onclick=function(){select((sel-1+PARTS.length)%PARTS.length);};
+$('btn-reset').onclick=function(){sel=-1;var d=DEF_ANG-ang;d=Math.atan2(Math.sin(d),Math.cos(d));tgt=ang+d;
+$('card-num').textContent='?';$('card-num').classList.add('idle');$('card-title').textContent='เลือกชิ้นส่วน';$('card-spec').textContent='แตะตัวเลขบนโมเดล หรือกดถัดไปเพื่อไล่ดูทีละชิ้นตามทางลม';$('card-text').textContent='';
+PARTS.forEach(function(q){var b=$('part-'+q.k);b.classList.remove('on');b.firstChild.classList.add('idle');});
+Array.prototype.forEach.call($('flow').querySelectorAll('button'),function(b){b.classList.remove('on');});};
+var drag=false,moved=0,lx=0;
+cv.addEventListener('pointerdown',function(e){drag=true;moved=0;lx=e.clientX;});
+cv.addEventListener('pointermove',function(e){if(!drag)return;var dx=e.clientX-lx;moved+=Math.abs(dx);if(moved>4){cv.classList.add('dragging');auto=false;tgt=null;ang+=dx*0.012;}lx=e.clientX;});
+function end(e){if(!drag)return;drag=false;cv.classList.remove('dragging');if(moved<=4&&e&&e.type==='pointerup'){var r=cv.getBoundingClientRect();pick(e.clientX-r.left,e.clientY-r.top);}}
+cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',function(){drag=false;cv.classList.remove('dragging');});cv.addEventListener('pointerleave',function(){drag=false;cv.classList.remove('dragging');});
+var pins=[],hits=[];
+function inPoly(x,y,P){var c=false;for(var i=0,j=P.length-1;i<P.length;j=i++){if(((P[i][1]>y)!==(P[j][1]>y))&&(x<(P[j][0]-P[i][0])*(y-P[i][1])/(P[j][1]-P[i][1])+P[i][0]))c=!c;}return c;}
+function pick(x,y){for(var i=pins.length-1;i>=0;i--){var p=pins[i];if(Math.hypot(x-p.x,y-p.y)<=16){select(p.i);return;}}
+for(var j=hits.length-1;j>=0;j--){if(inPoly(x,y,hits[j].P)){select(byK[hits[j].key].i);return;}}}
+var L=[-0.35,0.6,0.72],ln=Math.hypot(L[0],L[1],L[2]);L=L.map(function(v){return v/ln;});
+function rot(p,ca,sa,cb,sb){var x1=p[0]*ca+p[2]*sa,z1=-p[0]*sa+p[2]*ca,y=p[1]-0.85;return [x1,y*cb-z1*sb,y*sb+z1*cb];}
+var FIT=null,PTS=[];items.forEach(function(it){if(it.t==='p')PTS.push.apply(PTS,it.pts);});PARTS.forEach(function(p){PTS.push([p.a[0],p.a[1]+0.35,p.a[2]]);});
+function fit(){var x0=1e9,x1=-1e9,y0=1e9,y1=-1e9,cb=Math.cos(tilt),sb=Math.sin(tilt);for(var k=0;k<24;k++){var a=k/24*Math.PI*2,ca=Math.cos(a),sa=Math.sin(a);for(var i=0;i<PTS.length;i+=3){var r=rot(PTS[i],ca,sa,cb,sb),f=Dc/(Dc-r[2]),X=r[0]*f,Y=r[1]*f;if(X<x0)x0=X;if(X>x1)x1=X;if(Y<y0)y0=Y;if(Y>y1)y1=Y;}}
+var pad=14,S=Math.min((W-2*pad)/(x1-x0),(H-36-pad)/(y1-y0));FIT={S:S,cx:W/2-S*(x0+x1)/2,cy:36+(H-36-pad)/2+S*(y0+y1)/2};}
+function proj(r,S){var f=Dc/(Dc-r[2]);return [FIT.cx+r[0]*S*f,FIT.cy-r[1]*S*f,f];}
+function mix(a,b,t){return [0,1,2].map(function(k){return Math.round(a[k]*(1-t)+b[k]*t);});}
+function frame(){size();ctx.clearRect(0,0,W,H);if(!FIT)fit();var S=FIT.S,ca=Math.cos(ang),sa=Math.sin(ang),cb=Math.cos(tilt),sb=Math.sin(tilt),list=[];
+var stage=hex(tok('--stage','#e9ebe2')),tin=tok('--tube-in','#f6f5ef'),tout=tok('--tube-out','#8f8d86'),mc=tok(mode==='sniff'?'--sniff':'--purge','#d98b16');
+var selK=sel>=0?PARTS[sel].k:null;
+items.forEach(function(it){if(it.t==='p'){var R=it.pts.map(function(p){return rot(p,ca,sa,cb,sb);}),z=0;R.forEach(function(r){z+=r[2];});z/=R.length;
+var u=[R[1][0]-R[0][0],R[1][1]-R[0][1],R[1][2]-R[0][2]],v=[R[2][0]-R[0][0],R[2][1]-R[0][1],R[2][2]-R[0][2]],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],nl=Math.hypot(n[0],n[1],n[2])||1;
+list.push({it:it,R:R,z:z,br:0.55+0.45*Math.abs((n[0]*L[0]+n[1]*L[1]+n[2]*L[2])/nl)});}
+else if(it.t==='l'){var a=rot(it.a,ca,sa,cb,sb),b=rot(it.b,ca,sa,cb,sb);list.push({it:it,a:a,b:b,z:(a[2]+b[2])/2+0.02});}
+else{var r=rot(it.p,ca,sa,cb,sb);list.push({it:it,r:r,z:r[2]+0.01});}});
+dots.forEach(function(d){var c=d.c,x=Math.max(0,Math.min(d.t,0.999))*(c.length-1),i=Math.floor(x),fr=x-i,p0=c[i],p1=c[Math.min(i+1,c.length-1)];var p=[p0[0]+(p1[0]-p0[0])*fr,p0[1]+(p1[1]-p0[1])*fr,p0[2]+(p1[2]-p0[2])*fr];var r=rot(p,ca,sa,cb,sb);list.push({it:{t:'d',flow:1,rad:4.5,layer:1},r:r,z:r[2]+0.05});});
+list.sort(function(a,b){return (a.it.layer-b.it.layer)||(a.z-b.z);});
+hits=[];
+list.forEach(function(e){var it=e.it,dim=selK&&it.key!==selK&&it.layer!==0;
+if(it.t==='p'){var P=e.R.map(function(r){return proj(r,S);});var c=it.col.map(function(v){return Math.min(255,Math.round(v*e.br));});if(dim)c=mix(c,stage,0.6);
+var al=it.alpha*(dim&&it.glass?0.5:1),fill='rgba('+c[0]+','+c[1]+','+c[2]+','+al+')';
+ctx.beginPath();ctx.moveTo(P[0][0],P[0][1]);for(var i=1;i<P.length;i++)ctx.lineTo(P[i][0],P[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+ctx.lineWidth=0.6;ctx.strokeStyle=it.glass?'rgba(160,200,215,'+(dim?0.15:0.35)+')':fill;ctx.stroke();
+if(it.key&&!it.glass)hits.push({key:it.key,P:P});else if(it.key&&it.glass)hits.push({key:it.key,P:P});}
+else if(it.t==='l'){var A=proj(e.a,S),B=proj(e.b,S),on=ACTIVE[mode][it.pk];ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.lineTo(B[0],B[1]);ctx.lineCap='round';
+ctx.globalAlpha=on?1:(selK?0.25:0.45);ctx.lineWidth=4.5*A[2];ctx.strokeStyle=on?mc:tout;ctx.stroke();ctx.lineWidth=2.6*A[2];ctx.strokeStyle=tin;ctx.stroke();ctx.globalAlpha=1;}
+else{var Q=proj(e.r,S);ctx.beginPath();ctx.arc(Q[0],Q[1],it.rad*Q[2],0,Math.PI*2);var col=it.flow?mc:it.col;if(dim&&!it.flow){var cc=mix(hex(col),stage,0.6);col='rgb('+cc+')';}ctx.fillStyle=col;ctx.fill();}});
+pins=[];var acc=tok('--accent','#5f7a1e'),pan=tok('--panel','#fff'),fg=tok('--fg','#1f2418'),onA=tok('--on-accent','#fff'),line=tok('--muted','#5d6452');
+var PP=PARTS.map(function(p){var r=rot(p.a,ca,sa,cb,sb),Q=proj(r,S);return {i:p.i,x:Q[0],y:Q[1]-14,ay:Q[1],z:r[2]};});
+PP.slice().sort(function(a,b){return b.z-a.z;}).forEach(function(p,n,arr){for(var g=0;g<6;g++){var hit=false;for(var m=0;m<n;m++){var q=arr[m];if(Math.hypot(p.x-q.x,p.y-q.y)<24){p.y=q.y-26;hit=true;}}if(!hit)break;}p.y=Math.max(14,p.y);});
+PP.sort(function(a,b){return a.z-b.z;}).forEach(function(p){
+var on=p.i===sel,back=p.z<-0.7&&!on;ctx.globalAlpha=back?0.55:1;
+ctx.beginPath();ctx.moveTo(p.x,p.y+11);ctx.lineTo(p.x,p.ay);ctx.strokeStyle=on?acc:line;ctx.lineWidth=1.5;ctx.stroke();
+ctx.beginPath();ctx.arc(p.x,p.y,11,0,Math.PI*2);ctx.fillStyle=on?acc:pan;ctx.fill();ctx.lineWidth=1.5;ctx.strokeStyle=on?acc:line;ctx.stroke();
+ctx.fillStyle=on?onA:fg;ctx.font='500 12px "IBM Plex Mono",ui-monospace,monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(p.i+1),p.x,p.y+0.5);
+ctx.globalAlpha=1;pins.push(p);});}
+setMode('sniff');
+var last=performance.now();
+function loop(now){var dt=Math.max(0,Math.min((now-last)/1000,0.05));last=now;
+if(tgt!==null){if(reduce){ang=tgt;tgt=null;}else{var d=tgt-ang;ang+=d*Math.min(1,dt*6);if(Math.abs(d)<0.002){ang=tgt;tgt=null;}}}
+else if(auto)ang+=dt*0.3;
+dots.forEach(function(d){d.t=(((d.t+dt*0.3)%1)+1)%1;});try{frame();}catch(err){}requestAnimationFrame(loop);}
+try{frame();}catch(err){}requestAnimationFrame(loop);
+})();
+</script>
+<a href="./index.html" style="position:fixed;right:12px;bottom:12px;z-index:9999;font:500 13px system-ui,sans-serif;background:#1d2117;color:#b6cf6a;border:1px solid #b6cf6a;border-radius:999px;padding:6px 12px;text-decoration:none">← หน้ารวม e-nose hub</a></body>
+</html>

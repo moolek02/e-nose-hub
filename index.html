@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>จมูกแมลงหวี่ · e-nose hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: nav, intro, featured simulation card, grid of the three original sites, airflow summary, sources */
+:root{color-scheme:dark;--bg:#14170f;--panel:#1d2117;--fg:#e7eadc;--muted:#a3a993;--line:#33392a;--accent:#b6cf6a;--accent-bg:#2b3419;--sniff:#efa53a;--purge:#3fc196;
+  --display:"IBM Plex Sans Thai",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--display);font-size:15px;line-height:1.6}
+a{color:var(--accent)}
+nav.top{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;padding:10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);font-size:14px}
+nav.top .brand{font-weight:600;margin-right:6px;text-decoration:none;color:var(--accent)}
+nav.top a{text-decoration:none;color:var(--muted)}
+nav.top a:hover{color:var(--fg)}
+.wrap{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 48px;display:flex;flex-direction:column;gap:18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent)}
+h1{font-size:clamp(26px,4vw,36px);font-weight:600;margin:0;line-height:1.25;text-wrap:balance}
+h2{font-size:18px;font-weight:600;margin:10px 0 0}
+p{margin:0}
+.sub{color:var(--muted);max-width:72ch}
+.feat{display:grid;grid-template-columns:1.2fr 1fr;gap:0;background:var(--panel);border:1px solid var(--accent);border-radius:16px;overflow:hidden;text-decoration:none;color:var(--fg)}
+@media (max-width:760px){.feat{grid-template-columns:1fr}}
+.feat .art{background:#101309;min-height:200px;display:grid;place-items:center}
+.feat .txt{padding:20px;display:flex;flex-direction:column;gap:8px;justify-content:center}
+.feat .txt b{font-size:20px}
+.badge{display:inline-block;font:500 11px var(--mono);padding:2px 8px;border-radius:999px;background:var(--accent-bg);color:var(--accent);width:max-content}
+.badge.warn{background:#3a2c08;color:#ffe3a3}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-decoration:none;color:var(--fg);display:flex;flex-direction:column;gap:6px}
+.card:hover,.feat:hover{border-color:var(--accent)}
+.card b{font-size:16px}
+.card .k{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.card p{color:var(--muted);font-size:14px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px}
+.flow span.s{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+.small{font-size:12.5px;color:var(--muted)}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="เมนูหลัก">
+  <a class="brand" href="./index.html">จมูกแมลงหวี่ · e-nose hub</a>
+  <a href="./simulation.html">Simulation</a>
+  <a href="./hamsterhub-project.html">โมเดล 3D</a>
+  <a href="./e-nose-wiring-diagram.html">ผังต่อสาย</a>
+  <a href="./flyhash-mockup.html">FlyHash Brain Lab</a>
+</nav>
+<div class="wrap">
+<header>
+  <div class="eyebrow">E-NOSE · ชุด A · ESP32-S3 + FlyHash · INTERNET OF THAILAND</div>
+  <h1>จมูกแมลงหวี่: เครื่องดมความสุกและการเน่าของผลไม้</h1>
+  <p class="sub">รวมทุกหน้าของโปรเจกต์ไว้ที่เดียว ตั้งแต่ตัวเครื่อง ผังต่อสาย แบบจำลองแก๊สในเครื่อง จนถึงสมองแมลงหวี่ที่ใช้แยกกลิ่นด้วย FlyHash</p>
+</header>
+
+<a class="feat" href="./simulation.html">
+  <div class="art" aria-hidden="true">
+    <svg viewBox="0 0 320 190" width="100%" height="200">
+      <rect x="20" y="150" width="280" height="14" rx="3" fill="#4a4d42"/>
+      <rect x="40" y="40" width="90" height="110" rx="10" fill="#9fd0e0" fill-opacity=".14" stroke="#9fd0e0" stroke-opacity=".5"/>
+      <rect x="36" y="32" width="98" height="10" rx="3" fill="#8b8a82"/>
+      <circle cx="85" cy="112" r="30" fill="#c9a73a"/>
+      <g fill="#c98500"><circle cx="60" cy="70" r="4"/><circle cx="108" cy="62" r="4"/><circle cx="72" cy="55" r="3"/></g>
+      <g fill="#199e70"><path d="M100 80l5 5-5 5-5-5z"/><path d="M58 92l5 5-5 5-5-5z"/></g>
+      <g fill="#3987e5"><rect x="115" y="95" width="7" height="7"/><rect x="50" y="122" width="7" height="7"/></g>
+      <path d="M118 36C150 0 160 90 178 118" stroke="#efa53a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
+      <rect x="170" y="112" width="80" height="38" rx="5" fill="#9fd0e0" fill-opacity=".14" stroke="#9fd0e0" stroke-opacity=".5"/>
+      <g fill="#c9c8bf"><circle cx="190" cy="140" r="7"/><circle cx="212" cy="140" r="7"/></g><rect x="228" y="136" width="12" height="7" fill="#534ab7"/>
+      <rect x="262" y="118" width="22" height="32" rx="4" fill="#3d3d3a"/>
+      <path d="M250 131H262" stroke="#efa53a" stroke-width="5"/>
+      <polyline points="170,30 190,32 205,40 220,62 235,70 250,68 265,74 285,72" fill="none" stroke="#b6cf6a" stroke-width="2"/>
+      <text x="170" y="22" fill="#a3a993" font-size="10" font-family="monospace">Rs/R0 · จำลอง</text>
+    </svg>
+  </div>
+  <div class="txt">
+    <span class="badge">ใหม่</span>
+    <b>Simulation: ตัวเครื่อง ภายใน และแก๊สที่จะวัด</b>
+    <p class="sub">ภาพตัด 3 มิติ เห็นห้องดม ห้องเซนเซอร์ TGS2602 / TGS2603 / BME688 ปั๊ม วาล์ว และ ESP32-S3 ปรับผลไม้ สด → สุก → เริ่มเน่า → เน่า แล้วดูอนุภาคแก๊สและกราฟเซนเซอร์เปลี่ยนตาม</p>
+    <span class="badge warn">ค่าทั้งหมดเป็นการจำลอง ไม่ใช่ข้อมูลวัดจริง</span>
+  </div>
+</a>
+
+<h2>หน้าอื่นในโปรเจกต์</h2>
+<div class="grid">
+  <a class="card" href="./hamsterhub-project.html"><span class="k">hamsterhub-project</span><b>โมเดล 3D เครื่องดมทุเรียน</b><p>หมุนดูชิ้นส่วน สลับเส้นทางลมรอบดม / รอบล้าง แตะเพื่อดูหน้าที่ของแต่ละชิ้น</p></a>
+  <a class="card" href="./e-nose-wiring-diagram.html"><span class="k">e-nose-wiring-diagram</span><b>ผังต่อสาย prototype</b><p>ESP32-S3 + ADS1115 + TGS2602 / TGS2603 + BME688 × 2 + ปั๊มและวาล์ว พร้อมตารางต่อขาและเช็กลิสต์ก่อนเสียบไฟ</p></a>
+  <a class="card" href="./flyhash-mockup.html"><span class="k">flyhash-mockup</span><b>FlyHash Brain Lab</b><p>สมองแมลงหวี่ 3 มิติ คำนวณแฮชกลิ่นด้วยอัลกอริทึม FlyHash แบบเรียลไทม์ (โหลด Three.js จาก CDN)</p></a>
+</div>
+
+<h2>เครื่องทำงานอย่างไร</h2>
+<div class="flow" aria-label="ลำดับทางลม">
+  <span class="s">ไส้กรองคาร์บอน</span><i>→</i><span class="s">วาล์ว 3 ทาง</span><i>→</i><span class="s" style="border-color:var(--sniff)">ห้องดม (เฉพาะรอบดม)</span><i>→</i><span class="s">ห้องเซนเซอร์</span><i>→</i><span class="s">ปั๊มลม</span><i>→</i><span class="s">ปล่อยทิ้ง</span>
+</div>
+<p class="small">ESP32-S3 อ่านค่าเซนเซอร์ผ่าน I²C และ ADS1115 รัน FlyHash เทียบคลังกลิ่น แล้วส่งผลผ่าน MQTT ขึ้นแดชบอร์ด (NETPIE / Node-RED) และแจ้งเตือนผ่าน LINE Messaging API</p>
+
+<footer>หน้าย่อย 3 หน้ามาจาก repo เดิม (flyhash-mockup, hamsterhub-project, e-nose-wiring-diagram) คัดลอกมาโดยไม่แก้เนื้อหา เพิ่มแค่ปุ่มกลับหน้ารวม · ข้อมูลแก๊สในหน้า Simulation อ้างอิงไฟล์งานวิจัยของทีม (2026-10-26)</footer>
+</div>
+</body>
+</html>

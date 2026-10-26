@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulation · จมูกแมลงหวี่</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: top nav + simulation banner, then 3D cutaway stage | controls, then sensor charts, then gas/sensor table and notes */
+:root{
+  color-scheme:dark;
+  --bg:#14170f;--panel:#1d2117;--panel-2:#232819;--fg:#e7eadc;--muted:#a3a993;--dim:#7b8170;--line:#33392a;
+  --accent:#b6cf6a;--accent-bg:#2b3419;--on-accent:#14170f;--sniff:#efa53a;--purge:#3fc196;--warn:#fab219;
+  --g-ferm:#c98500;--g-oct:#d55181;--g-eth:#3987e5;--g-est:#199e70;
+  --grid:#2c3123;--axis:#3d4433;
+  --display:"IBM Plex Sans Thai",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--display);font-size:15px;line-height:1.6}
+a{color:var(--accent)}
+nav.top{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;padding:10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);font-size:14px}
+nav.top .brand{font-weight:600;margin-right:6px;text-decoration:none;color:var(--fg)}
+nav.top a{text-decoration:none;color:var(--muted);padding:2px 0}
+nav.top a:hover{color:var(--fg)}
+nav.top a[aria-current]{color:var(--accent);border-bottom:2px solid var(--accent)}
+.banner{position:sticky;top:0;z-index:20;background:#3a2c08;color:#ffe3a3;border-bottom:1px solid #6b5212;padding:8px max(16px,env(safe-area-inset-left,0px));font-size:14px;font-weight:500;display:flex;gap:8px;align-items:center}
+.banner b{color:#fff}
+.wrap{max-width:1280px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-left,0px)) 48px;display:flex;flex-direction:column;gap:16px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent)}
+h1{font-size:26px;font-weight:600;margin:0;text-wrap:balance}
+h2{font-size:18px;font-weight:600;margin:6px 0 0}
+h3{font-size:13px;font-weight:500;color:var(--muted);margin:0;letter-spacing:.02em}
+p{margin:0}
+.sub{color:var(--muted);font-size:14px;max-width:80ch}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px}
+@media (max-width:980px){.main{grid-template-columns:1fr}}
+.stage{position:relative;background:#101309;border:1px solid var(--line);border-radius:14px;overflow:hidden;min-height:420px}
+#three{display:block;width:100%;height:560px;touch-action:none}
+@media (max-width:700px){#three{height:420px}}
+.stage .tools{position:absolute;top:8px;right:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;z-index:3}
+.stage .hint{position:absolute;left:12px;bottom:10px;font-size:12px;color:var(--muted);pointer-events:none;z-index:3}
+.stage .simtag{position:absolute;left:10px;top:10px;font:500 12px var(--mono);color:#ffe3a3;background:rgba(58,44,8,.85);border:1px solid #6b5212;padding:3px 8px;border-radius:6px;z-index:3}
+.labels{position:absolute;inset:0;pointer-events:none;z-index:2}
+.lbl{position:absolute;transform:translate(-50%,-100%);font-size:11.5px;line-height:1.2;white-space:nowrap;background:rgba(20,23,15,.82);border:1px solid var(--line);color:var(--fg);padding:2px 6px;border-radius:6px;pointer-events:auto;cursor:pointer}
+.lbl.concept{border-style:dashed;color:var(--muted)}
+.lbl.on{border-color:var(--accent);color:var(--accent)}
+.lbl[hidden]{display:none}
+button{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{border-color:var(--accent);background:var(--accent-bg)}
+.tools button{padding:5px 10px;font-size:12px;border-radius:8px;background:rgba(29,33,23,.9)}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stages button{padding:7px 4px;font-size:13px;text-align:center}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;color:var(--muted)}
+.row output{font-family:var(--mono);color:var(--fg)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{padding:7px 4px;font-size:13px;text-align:center}
+.seg button::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--c,transparent);vertical-align:1px}
+.status{font-family:var(--mono);font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.status b{color:var(--fg);font-weight:500}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:grid;grid-template-columns:118px 1fr 44px;gap:8px;align-items:center;font-size:12.5px}
+.bar .nm{display:flex;align-items:center;gap:6px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .tr{height:10px;background:var(--panel-2);border-radius:5px;overflow:hidden}
+.bar .fl{height:100%;width:0;background:var(--c);border-radius:0 4px 4px 0;transition:width .15s linear}
+.bar .v{font-family:var(--mono);font-size:12px;text-align:right;color:var(--muted)}
+.sw{flex:none;width:12px;height:12px;display:inline-block;background:var(--c)}
+.sw.sphere{border-radius:50%}
+.sw.cube{border-radius:2px}
+.sw.tetra{clip-path:polygon(50% 0,100% 100%,0 100%)}
+.sw.octa{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.sw.air{border-radius:50%;background:#e9eee0;width:8px;height:8px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.small{font-size:12px;color:var(--muted)}
+.info-title{font-weight:600;font-size:16px}
+.info-spec{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.tag{display:inline-block;font:500 11px var(--mono);padding:1px 6px;border-radius:5px;border:1px dashed var(--muted);color:var(--muted);margin-left:6px;vertical-align:2px}
+.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.charts{grid-template-columns:1fr}}
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 12px 8px;position:relative;min-width:0}
+.chart .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.chart .hd b{font-weight:600}
+.chart .hd .val{font-family:var(--mono);font-size:13px}
+.chart canvas{display:block;width:100%;height:170px}
+.tip{position:absolute;pointer-events:none;background:#0d0f09;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font:12px var(--mono);color:var(--fg);white-space:nowrap;z-index:5}
+.tip[hidden]{display:none}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:820px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:500;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.note b{display:block;margin-bottom:2px}
+.note.warn{border-color:#6b5212}
+footer{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="เมนูหลัก">
+  <a class="brand" href="./index.html">จมูกแมลงหวี่ · e-nose hub</a>
+  <a href="./simulation.html" aria-current="page">Simulation</a>
+  <a href="./hamsterhub-project.html">โมเดล 3D</a>
+  <a href="./e-nose-wiring-diagram.html">ผังต่อสาย</a>
+  <a href="./flyhash-mockup.html">FlyHash Brain Lab</a>
+</nav>
+<div class="banner" role="note">⚠ <span><b>ค่าทั้งหมดเป็นการจำลอง ไม่ใช่ข้อมูลวัดจริง</b> · หน่วยเป็นหน่วยสมมติ (a.u.) ไม่ใช่ ppm</span></div>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">E-NOSE · ชุด A · SIMULATION</div>
+  <h1>จำลองตัวเครื่อง ภายในเครื่อง และแก๊สที่จะวัด</h1>
+  <p class="sub">ภาพตัดให้เห็นภายในเครื่อง ชิ้นส่วนและเส้นทางลมยึดตาม<a href="./hamsterhub-project.html">โมเดล 3D</a>และ<a href="./e-nose-wiring-diagram.html">ผังต่อสาย</a> ปรับสถานะผลไม้แล้วดูแก๊สในห้องดมและค่าเซนเซอร์เปลี่ยนตาม ตัวเลขทุกตัวในหน้านี้มาจากแบบจำลองอย่างง่าย ไม่ได้มาจากเครื่องจริง</p>
+</header>
+
+<div class="main">
+  <div class="stage" id="stage">
+    <canvas id="three" aria-label="ภาพตัด 3 มิติของเครื่อง e-nose: ห้องดมที่มีผลไม้, ห้องเซนเซอร์, ปั๊ม, วาล์ว, ไส้กรอง และบอร์ด ESP32-S3 พร้อมอนุภาคแก๊สจำลอง"></canvas>
+    <div class="labels" id="labels"></div>
+    <div class="simtag">SIMULATION · ไม่ใช่ค่าจริง</div>
+    <div class="tools">
+      <button id="t-shell" type="button" class="on" aria-pressed="true">กล่องเครื่อง (แนวคิด)</button>
+      <button id="t-wires" type="button" class="on" aria-pressed="true">สายไฟ</button>
+      <button id="t-labels" type="button" class="on" aria-pressed="true">ป้ายชื่อ</button>
+      <button id="t-reset" type="button">มุมเริ่มต้น</button>
+    </div>
+    <div class="hint">ลากเพื่อหมุน · เลื่อน/บีบเพื่อซูม · แตะชิ้นส่วนเพื่อดูรายละเอียด</div>
+  </div>
+
+  <div class="side">
+    <div class="card">
+      <h3>สถานะผลไม้ (ป้อนเอง)</h3>
+      <div class="stages" id="stages">
+        <button type="button" data-s="0">สด</button>
+        <button type="button" data-s="1">สุก</button>
+        <button type="button" data-s="2">เริ่มเน่า</button>
+        <button type="button" data-s="3">เน่า</button>
+      </div>
+      <input type="range" id="stage-r" min="0" max="3" step="0.01" value="1" aria-label="สถานะผลไม้ จากสดถึงเน่า">
+      <div class="row"><span>สด → สุก → เริ่มเน่า → เน่า</span><output id="stage-o">สุก</output></div>
+    </div>
+
+    <div class="card">
+      <h3>รอบการทำงาน</h3>
+      <div class="seg" id="modes">
+        <button type="button" data-m="auto" style="--c:var(--accent)">อัตโนมัติ</button>
+        <button type="button" data-m="sniff" style="--c:var(--sniff)">ดม</button>
+        <button type="button" data-m="purge" style="--c:var(--purge)">ล้าง</button>
+      </div>
+      <div class="row"><label for="speed">ความเร็วเวลาจำลอง</label><output id="speed-o">×4</output></div>
+      <input type="range" id="speed" min="1" max="20" step="1" value="4" aria-label="ความเร็วเวลาจำลอง">
+      <div class="status" aria-live="polite"><span>ตอนนี้: <b id="st-mode">ดม</b></span><span>เวลา: <b id="st-time">0 วิ</b></span><span id="st-next"></span></div>
+      <p class="small">อัตโนมัติ = ดม 60 วิ สลับล้าง 60 วิ (ต้นทางกำหนดดม 60–120 วิ แล้วล้างจนค่ากลับเส้นฐาน) วาล์ว HIGH = ดม, LOW = ล้าง</p>
+    </div>
+
+    <div class="card">
+      <h3>แก๊สในห้องเซนเซอร์ (หน่วยสมมติ)</h3>
+      <div class="bars" id="bars"></div>
+      <div class="legend">
+        <span><i class="sw sphere" style="--c:var(--g-ferm)"></i>หมัก</span>
+        <span><i class="sw tetra" style="--c:var(--g-oct)"></i>1-octen-3-ol</span>
+        <span><i class="sw cube" style="--c:var(--g-eth)"></i>ethylene</span>
+        <span><i class="sw octa" style="--c:var(--g-est)"></i>esters</span>
+        <span><i class="sw air"></i>อากาศสะอาด</span>
+      </div>
+    </div>
+
+    <div class="card" id="info" aria-live="polite">
+      <div class="info-title" id="info-title">เลือกชิ้นส่วน</div>
+      <div class="info-spec" id="info-spec">แตะชิ้นส่วนหรือป้ายชื่อบนภาพ</div>
+      <div id="info-text" class="small"></div>
+    </div>
+  </div>
+</div>
+
+<h2>ค่าเซนเซอร์แบบ real-time (จำลอง)</h2>
+<p class="sub">แสดง Rs/R0 ตามวิธีอ่านในผังต่อสาย: ความต้านทานเซนเซอร์เทียบกับตอนอากาศสะอาด ยิ่งมีแก๊สมาก ค่ายิ่งต่ำ แถบพื้นสีเข้ม = ช่วงรอบล้าง แกนนอนคือเวลาจำลองย้อนหลัง 180 วิ</p>
+<div class="charts" id="charts"></div>
+
+<h2>แก๊สที่จำลอง และเซนเซอร์ตัวไหนไวต่ออะไร</h2>
+<div class="tbl"><table>
+<thead><tr><th>กลุ่ม</th><th>สาร</th><th>บ่งชี้อะไร (ตามไฟล์งานวิจัย)</th><th>ในจำลองขึ้นช่วงไหน</th><th>TGS2602</th><th>TGS2603</th><th>BME688</th></tr></thead>
+<tbody>
+<tr><td><span class="legend"><span><i class="sw sphere" style="--c:var(--g-ferm)"></i>หมัก</span></span></td><td>ethanol, acetaldehyde, ethyl acetate</td><td>ขาดออกซิเจน/หมัก (Larsen 1994, confirmed) และ ethanol พบในแอปเปิลเน่าจากเชื้อรา (Kim 2018, confirmed) ใช้เป็นสัญญาณ "เริ่มเน่า" แต่แยกจากผลเสียกลิ่นได้ยาก</td><td>เริ่มเน่า → เน่า</td><td>ethanol อยู่ในกราฟความไวของ datasheet · อีกสองตัวประมาณ (กลุ่ม VOC)</td><td>ethanol อยู่ในกราฟความไวของ datasheet · อีกสองตัวประมาณ</td><td>ตอบสนอง VOC แบบกว้าง · ประมาณ</td></tr>
+<tr><td><span class="legend"><span><i class="sw tetra" style="--c:var(--g-oct)"></i>เชื้อรา</span></span></td><td>1-octen-3-ol</td><td>เชื้อรา Botrytis ในสตรอว์เบอร์รี/องุ่น กลิ่นเห็ด-ดิน (partial) งานต้นทางบอกว่าตรวจระยะเริ่มต้นได้ยาก</td><td>เริ่มเน่า → เน่า</td><td>ไม่มีใน datasheet · ประมาณ</td><td>ไม่มีใน datasheet · ประมาณ</td><td>ประมาณ</td></tr>
+<tr><td><span class="legend"><span><i class="sw cube" style="--c:var(--g-eth)"></i>ฮอร์โมน</span></span></td><td>ethylene</td><td>ขึ้นทั้งตอนสุกและตอนติดเชื้อ แยกสุกกับเน่าไม่ได้ (Silva 2022, confirmed)</td><td>สุก → เน่า</td><td>ไม่มีใน datasheet · ประมาณว่าต่ำ</td><td>ไม่มีใน datasheet · ประมาณว่าต่ำ</td><td>ไม่แน่ใจ · ประมาณว่าต่ำ</td></tr>
+<tr><td><span class="legend"><span><i class="sw octa" style="--c:var(--g-est)"></i>กลิ่นสุก</span></span></td><td>esters (เช่น ethyl propanoate, ethyl 2-methylbutanoate)</td><td>บ่งชี้ "สุก" ไม่ใช่เน่า (ทุเรียน Chawengkijwanich 2008, confirmed)</td><td>สุกสูงสุด แล้วลดลงบางส่วน</td><td>ประมาณ (กลุ่ม VOC)</td><td>ประมาณ</td><td>ประมาณ</td></tr>
+</tbody></table></div>
+<p class="small">ข้อมูลความไวของเซนเซอร์: TGS2602 datasheet ระบุว่าไวต่อกลิ่นและ VOC เช่น ammonia, H₂S, toluene และมีกราฟ ethanol · TGS2603 ระบุว่าไวต่อกลิ่นกลุ่ม amine และกำมะถัน (trimethylamine, methyl mercaptan) และมีกราฟ ethanol · BME688 เป็นเซนเซอร์แก๊ส MOX ที่ตอบสนอง VOC แบบกว้าง ช่องที่เขียนว่า "ประมาณ" คือไม่มีข้อมูลตรงใน datasheet ค่าน้ำหนักในแบบจำลองเป็นค่าสมมติ</p>
+
+<h2>สมมติฐานของแบบจำลอง</h2>
+<div class="notes">
+  <div class="note warn"><b>ไม่ใช่ข้อมูลวัดจริง</b>ไฟล์งานวิจัยระบุว่าแหล่งที่อ่านได้แทบไม่มีตัวเลขความเข้มข้น อัตราปล่อยแก๊สในแต่ละสถานะจึงเป็นค่าสมมติเพื่อให้เห็นแนวโน้มเท่านั้น ห้ามใช้แทนค่า ppm</div>
+  <div class="note"><b>แบบจำลองแก๊ส</b>ห้องดมสะสมแก๊สจากผล (ปล่อยตามสถานะ − ถูกลมพาออก) รอบดมลมพาแก๊สจากห้องดมไปห้องเซนเซอร์ รอบล้างส่งอากาศจากไส้กรองตรงเข้าห้องเซนเซอร์ แก๊สในห้องดมจึงสะสมระหว่างล้าง และพุ่งตอนเริ่มดมรอบถัดไป</div>
+  <div class="note"><b>แบบจำลองเซนเซอร์</b>Rs/R0 = (1 + Σ น้ำหนัก × ปริมาณแก๊ส)<sup>−0.6</sup> แล้วหน่วงเวลาตอบสนองเล็กน้อยและเติมสัญญาณรบกวน รูปแบบกฎกำลังนี้เป็นแนวทั่วไปของเซนเซอร์ MOX ตัวเลขทั้งหมดเป็นค่าสมมติ</div>
+  <div class="note"><b>ชิ้นส่วนที่เป็นแนวคิด</b>กล่องเครื่องภายนอก และตำแหน่งของ BME688 #2 (อากาศอ้างอิง) ต้นทางไม่ได้กำหนด จึงทำป้ายเส้นประไว้ ต้นทางใช้ปั๊มลมดูดอากาศ ไม่มีพัดลม</div>
+  <div class="note"><b>แยกสุกกับเน่าได้แค่ไหน</b>ethylene และ esters ขึ้นตอนสุก กลุ่มหมักและ 1-octen-3-ol ขึ้นตอนเน่า ในเครื่องจริงต้องเก็บข้อมูลจริงแล้วให้ <a href="./flyhash-mockup.html">FlyHash</a> เทียบคลังกลิ่น หน้านี้ไม่ได้ทำนายผล</div>
+</div>
+<footer>แหล่งข้อมูล: hamsterhub-project (โมเดล 3D) · e-nose-wiring-diagram (ผังต่อสาย) · Shared/research/fruit-spoilage-compounds.md (Researcher, 2026-10-26) · datasheet Figaro TGS2602/TGS2603 และ Bosch BME688</footer>
+</div>
+
+<div class="tip" id="tip" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id);};
+var css=function(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();};
+
+/* ---------------- model: gases, stages, sensors (all assumed values) ---------------- */
+var GROUPS=[
+  {k:'ferm',name:'หมัก',col:css('--g-ferm'),shape:'sphere'},
+  {k:'oct',name:'1-octen-3-ol',col:css('--g-oct'),shape:'tetra'},
+  {k:'eth',name:'ethylene',col:css('--g-eth'),shape:'cube'},
+  {k:'est',name:'esters',col:css('--g-est'),shape:'octa'}];
+var GASES=[
+  {k:'ethanol',name:'ethanol',g:0},
+  {k:'acet',name:'acetaldehyde',g:0},
+  {k:'ea',name:'ethyl acetate',g:0},
+  {k:'oct',name:'1-octen-3-ol',g:1},
+  {k:'ethy',name:'ethylene',g:2},
+  {k:'est',name:'esters',g:3}];
+/* emission a.u./s per stage: สด, สุก, เริ่มเน่า, เน่า (assumed, shows trend only) */
+var EMIT=[
+  [0.02,0.02,0.01,0.00,0.05,0.10],
+  [0.08,0.05,0.06,0.00,0.50,0.60],
+  [0.45,0.30,0.35,0.10,0.55,0.45],
+  [0.90,0.55,0.70,0.45,0.45,0.30]];
+var STAGE_NAMES=['สด','สุก','เริ่มเน่า','เน่า'];
+var SENSORS=[
+  {k:'tgs2602',name:'TGS2602',sub:'ADS1115 A0',w:[0.30,0.20,0.15,0.10,0.02,0.05],tau:2.5},
+  {k:'tgs2603',name:'TGS2603',sub:'ADS1115 A1',w:[0.25,0.15,0.10,0.08,0.02,0.04],tau:3.0},
+  {k:'bme1',name:'BME688 #1',sub:'gas resistance · 0x76',w:[0.20,0.15,0.15,0.15,0.03,0.08],tau:4.0}];
+var K_OUT=0.12,K_LEAK=0.02,R_CH=0.4,CYCLE=60,HIST=180,DT_S=0.25;
+
+var st={stage:1,mode:'auto',speed:4,t:0,phase:'sniff',jar:GASES.map(function(){return 0;}),ch:GASES.map(function(){return 0;}),
+  y:SENSORS.map(function(){return 1;}),hist:SENSORS.map(function(){return [];}),phaseHist:[],acc:0};
+
+function emission(s){var i=Math.min(2,Math.floor(s)),f=s-i;return EMIT[i].map(function(v,j){return v+(EMIT[i+1][j]-v)*f;});}
+function curPhase(){if(st.mode!=='auto')return st.mode;return Math.floor(st.t/CYCLE)%2===0?'sniff':'purge';}
+function rnd(){return Math.random()*2-1;}
+function stepModel(dt){
+  st.phase=curPhase();
+  var E=emission(st.stage),sniff=st.phase==='sniff';
+  for(var j=0;j<GASES.length;j++){
+    var cj=st.jar[j];
+    st.jar[j]=Math.max(0,cj+(E[j]-(sniff?K_OUT:K_LEAK)*cj)*dt);
+    var target=sniff?cj:0;
+    st.ch[j]=Math.max(0,st.ch[j]+R_CH*(target-st.ch[j])*dt);
+  }
+  SENSORS.forEach(function(s,i){var x=0;for(var j=0;j<GASES.length;j++)x+=s.w[j]*st.ch[j];
+    var ideal=Math.pow(1+x,-0.6);st.y[i]+=(ideal-st.y[i])*Math.min(1,dt/s.tau);});
+  st.t+=dt;st.acc+=dt;
+  while(st.acc>=DT_S){st.acc-=DT_S;
+    SENSORS.forEach(function(s,i){var h=st.hist[i];h.push({t:st.t,v:Math.max(0.02,Math.min(1.05,st.y[i]+rnd()*0.006))});while(h.length&&h[0].t<st.t-HIST)h.shift();});
+    st.phaseHist.push({t:st.t,p:st.phase});while(st.phaseHist.length&&st.phaseHist[0].t<st.t-HIST)st.phaseHist.shift();}
+}
+
+/* ---------------- UI: stage, modes, bars ---------------- */
+function setStage(s){st.stage=Math.max(0,Math.min(3,s));$('stage-r').value=st.stage;
+  var i=Math.round(st.stage);$('stage-o').textContent=(Math.abs(st.stage-i)<0.02?'':'ระหว่าง ')+STAGE_NAMES[i]+' ('+st.stage.toFixed(2)+')';
+  Array.prototype.forEach.call(document.querySelectorAll('#stages button'),function(b){var on=Math.abs(+b.dataset.s-st.stage)<0.02;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+  updateFruit();}
+$('stages').addEventListener('click',function(e){var b=e.target.closest('button');if(b)setStage(+b.dataset.s);});
+$('stage-r').addEventListener('input',function(){setStage(+this.value);});
+function setMode(m){st.mode=m;Array.prototype.forEach.call(document.querySelectorAll('#modes button'),function(b){var on=b.dataset.m===m;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});}
+$('modes').addEventListener('click',function(e){var b=e.target.closest('button');if(b)setMode(b.dataset.m);});
+$('speed').addEventListener('input',function(){st.speed=+this.value;$('speed-o').textContent='×'+st.speed;});
+var BAR_MAX=8,barEls=[];
+GASES.forEach(function(g){var G=GROUPS[g.g],d=document.createElement('div');d.className='bar';
+  d.innerHTML='<span class="nm"><i class="sw '+G.shape+'" style="--c:'+G.col+'"></i>'+g.name+'</span><span class="tr"><span class="fl" style="--c:'+G.col+'"></span></span><span class="v">0.0</span>';
+  $('bars').appendChild(d);barEls.push({fl:d.querySelector('.fl'),v:d.querySelector('.v')});});
+function updateBars(){GASES.forEach(function(g,j){var v=st.ch[j];barEls[j].fl.style.width=Math.min(100,v/BAR_MAX*100)+'%';barEls[j].v.textContent=v.toFixed(1);});
+  $('st-mode').textContent=st.phase==='sniff'?'รอบดม (วาล์ว HIGH)':'รอบล้าง (วาล์ว LOW)';$('st-mode').style.color=st.phase==='sniff'?css('--sniff'):css('--purge');
+  $('st-time').textContent=Math.floor(st.t)+' วิ';
+  $('st-next').textContent=st.mode==='auto'?'สลับใน '+Math.ceil(CYCLE-st.t%CYCLE)+' วิ':'';}
+
+/* ---------------- charts: small multiples, one series each ---------------- */
+var charts=SENSORS.map(function(s,i){var d=document.createElement('div');d.className='chart';
+  d.innerHTML='<div class="hd"><span><b>'+s.name+'</b> <span class="small">'+s.sub+'</span></span><span class="val">Rs/R0 <span>1.00</span></span></div><canvas aria-label="กราฟจำลองค่า Rs/R0 ของ '+s.name+'"></canvas><div class="small">จำลอง · ไม่ใช่ค่าจริง</div>';
+  $('charts').appendChild(d);var cv=d.querySelector('canvas');var c={i:i,cv:cv,ctx:cv.getContext('2d'),val:d.querySelector('.val span'),hover:null,W:0,H:0};
+  cv.addEventListener('pointermove',function(e){var r=cv.getBoundingClientRect();c.hover=e.clientX-r.left;});
+  cv.addEventListener('pointerleave',function(){c.hover=null;$('tip').hidden=true;});
+  return c;});
+var PAD={l:34,r:8,t:8,b:20};
+function drawChart(c){var cv=c.cv,dpr=Math.min(window.devicePixelRatio||1,2),W=cv.clientWidth,H=cv.clientHeight;
+  if(W!==c.W||H!==c.H){c.W=W;c.H=H;cv.width=W*dpr;cv.height=H*dpr;}
+  var x=c.ctx;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,W,H);
+  var pw=W-PAD.l-PAD.r,ph=H-PAD.t-PAD.b,t1=st.t,t0=t1-HIST;
+  var X=function(t){return PAD.l+(t-t0)/HIST*pw;},Y=function(v){return PAD.t+(1-v/1.05)*ph;};
+  /* purge bands */
+  x.fillStyle='rgba(0,0,0,.28)';var ph0=null;st.phaseHist.forEach(function(p,k){if(p.p==='purge'&&ph0===null)ph0=p.t;if((p.p!=='purge'||k===st.phaseHist.length-1)&&ph0!==null){x.fillRect(X(Math.max(t0,ph0)),PAD.t,X(p.t)-X(Math.max(t0,ph0)),ph);ph0=null;}});
+  /* grid */
+  x.font='11px "IBM Plex Mono",monospace';x.textAlign='right';x.textBaseline='middle';
+  [0,0.25,0.5,0.75,1].forEach(function(v){x.strokeStyle=v===0?css('--axis'):css('--grid');x.lineWidth=1;x.beginPath();x.moveTo(PAD.l,Math.round(Y(v))+.5);x.lineTo(W-PAD.r,Math.round(Y(v))+.5);x.stroke();x.fillStyle=css('--dim');x.fillText(v.toFixed(2),PAD.l-4,Y(v));});
+  x.textAlign='center';x.textBaseline='top';[-180,-120,-60,0].forEach(function(dt){var tx=X(t1+dt);x.fillStyle=css('--dim');x.fillText(dt===0?'ตอนนี้':dt+' วิ',Math.min(Math.max(tx,PAD.l+14),W-PAD.r-18),H-PAD.b+5);});
+  var h=st.hist[c.i];if(h.length<2)return;
+  x.strokeStyle=css('--accent');x.lineWidth=2;x.lineJoin='round';x.beginPath();h.forEach(function(p,k){var px=X(p.t),py=Y(p.v);k?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();
+  var last=h[h.length-1];x.fillStyle=css('--accent');x.beginPath();x.arc(X(last.t),Y(last.v),4,0,7);x.fill();
+  c.val.textContent=last.v.toFixed(2);
+  if(c.hover!==null&&c.hover>=PAD.l){var tt=t0+(c.hover-PAD.l)/pw*HIST,best=null;h.forEach(function(p){if(!best||Math.abs(p.t-tt)<Math.abs(best.t-tt))best=p;});
+    if(best){var bx=X(best.t);x.strokeStyle=css('--muted');x.lineWidth=1;x.beginPath();x.moveTo(bx+.5,PAD.t);x.lineTo(bx+.5,PAD.t+ph);x.stroke();
+      x.fillStyle=css('--accent');x.strokeStyle=css('--panel');x.lineWidth=2;x.beginPath();x.arc(bx,Y(best.v),4.5,0,7);x.fill();x.stroke();
+      var tip=$('tip'),r=cv.getBoundingClientRect();tip.hidden=false;tip.textContent=SENSORS[c.i].name+' · '+(best.t-t1).toFixed(0)+' วิ · Rs/R0 '+best.v.toFixed(2)+' (จำลอง)';
+      tip.style.left=Math.min(window.innerWidth-tip.offsetWidth-8,r.left+bx+12+window.scrollX)+'px';tip.style.top=(r.top+window.scrollY+Y(best.v)-30)+'px';}}
+}
+
+/* ---------------- 3D scene ---------------- */
+var canvas=$('three'),stage=$('stage');
+if(!window.THREE){$('labels').innerHTML='<p style="padding:40px;color:#ffe3a3">โหลด Three.js ไม่ได้ ต้องต่ออินเทอร์เน็ต กราฟด้านล่างยังทำงาน</p>';}
+var T=window.THREE,renderer,scene,camera,controls,pickables=[],labelDefs=[],shellGroup,wireGroup,fruit={},tubes={},inst={},valveMat,pumpMat;
+var DEF_CAM=[3.6,3.4,4.8],DEF_TGT=[0.1,0.85,0];
+if(T){
+renderer=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+scene=new T.Scene();
+camera=new T.PerspectiveCamera(40,1,0.05,100);camera.position.set(DEF_CAM[0],DEF_CAM[1],DEF_CAM[2]);
+controls=new T.OrbitControls(camera,canvas);controls.target.set(DEF_TGT[0],DEF_TGT[1],DEF_TGT[2]);controls.enableDamping=true;controls.minDistance=2;controls.maxDistance=12;controls.maxPolarAngle=Math.PI*0.49;controls.update();
+scene.add(new T.HemisphereLight(0xeef3e0,0x20241a,0.85));
+var dl=new T.DirectionalLight(0xffffff,0.75);dl.position.set(-3,6,4);scene.add(dl);
+var dl2=new T.DirectionalLight(0xb6cf6a,0.25);dl2.position.set(4,2,-3);scene.add(dl2);
+
+function mat(c,o){o=o||{};return new T.MeshStandardMaterial({color:c,roughness:o.r!==undefined?o.r:0.7,metalness:o.m||0,transparent:!!o.op,opacity:o.op||1,depthWrite:o.op?false:true,side:o.ds?T.DoubleSide:T.FrontSide,emissive:o.e||0x000000});}
+function add(geo,m,pos,key,parent){var me=new T.Mesh(geo,m);me.position.set(pos[0],pos[1],pos[2]);if(key){me.userData.key=key;pickables.push(me);}(parent||scene).add(me);return me;}
+function box(s,c,pos,key,o,parent){return add(new T.BoxGeometry(s[0],s[1],s[2]),mat(c,o),pos,key,parent);}
+function cyl(r,h,c,pos,key,o,parent){return add(new T.CylinderGeometry(r,r,h,o&&o.n||24,1,!!(o&&o.open)),mat(c,o),pos,key,parent);}
+
+/* base plate (from 3D model) */
+box([4.2,0.3,2.6],0x4a4d42,[0,0.15,0],null);
+/* housing — concept: back, left, right walls + edges, front and top cut away */
+shellGroup=new T.Group();scene.add(shellGroup);
+var SH={x0:-2.1,x1:2.1,y0:0.3,y1:2.45,z0:-1.3,z1:1.3};
+var wallM=mat(0x8d9478,{op:0.10,ds:1,r:0.4});
+add(new T.PlaneGeometry(SH.x1-SH.x0,SH.y1-SH.y0),wallM,[0,(SH.y0+SH.y1)/2,SH.z0],null,shellGroup);
+var lw=add(new T.PlaneGeometry(SH.z1-SH.z0,SH.y1-SH.y0),wallM,[SH.x0,(SH.y0+SH.y1)/2,0],null,shellGroup);lw.rotation.y=Math.PI/2;
+var rw=add(new T.PlaneGeometry(SH.z1-SH.z0,SH.y1-SH.y0),wallM,[SH.x1,(SH.y0+SH.y1)/2,0],null,shellGroup);rw.rotation.y=-Math.PI/2;
+var eg=new T.EdgesGeometry(new T.BoxGeometry(SH.x1-SH.x0,SH.y1-SH.y0,SH.z1-SH.z0));
+var el=new T.LineSegments(eg,new T.LineDashedMaterial({color:0xa3a993,dashSize:0.08,gapSize:0.06,transparent:true,opacity:0.6}));el.computeLineDistances();el.position.set(0,(SH.y0+SH.y1)/2,0);shellGroup.add(el);
+
+/* sniff jar (glass) + lid + ports */
+var glass={op:0.16,ds:1,r:0.1};
+cyl(0.66,0.04,0x9fd0e0,[-1.1,0.32,0],'jar',{op:0.35});
+cyl(0.66,1.4,0x9fd0e0,[-1.1,1.0,0],'jar',Object.assign({open:1,n:40},glass));
+cyl(0.7,0.1,0x8b8a82,[-1.1,1.75,0],'jar',{n:40,m:0.4,r:0.4});
+cyl(0.05,0.16,0x77766f,[-1.3,1.86,-0.15],'jar',{n:10});
+cyl(0.05,0.16,0x77766f,[-0.9,1.86,0.15],'jar',{n:10});
+
+/* fruit: sphere with spikes (source: durian), color driven by stage */
+fruit.mat=mat(0x97a34a,{r:0.8});fruit.spikeMat=mat(0x7d8a37,{r:0.8});
+fruit.body=add(new T.SphereGeometry(0.42,32,24),fruit.mat,[-1.1,0.8,0],'fruit');
+var spikeGeo=new T.ConeGeometry(0.035,0.09,6);spikeGeo.translate(0,0.045,0);
+var fr0=new T.Vector3(-1.1,0.8,0);
+for(var k=0;k<120;k++){var yy=1-2*(k+0.5)/120,rr=Math.sqrt(1-yy*yy),phi=k*2.39996;var n=new T.Vector3(Math.cos(phi)*rr,yy,Math.sin(phi)*rr);
+  var sp=new T.Mesh(spikeGeo,fruit.spikeMat);sp.position.copy(fr0).addScaledVector(n,0.405);sp.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),n);sp.userData.key='fruit';pickables.push(sp);scene.add(sp);}
+fruit.spotMat=mat(0x2a2116,{op:0.01,r:1});fruit.spots=[];
+for(var k2=0;k2<16;k2++){var a=k2*2.1,b=Math.acos(1-2*((k2*0.618)%1));var n2=new T.Vector3(Math.sin(b)*Math.cos(a),Math.cos(b),Math.sin(b)*Math.sin(a));
+  var spt=new T.Mesh(new T.SphereGeometry(0.09+0.05*((k2*0.37)%1),12,8),fruit.spotMat);spt.scale.set(1,1,0.25);spt.position.copy(fr0).addScaledVector(n2,0.41);spt.lookAt(fr0.clone().addScaledVector(n2,2));scene.add(spt);fruit.spots.push(spt);}
+var moldGeo=new T.BufferGeometry(),mp=[];for(var k3=0;k3<260;k3++){var u=Math.random()*Math.PI*2,v=Math.acos(Math.random()*1.4-1),r3=0.44+Math.random()*0.05;mp.push(-1.1+r3*Math.sin(v)*Math.cos(u),0.8+r3*Math.cos(v)*-1,r3*Math.sin(v)*Math.sin(u));}
+moldGeo.setAttribute('position',new T.Float32BufferAttribute(mp,3));fruit.moldMat=new T.PointsMaterial({color:0xe8e6d8,size:0.025,transparent:true,opacity:0});scene.add(new T.Points(moldGeo,fruit.moldMat));
+
+/* sensor chamber (glass box) with TGS2602, TGS2603, BME688 #1 */
+box([1.1,0.46,0.7],0x9fd0e0,[0.6,0.56,0],'chamber',{op:0.14,ds:1,r:0.1});
+var edC=new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(1.1,0.46,0.7)),new T.LineBasicMaterial({color:0x9fd0e0,transparent:true,opacity:0.45}));edC.position.set(0.6,0.56,0);scene.add(edC);
+box([1.0,0.03,0.6],0x2f5a3c,[0.6,0.345,0],'chamber');
+function tgs(x,key){cyl(0.1,0.1,0xc9c8bf,[x,0.41,-0.05],key,{m:0.6,r:0.35,n:20});cyl(0.075,0.015,0x5f5e5a,[x,0.465,-0.05],key,{n:20});}
+tgs(0.3,'tgs2602');tgs(0.58,'tgs2603');
+box([0.2,0.03,0.2],0x534ab7,[0.88,0.375,-0.05],'bme1');box([0.06,0.02,0.06],0xb9b4f0,[0.88,0.395,-0.05],'bme1');
+
+/* pump, valve, filter */
+pumpMat=mat(0x3d3d3a,{r:0.5,m:0.3});cyl(0.2,0.45,0x3d3d3a,[1.6,0.53,0],'pump',{n:24,m:0.3});
+var pumpRing=add(new T.TorusGeometry(0.21,0.02,8,32),pumpMat,[1.6,0.68,0],'pump');pumpRing.rotation.x=Math.PI/2;
+box([0.3,0.28,0.3],0x5f5e5a,[-0.1,0.44,-0.75],'valve');
+valveMat=mat(0xba7517,{r:0.5});cyl(0.1,0.2,0xba7517,[-0.1,0.68,-0.75],'valve',{n:16});scene.children[scene.children.length-1].material=valveMat;
+var fil=cyl(0.15,0.8,0x3d3d3a,[1.0,0.47,-0.85],'filter',{n:20});fil.rotation.z=Math.PI/2;
+var fil2=cyl(0.16,0.04,0x888780,[1.42,0.47,-0.85],'filter',{n:20});fil2.rotation.z=Math.PI/2;
+/* BME688 #2 reference air — position is a concept */
+box([0.2,0.03,0.2],0x534ab7,[0.55,0.33,-1.08],'bme2');box([0.06,0.02,0.06],0xb9b4f0,[0.55,0.35,-1.08],'bme2');
+
+/* electronics: ESP32-S3 board, ADS1115, two MOSFET drivers */
+box([1.0,0.05,0.45],0x0f6e56,[0.45,0.33,0.85],'esp');
+box([0.32,0.05,0.26],0x888780,[0.35,0.38,0.85],'esp',{m:0.5,r:0.3});
+box([0.28,0.04,0.22],0x185fa5,[1.25,0.33,0.85],'ads');
+box([0.08,0.04,0.06],0x1b1b19,[0.78,0.37,0.72],'mosfet');box([0.08,0.04,0.06],0x1b1b19,[0.78,0.37,0.98],'mosfet');
+
+/* air tubes (paths from the 3D model) */
+var PATHS={A:[[0.6,0.47,-0.85],[0.35,0.5,-0.8],[0.05,0.47,-0.75]],B:[[-0.25,0.47,-0.75],[-0.85,0.9,-0.85],[-1.3,2.15,-0.45],[-1.3,1.93,-0.15]],
+  C:[[-0.1,0.44,-0.6],[0.0,0.48,-0.35],[0.05,0.5,-0.15]],D:[[-0.9,1.93,0.15],[-0.8,2.2,0.45],[-0.2,1.0,0.45],[0.05,0.55,0.15]],
+  E:[[1.15,0.55,0],[1.3,0.56,0],[1.42,0.55,0]],F:[[1.6,0.76,0],[1.6,1.0,0],[1.95,1.05,0],[2.25,1.05,0]]};
+var curves={};
+Object.keys(PATHS).forEach(function(k){var c=new T.CatmullRomCurve3(PATHS[k].map(function(p){return new T.Vector3(p[0],p[1],p[2]);}));curves[k]=c;
+  var m=new T.MeshStandardMaterial({color:0xdedcd2,transparent:true,opacity:0.35,roughness:0.2,depthWrite:false});
+  var tm=new T.Mesh(new T.TubeGeometry(c,48,0.04,10,false),m);tm.userData.key='tube';pickables.push(tm);scene.add(tm);tubes[k]=m;});
+curves.len={};Object.keys(PATHS).forEach(function(k){curves.len[k]=curves[k].getLength();});
+
+/* wires (from the wiring diagram): analog green, I2C blue, GPIO orange */
+wireGroup=new T.Group();scene.add(wireGroup);
+function wire(pts,col){var c=new T.CatmullRomCurve3(pts.map(function(p){return new T.Vector3(p[0],p[1],p[2]);}));var me=new T.Mesh(new T.TubeGeometry(c,40,0.012,6,false),new T.MeshBasicMaterial({color:col}));wireGroup.add(me);}
+wire([[0.3,0.36,0.05],[0.3,0.36,0.4],[0.9,0.36,0.75],[1.2,0.36,0.82]],0x4cc28b);
+wire([[0.58,0.36,0.05],[0.58,0.36,0.42],[1.0,0.36,0.78],[1.28,0.36,0.85]],0x4cc28b);
+wire([[0.88,0.37,0.05],[0.88,0.37,0.4],[0.5,0.37,0.7],[0.4,0.41,0.8]],0x6aa3ef);
+wire([[1.2,0.36,0.9],[0.9,0.38,0.92],[0.45,0.41,0.88]],0x6aa3ef);
+wire([[0.55,0.34,-1.0],[0.0,0.34,-0.4],[0.0,0.34,0.5],[0.3,0.41,0.8]],0x6aa3ef);
+wire([[0.8,0.37,0.72],[1.2,0.34,0.45],[1.55,0.34,0.2]],0xf0954a);
+wire([[0.78,0.37,0.98],[-0.3,0.34,0.98],[-0.4,0.34,-0.2],[-0.1,0.34,-0.6]],0xf0954a);
+
+/* ---------- particles ---------- */
+var GEOS={sphere:new T.SphereGeometry(0.03,8,6),tetra:new T.TetrahedronGeometry(0.042),cube:new T.BoxGeometry(0.045,0.045,0.045),octa:new T.OctahedronGeometry(0.038)};
+var CAP=700,CAP_AIR=260;
+GROUPS.forEach(function(G,i){var m=new T.InstancedMesh(GEOS[G.shape],new T.MeshStandardMaterial({color:G.col,roughness:0.5,emissive:G.col,emissiveIntensity:0.25}),CAP);m.count=0;m.frustumCulled=false;scene.add(m);inst[i]=m;});
+inst.air=new T.InstancedMesh(new T.SphereGeometry(0.018,6,4),new T.MeshBasicMaterial({color:0xe9eee0,transparent:true,opacity:0.7}),CAP_AIR);inst.air.count=0;inst.air.frustumCulled=false;scene.add(inst.air);
+}
+
+var parts=[],spawnAcc=GASES.map(function(){return 0;}),airAcc=0,JAR={x:-1.1,z:0,r:0.56,y0:0.4,y1:1.62},FR={x:-1.1,y:0.8,z:0,r:0.5},CH={x0:0.12,x1:1.08,y0:0.4,y1:0.74,z0:-0.28,z1:0.28};
+var OUTLET=[-0.9,1.68,0.15],CH_EXIT=[1.12,0.55,0],SPAWN=7,AIR_RATE=9,V_TUBE=1.4;
+function spawnGas(j){var a=Math.random()*Math.PI*2,b=Math.acos(Math.random()*2-1);
+  parts.push({gas:j,g:GASES[j].g,s:'jar',x:FR.x+Math.sin(b)*Math.cos(a)*FR.r,y:FR.y+Math.cos(b)*FR.r,z:FR.z+Math.sin(b)*Math.sin(a)*FR.r,vx:0,vy:0,vz:0,t:0,path:null});}
+function spawnAir(){parts.push({air:1,s:'path',path:'A',t:0,x:0,y:0,z:0,vx:0,vy:0,vz:0});}
+function jitter(p,dt,amp){p.vx+=rnd()*amp*dt;p.vy+=rnd()*amp*dt;p.vz+=rnd()*amp*dt;var d=Math.pow(0.2,dt);p.vx*=d;p.vy*=d;p.vz*=d;p.x+=p.vx*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;}
+function moveToward(p,q,dt,sp){var dx=q[0]-p.x,dy=q[1]-p.y,dz=q[2]-p.z,L=Math.hypot(dx,dy,dz);if(L<0.04)return true;var s=Math.min(L,sp*dt)/L;p.x+=dx*s;p.y+=dy*s;p.z+=dz*s;return false;}
+function nextPath(p){var sniff=st.phase==='sniff';
+  if(p.path==='A'){p.path=sniff?'B':'C';p.t=0;return;}
+  if(p.path==='B'){p.s='jarAir';p.life=1.5;p.x=-1.3;p.y=1.6;p.z=-0.15;p.vx=p.vy=p.vz=0;return;}
+  if(p.path==='C'||p.path==='D'){p.s='ch';p.x=0.15;p.y=0.55;p.z=p.path==='C'?-0.1:0.12;p.vx=0.25;p.vy=p.vz=0;return;}
+  if(p.path==='E'){p.path='F';p.t=0;return;}
+  p.dead=true;}
+function stepParticles(dt){if(!T)return;var sniff=st.phase==='sniff',E=emission(st.stage);
+  for(var j=0;j<GASES.length;j++){spawnAcc[j]+=E[j]*SPAWN*dt;while(spawnAcc[j]>=1){spawnAcc[j]-=1;spawnGas(j);}}
+  airAcc+=AIR_RATE*dt;while(airAcc>=1){airAcc-=1;spawnAir();}
+  for(var i=0;i<parts.length;i++){var p=parts[i];
+    if(p.s==='jar'){jitter(p,dt,1.2);var dx=p.x-JAR.x,dz=p.z-JAR.z,rr=Math.hypot(dx,dz);if(rr>JAR.r){p.x=JAR.x+dx/rr*JAR.r;p.z=JAR.z+dz/rr*JAR.r;p.vx*=-0.5;p.vz*=-0.5;}
+      if(p.y<JAR.y0){p.y=JAR.y0;p.vy=Math.abs(p.vy);}if(p.y>JAR.y1){p.y=JAR.y1;p.vy=-Math.abs(p.vy);}
+      var fx=p.x-FR.x,fy=p.y-FR.y,fz=p.z-FR.z,fd=Math.hypot(fx,fy,fz);if(fd<FR.r){p.x=FR.x+fx/fd*FR.r;p.y=FR.y+fy/fd*FR.r;p.z=FR.z+fz/fd*FR.r;}
+      if(sniff){if(Math.random()<K_OUT*dt)p.s='out';}else if(Math.random()<K_LEAK*dt)p.dead=true;}
+    else if(p.s==='out'){if(moveToward(p,OUTLET,dt,0.9)){p.s='path';p.path='D';p.t=0;}}
+    else if(p.s==='jarAir'){jitter(p,dt,1.5);p.life-=dt;if(p.life<=0)p.dead=true;}
+    else if(p.s==='ch'){jitter(p,dt,1.0);p.x=Math.max(CH.x0,Math.min(CH.x1,p.x));p.y=Math.max(CH.y0,Math.min(CH.y1,p.y));p.z=Math.max(CH.z0,Math.min(CH.z1,p.z));
+      if(p.air){if(Math.random()<1.2*dt)p.s='chOut';}else if(Math.random()<R_CH*dt)p.s='chOut';}
+    else if(p.s==='chOut'){if(moveToward(p,CH_EXIT,dt,0.8)){p.s='path';p.path='E';p.t=0;}}
+    else if(p.s==='path'){p.t+=dt*V_TUBE/curves.len[p.path];if(p.t>=1){nextPath(p);}else{var q=curves[p.path].getPointAt(p.t);p.x=q.x;p.y=q.y;p.z=q.z;}}
+  }
+  /* cap: drop oldest jar particles first */
+  parts=parts.filter(function(p){return !p.dead;});
+  var counts=[0,0,0,0];parts.forEach(function(p){if(!p.air)counts[p.g]++;});
+  for(var g=0;g<4;g++){var over=counts[g]-CAP;for(var m2=0;m2<parts.length&&over>0;m2++){var pp=parts[m2];if(!pp.air&&pp.g===g&&pp.s==='jar'){pp.dead=true;over--;}}}
+  var nAir=parts.filter(function(p){return p.air;}).length,oa=nAir-CAP_AIR;for(var m3=0;m3<parts.length&&oa>0;m3++){if(parts[m3].air){parts[m3].dead=true;oa--;}}
+  parts=parts.filter(function(p){return !p.dead;});
+}
+var M4=T?new T.Matrix4():null,Q4=T?new T.Quaternion():null,S4=T?new T.Vector3(1,1,1):null,P4=T?new T.Vector3():null,EU=T?new T.Euler():null;
+function renderParticles(now){var idx=[0,0,0,0],ia=0;
+  parts.forEach(function(p,k){P4.set(p.x,p.y,p.z);
+    if(p.air){if(ia<CAP_AIR){M4.makeTranslation(p.x,p.y,p.z);inst.air.setMatrixAt(ia++,M4);}return;}
+    if(idx[p.g]>=CAP)return;EU.set(now*0.0011+k,now*0.0007+k*0.3,0);Q4.setFromEuler(EU);M4.compose(P4,Q4,S4);inst[p.g].setMatrixAt(idx[p.g]++,M4);});
+  for(var g=0;g<4;g++){inst[g].count=idx[g];inst[g].instanceMatrix.needsUpdate=true;}inst.air.count=ia;inst.air.instanceMatrix.needsUpdate=true;}
+
+/* fruit appearance by stage */
+var FRUIT_COLS=[[0x7f,0x9a,0x3a],[0xc9,0xa7,0x3a],[0x9a,0x80,0x3c],[0x5a,0x48,0x2c]];
+function updateFruit(){if(!T)return;var s=st.stage,i=Math.min(2,Math.floor(s)),f=s-i,a=FRUIT_COLS[i],b=FRUIT_COLS[i+1];
+  var c=new T.Color((a[0]+(b[0]-a[0])*f)/255,(a[1]+(b[1]-a[1])*f)/255,(a[2]+(b[2]-a[2])*f)/255);fruit.mat.color.copy(c);fruit.spikeMat.color.copy(c).multiplyScalar(0.82);
+  fruit.spotMat.opacity=Math.max(0,Math.min(0.9,(s-1.4)*0.75));fruit.moldMat.opacity=Math.max(0,Math.min(0.85,(s-2.1)*0.9));}
+
+/* ---------- part info + labels ---------- */
+var INFO={
+ housing:{t:'กล่องเครื่อง',s:'แนวคิด · ต้นทางไม่ได้กำหนด',x:'ภาพตัดเปิดด้านหน้าและด้านบนให้เห็นภายใน ต้นทาง (โมเดล 3D) มีแค่ฐานวางชิ้นส่วน รูปทรงกล่องจึงเป็นแนวคิด',c:1},
+ jar:{t:'ห้องดม',s:'โหลแก้ว / หม้อสแตนเลส ฝาซีล',x:'ใส่ผลไม้ 1 ลูก ฝามีรูลมเข้าและออก รอบดมลมพากลิ่นจากผลไปห้องเซนเซอร์ ระหว่างรอบล้างแก๊สจะสะสมในห้องนี้'},
+ fruit:{t:'ผลไม้ตัวอย่าง',s:'ต้นทางออกแบบไว้ดมทุเรียน',x:'สีผิว จุดช้ำ และเชื้อราบนผลเปลี่ยนตามสถานะที่เลือก เป็นภาพประกอบ ไม่ได้จำลองจากข้อมูลจริง'},
+ chamber:{t:'ห้องเซนเซอร์',s:'TGS2602 · TGS2603 · BME688 #1',x:'กล่องเล็กแยกจากผล ปริมาตรน้อยจึงตอบสนองเร็ว เซนเซอร์วัดความต้านทานที่เปลี่ยนตามกลิ่น'},
+ tgs2602:{t:'Figaro TGS2602',s:'ADS1115 A0 · โหลด 3.9k + 6.8k · ฮีตเตอร์ 5V',x:'datasheet: ไวต่อกลิ่นและ VOC ความเข้มข้นต่ำ เช่น ammonia, H₂S, toluene และมีกราฟ ethanol ในจำลองให้น้ำหนักกลุ่มหมักสูงสุด (ค่าสมมติ)'},
+ tgs2603:{t:'Figaro TGS2603',s:'ADS1115 A1 · โหลด 3.9k + 6.8k · ฮีตเตอร์ 5V',x:'datasheet: ไวต่อกลิ่นกลุ่ม amine และกำมะถัน เช่น trimethylamine, methyl mercaptan และมีกราฟ ethanol ไฟล์งานวิจัยไม่พบหลักฐานว่า amine บ่งชี้ผลไม้เน่า จึงไม่ได้จำลองกลุ่มนี้'},
+ bme1:{t:'BME688 #1',s:'I²C 0x76 · SDO → GND · ในห้องเซนเซอร์',x:'เซนเซอร์แก๊ส MOX + อุณหภูมิ ความชื้น ความดัน ในจำลองใช้เฉพาะค่า gas resistance ที่ตอบสนอง VOC แบบกว้าง (ประมาณ)'},
+ bme2:{t:'BME688 #2',s:'I²C 0x77 · SDO → 3V3 · อากาศอ้างอิง',x:'ผังต่อสายระบุว่าใช้วัดอากาศอ้างอิง แต่ไม่ได้ระบุตำแหน่งในเครื่อง ตำแหน่งข้างไส้กรองในภาพนี้เป็นแนวคิด',c:1},
+ pump:{t:'ปั๊มลม',s:'ไดอะแฟรม 5V DC · GPIO4 PWM ผ่าน MOSFET AO3400',x:'ดูดอากาศผ่านห้องเซนเซอร์ด้วยอัตราคงที่แล้วปล่อยทิ้งออกนอกเครื่อง มีไดโอด 1N5819 คร่อมและ C 470µF ใกล้ปั๊ม ต้นทางใช้ปั๊ม ไม่มีพัดลม'},
+ valve:{t:'วาล์ว 3 ทาง',s:'โซลินอยด์ · GPIO5 ผ่าน MOSFET AO3400',x:'HIGH = รอบดม ส่งลมผ่านห้องดม · LOW = รอบล้าง ส่งอากาศสะอาดตรงเข้าห้องเซนเซอร์ สีขดลวดในภาพเปลี่ยนตามรอบ'},
+ filter:{t:'ไส้กรองคาร์บอน',s:'ถ่านกัมมันต์',x:'ทำอากาศสะอาดไว้เป็นเส้นฐาน ใช้ทั้งตอนวัดค่าอ้างอิงและตอนล้างกลิ่นค้าง จุดสีขาวในภาพคืออากาศสะอาด'},
+ esp:{t:'ESP32-S3 DevKitC-1',s:'I²C GPIO8 SDA / GPIO9 SCL · 3V3 เลี้ยงเซนเซอร์',x:'อ่านค่าเซนเซอร์ คุมปั๊มและวาล์ว รัน FlyHash เทียบคลังกลิ่น แล้วส่งผลขึ้น MQTT (NETPIE / Node-RED) และแจ้งเตือน LINE'},
+ ads:{t:'ADS1115',s:'ADC 16 บิต · I²C 0x48 · ADDR → GND',x:'อ่านแรงดันจากตัวแบ่งแรงดันของ TGS2602 (A0) และ TGS2603 (A1) ใช้ไฟ 3.3V'},
+ mosfet:{t:'MOSFET AO3400 ×2',s:'100Ω ที่ Gate + 10k ดึงลง GND',x:'ขับปั๊มและวาล์วจากขา GPIO4 / GPIO5'},
+ tube:{t:'ท่อลม',s:'สีส้ม = รอบดม · สีเขียว = รอบล้าง',x:'ไส้กรอง → วาล์ว → (ดม: ห้องดม →) ห้องเซนเซอร์ → ปั๊ม → ปล่อยทิ้ง'}};
+var LABELS=[['jar',[-1.1,2.0,-0.5]],['fruit',[-1.55,0.95,0.4]],['chamber',[0.6,0.95,0.3]],['tgs2602',[0.3,0.5,-0.3]],['tgs2603',[0.58,0.5,-0.3]],['bme1',[0.95,0.45,-0.3]],
+ ['pump',[1.6,0.85,0.3]],['valve',[-0.1,0.85,-0.75]],['filter',[1.0,0.66,-0.85]],['bme2',[0.55,0.4,-1.1]],['esp',[0.3,0.48,0.95]],['ads',[1.3,0.42,0.95]],['housing',[-2.0,2.5,-1.25]]];
+var NAMES={jar:'ห้องดม',fruit:'ผลไม้',chamber:'ห้องเซนเซอร์',tgs2602:'TGS2602',tgs2603:'TGS2603',bme1:'BME688 #1',pump:'ปั๊มลม',valve:'วาล์ว 3 ทาง',filter:'ไส้กรอง',bme2:'BME688 #2 (แนวคิด)',esp:'ESP32-S3',ads:'ADS1115',housing:'กล่อง (แนวคิด)'};
+var selKey=null,labelsOn=true;
+LABELS.forEach(function(L){var d=document.createElement('div');d.className='lbl'+(INFO[L[0]].c?' concept':'');d.textContent=NAMES[L[0]];d.addEventListener('click',function(){select(L[0]);});$('labels').appendChild(d);labelDefs.push({k:L[0],p:L[1],el:d});});
+function select(k){selKey=k;var I=INFO[k];$('info-title').innerHTML=I.t+(I.c?'<span class="tag">แนวคิด</span>':'');$('info-spec').textContent=I.s;$('info-text').textContent=I.x;
+  labelDefs.forEach(function(L){L.el.classList.toggle('on',L.k===k);});}
+function toggle(id,fn){var b=$(id);b.addEventListener('click',function(){var on=!b.classList.contains('on');b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);fn(on);});}
+toggle('t-shell',function(on){if(shellGroup)shellGroup.visible=on;});
+toggle('t-wires',function(on){if(wireGroup)wireGroup.visible=on;});
+toggle('t-labels',function(on){labelsOn=on;});
+$('t-reset').addEventListener('click',function(){if(!T)return;camera.position.set(DEF_CAM[0],DEF_CAM[1],DEF_CAM[2]);controls.target.set(DEF_TGT[0],DEF_TGT[1],DEF_TGT[2]);controls.update();});
+
+if(T){var ray=new T.Raycaster(),mv=new T.Vector2(),down=null;
+ canvas.addEventListener('pointerdown',function(e){down=[e.clientX,e.clientY];});
+ canvas.addEventListener('pointerup',function(e){if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;var r=canvas.getBoundingClientRect();
+  mv.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(mv,camera);var hit=ray.intersectObjects(pickables,false);
+  var order=['tgs2602','tgs2603','bme1','bme2','fruit','pump','valve','filter','ads','esp','mosfet','tube','chamber','jar'];
+  if(hit.length){var best=hit[0].object.userData.key;hit.slice(0,4).forEach(function(h){if(order.indexOf(h.object.userData.key)<order.indexOf(best))best=h.object.userData.key;});select(best);}});}
+
+function resize(){if(!T)return;var w=canvas.clientWidth,h=canvas.clientHeight;if(canvas.width!==Math.round(w*renderer.getPixelRatio())||canvas.height!==Math.round(h*renderer.getPixelRatio())){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}}
+var V3=T?new T.Vector3():null;
+function placeLabels(){var w=canvas.clientWidth,h=canvas.clientHeight;labelDefs.forEach(function(L){
+  var hide=!labelsOn||(L.k==='housing'&&!shellGroup.visible);if(hide){L.el.hidden=true;return;}
+  V3.set(L.p[0],L.p[1],L.p[2]).project(camera);if(V3.z>1){L.el.hidden=true;return;}L.el.hidden=false;L.el.style.left=((V3.x+1)/2*w)+'px';L.el.style.top=((1-V3.y)/2*h)+'px';});}
+
+var SNIFF_C=T?new T.Color(css('--sniff')):null,PURGE_C=T?new T.Color(css('--purge')):null,IDLE_C=T?new T.Color(0xdedcd2):null;
+function updateScene(now){var sniff=st.phase==='sniff',active=sniff?{A:1,B:1,D:1,E:1,F:1}:{A:1,C:1,E:1,F:1},mc=sniff?SNIFF_C:PURGE_C;
+  Object.keys(tubes).forEach(function(k){var on=!!active[k];tubes[k].color.copy(on?mc:IDLE_C);tubes[k].opacity=on?0.42:0.18;});
+  valveMat.emissive.copy(mc).multiplyScalar(0.45);pumpMat.emissive.copy(mc).multiplyScalar(0.35+0.25*Math.sin(now*0.02));}
+
+/* ---------------- main loop ---------------- */
+var last=performance.now(),chartTick=0,barTick=0;
+function loop(now){var rdt=Math.min(0.05,Math.max(0,(now-last)/1000));last=now;var sdt=rdt*st.speed;
+  var n=Math.ceil(sdt/0.05);for(var i=0;i<n;i++){stepModel(sdt/n);stepParticles(sdt/n);}
+  if(T){resize();controls.update();updateScene(now);renderParticles(now);renderer.render(scene,camera);placeLabels();}
+  barTick+=rdt;if(barTick>0.1){barTick=0;updateBars();}
+  chartTick+=rdt;if(chartTick>0.05){chartTick=0;charts.forEach(drawChart);}
+  requestAnimationFrame(loop);}
+setMode('auto');setStage(1);
+/* warm up so charts and particles are not empty on first view */
+for(var w=0;w<40/0.05;w++){stepModel(0.05);stepParticles(0.05);}
+select('chamber');
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
