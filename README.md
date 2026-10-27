@@ -4,8 +4,9 @@
 
 - `index.html` หน้ารวม
 - `simulation.html` จำลองตัวเครื่อง ภายในเครื่อง และแก๊สที่จะวัด (**ค่าทั้งหมดเป็นการจำลอง ไม่ใช่ข้อมูลวัดจริง**)
+- `ds-300-grader.html` DS-300 โรงคัด 3D ห้องดมตรวจทีละลูก + simulation แก๊ส (ค่าจำลอง)
 - `hamsterhub-project.html` โมเดล 3D (จาก repo hamsterhub-project)
 - `e-nose-wiring-diagram.html` ผังต่อสาย (จาก repo e-nose-wiring-diagram)
 - `flyhash-mockup.html` FlyHash Brain Lab (จาก repo flyhash-mockup)
 
-หน้าที่คัดลอกมาไม่ได้แก้เนื้อหา เพิ่มแค่ปุ่มกลับหน้ารวม ต้องต่ออินเทอร์เน็ตเพื่อโหลด Three.js และฟอนต์จาก CDN
+หน้าที่คัดลอกมาไม่ได้แก้เนื้อหา เพิ่มแค่แถบเมนูและบรรทัดลิขสิทธิ์ ต้องต่ออินเทอร์เน็ตเพื่อโหลด Three.js และฟอนต์จาก CDN
