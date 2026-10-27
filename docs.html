@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>เอกสารและสไลด์ · จมูกแมลงหวี่</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: shared nav, intro, one card per document (viewer + download buttons), footer */
+:root{color-scheme:dark;--bg:#14170f;--panel:#1d2117;--panel-2:#101309;--fg:#e7eadc;--muted:#a3a993;--line:#33392a;--accent:#b6cf6a;--accent-bg:#2b3419;
+  --display:"IBM Plex Sans Thai",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--display);font-size:15px;line-height:1.6}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 48px;display:flex;flex-direction:column;gap:18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent)}
+h1{font-size:clamp(24px,4vw,32px);font-weight:600;margin:0;line-height:1.25}
+h2{font-size:18px;font-weight:600;margin:0}
+p{margin:0}
+.sub{color:var(--muted);max-width:72ch}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.doc .hd{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px}
+.doc .meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.viewer{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.viewer iframe,.viewer object{display:block;width:100%;height:min(75vh,640px);border:0;background:#fff}
+.viewer video{display:block;width:100%;max-height:75vh;background:#000}
+.pending{padding:32px 16px;text-align:center;color:var(--muted);font-size:14px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--fg);background:var(--accent-bg);border:1px solid var(--accent);border-radius:10px;padding:8px 14px;font-size:14px}
+.btn:hover{background:#34401e}
+.btn small{font-family:var(--mono);color:var(--muted);font-size:11px}
+.note{font-size:12.5px;color:var(--muted)}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<style id="enh-nav-css">nav.enh-nav{all:initial;box-sizing:border-box;display:flex;align-items:center;gap:6px 16px;width:100%;padding:8px max(14px,env(safe-area-inset-left,0px));background:#14170f;border-bottom:1px solid #33392a;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7eadc;position:relative;z-index:1}nav.enh-nav *{box-sizing:border-box}nav.enh-nav .enh-brand{all:unset;cursor:pointer;font-weight:600;color:#b6cf6a;white-space:nowrap;flex:none}nav.enh-nav .enh-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}nav.enh-nav .enh-links::-webkit-scrollbar{display:none}nav.enh-nav .enh-links a{all:unset;cursor:pointer;white-space:nowrap;padding:6px 10px;border-radius:8px;color:#a3a993;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,sans-serif}nav.enh-nav .enh-links a:hover{color:#e7eadc;background:#1d2117}nav.enh-nav .enh-links a:focus-visible{outline:2px solid #b6cf6a;outline-offset:1px}nav.enh-nav .enh-links a[aria-current="page"]{color:#14170f;background:#b6cf6a}@media (max-width:560px){nav.enh-nav .enh-brand{display:none}}footer.enh-foot{all:initial;display:block;box-sizing:border-box;width:100%;padding:14px 16px 22px;text-align:center;font:12px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;color:#8d93ab}</style><nav class="enh-nav" aria-label="เมนู e-nose hub"><a class="enh-brand" href="./index.html">จมูกแมลงหวี่ · e-nose hub</a><div class="enh-links"><a href="./index.html">หน้ารวม</a><a href="./simulation.html">Simulation</a><a href="./hamsterhub-project.html">จมูกแมลงหวี่ 3D</a><a href="./e-nose-wiring-diagram.html">Wiring</a><a href="./flyhash-mockup.html">FlyHash</a><a href="./docs.html" aria-current="page">เอกสาร</a></div></nav>
+<div class="wrap">
+<header>
+  <div class="eyebrow">E-NOSE · ชุด A · DOCUMENTS</div>
+  <h1>เอกสารและสไลด์</h1>
+  <p class="sub">สไลด์นำเสนอ รายงานงานวิจัย และคลิปนำเสนอของโปรเจกต์จมูกแมลงหวี่ ดูในหน้านี้ได้เลย หรือกดดาวน์โหลดไฟล์ต้นฉบับ</p>
+</header>
+
+<section class="doc" id="slides">
+  <div class="hd"><h2>สไลด์นำเสนอ v6</h2><span class="meta">PDF · PPTX</span></div>
+  <div class="viewer"><p class="pending">กำลังเตรียมไฟล์ จะขึ้นที่นี่เมื่อพร้อม</p></div>
+</section>
+
+<section class="doc" id="report">
+  <div class="hd"><h2>รายงานสารที่ผลไม้ปล่อยเมื่อเน่า</h2><span class="meta">PDF · DOCX</span></div>
+  <div class="viewer"><p class="pending">กำลังเตรียมไฟล์ จะขึ้นที่นี่เมื่อพร้อม</p></div>
+</section>
+
+<section class="doc" id="video">
+  <div class="hd"><h2>คลิปนำเสนอ</h2><span class="meta">MP4</span></div>
+  <div class="viewer"><p class="pending">กำลังเตรียมไฟล์ จะขึ้นที่นี่เมื่อพร้อม</p></div>
+</section>
+
+<footer>© 2026 ณัฐพฤทธ์ เอกประเสริฐ — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต</footer>
+</div>
+</body>
+</html>

@@ -44,13 +44,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 </style>
 </head>
 <body>
-<nav class="top" aria-label="เมนูหลัก">
-  <a class="brand" href="./index.html">จมูกแมลงหวี่ · e-nose hub</a>
-  <a href="./simulation.html">Simulation</a>
-  <a href="./hamsterhub-project.html">โมเดล 3D</a>
-  <a href="./e-nose-wiring-diagram.html">ผังต่อสาย</a>
-  <a href="./flyhash-mockup.html">FlyHash Brain Lab</a>
-</nav>
+<style id="enh-nav-css">nav.enh-nav{all:initial;box-sizing:border-box;display:flex;align-items:center;gap:6px 16px;width:100%;padding:8px max(14px,env(safe-area-inset-left,0px));background:#14170f;border-bottom:1px solid #33392a;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7eadc;position:relative;z-index:1}nav.enh-nav *{box-sizing:border-box}nav.enh-nav .enh-brand{all:unset;cursor:pointer;font-weight:600;color:#b6cf6a;white-space:nowrap;flex:none}nav.enh-nav .enh-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}nav.enh-nav .enh-links::-webkit-scrollbar{display:none}nav.enh-nav .enh-links a{all:unset;cursor:pointer;white-space:nowrap;padding:6px 10px;border-radius:8px;color:#a3a993;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,sans-serif}nav.enh-nav .enh-links a:hover{color:#e7eadc;background:#1d2117}nav.enh-nav .enh-links a:focus-visible{outline:2px solid #b6cf6a;outline-offset:1px}nav.enh-nav .enh-links a[aria-current="page"]{color:#14170f;background:#b6cf6a}@media (max-width:560px){nav.enh-nav .enh-brand{display:none}}footer.enh-foot{all:initial;display:block;box-sizing:border-box;width:100%;padding:14px 16px 22px;text-align:center;font:12px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;color:#8d93ab}</style><nav class="enh-nav" aria-label="เมนู e-nose hub"><a class="enh-brand" href="./index.html">จมูกแมลงหวี่ · e-nose hub</a><div class="enh-links"><a href="./index.html" aria-current="page">หน้ารวม</a><a href="./simulation.html">Simulation</a><a href="./hamsterhub-project.html">จมูกแมลงหวี่ 3D</a><a href="./e-nose-wiring-diagram.html">Wiring</a><a href="./flyhash-mockup.html">FlyHash</a><a href="./docs.html">เอกสาร</a></div></nav>
 <div class="wrap">
 <header>
   <div class="eyebrow">E-NOSE · ชุด A · ESP32-S3 + FlyHash · INTERNET OF THAILAND</div>
@@ -90,6 +84,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <a class="card" href="./hamsterhub-project.html"><span class="k">hamsterhub-project</span><b>โมเดล 3D เครื่องดมทุเรียน</b><p>หมุนดูชิ้นส่วน สลับเส้นทางลมรอบดม / รอบล้าง แตะเพื่อดูหน้าที่ของแต่ละชิ้น</p></a>
   <a class="card" href="./e-nose-wiring-diagram.html"><span class="k">e-nose-wiring-diagram</span><b>ผังต่อสาย prototype</b><p>ESP32-S3 + ADS1115 + TGS2602 / TGS2603 + BME688 × 2 + ปั๊มและวาล์ว พร้อมตารางต่อขาและเช็กลิสต์ก่อนเสียบไฟ</p></a>
   <a class="card" href="./flyhash-mockup.html"><span class="k">flyhash-mockup</span><b>FlyHash Brain Lab</b><p>สมองแมลงหวี่ 3 มิติ คำนวณแฮชกลิ่นด้วยอัลกอริทึม FlyHash แบบเรียลไทม์ (โหลด Three.js จาก CDN)</p></a>
+  <a class="card" href="./docs.html"><span class="k">docs</span><b>เอกสารและสไลด์</b><p>สไลด์นำเสนอ v6 รายงานสารที่ผลไม้ปล่อยเมื่อเน่า และคลิปนำเสนอ ดูในเว็บหรือดาวน์โหลดได้</p></a>
 </div>
 
 <h2>เครื่องทำงานอย่างไร</h2>
@@ -98,7 +93,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 </div>
 <p class="small">ESP32-S3 อ่านค่าเซนเซอร์ผ่าน I²C และ ADS1115 รัน FlyHash เทียบคลังกลิ่น แล้วส่งผลผ่าน MQTT ขึ้นแดชบอร์ด (NETPIE / Node-RED) และแจ้งเตือนผ่าน LINE Messaging API</p>
 
-<footer>หน้าย่อย 3 หน้ามาจาก repo เดิม (flyhash-mockup, hamsterhub-project, e-nose-wiring-diagram) คัดลอกมาโดยไม่แก้เนื้อหา เพิ่มแค่ปุ่มกลับหน้ารวม · ข้อมูลแก๊สในหน้า Simulation อ้างอิงไฟล์งานวิจัยของทีม (2026-10-26)<br>© 2026 Nattakorn Choavalitwong — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต</footer>
+<footer>หน้าย่อย 3 หน้ามาจาก repo เดิม (flyhash-mockup, hamsterhub-project, e-nose-wiring-diagram) คัดลอกมาโดยไม่แก้เนื้อหา เพิ่มแค่แถบเมนูและบรรทัดลิขสิทธิ์ · ข้อมูลแก๊สในหน้า Simulation อ้างอิงไฟล์งานวิจัยของทีม (2026-10-26)<br>© 2026 ณัฐพฤทธ์ เอกประเสริฐ — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต</footer>
 </div>
 </body>
 </html>
