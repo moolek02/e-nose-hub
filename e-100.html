@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>E-100 เครื่องดมหน้าร้าน · e-nose</title>
+<meta name="description" content="E-100 แนวคิดเครื่องดมวางบนเคาน์เตอร์ ให้ลูกค้าดมเช็กทุเรียนพรีเมียมทีละลูกก่อนซื้อ ค่าทั้งหมดเป็นการจำลอง">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: shared nav, header, [3D stall viewer | customer display + sniff demo], DS-300 vs E-100 table, method, limits, footer */
+:root{color-scheme:dark;--bg:#14170f;--panel:#1d2117;--panel-2:#101309;--fg:#e7eadc;--muted:#a3a993;--line:#33392a;--accent:#b6cf6a;--accent-bg:#2b3419;
+  --unit:#f2b705;--raw:#62b04a;--ripe:#e8c53c;--over:#c96a3e;--unsure:#7fb2d9;
+  --display:"IBM Plex Sans Thai",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--display);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px max(16px,env(safe-area-inset-left,0px)) 40px;display:flex;flex-direction:column;gap:18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--unit)}
+h1{font-size:clamp(26px,4vw,36px);font-weight:600;margin:0;line-height:1.25}
+h2{font-size:19px;font-weight:600;margin:6px 0 0}
+p{margin:0}
+.sub{color:var(--muted);max-width:76ch}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.badge{display:inline-block;font-size:13px;font-weight:600;padding:3px 10px;border-radius:8px;background:#3a2c08;border:1px solid #e0b93a;color:#f3d77a}
+.badge.c{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:14px;align-items:start}
+.viewer{position:relative;height:600px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#1c2127;touch-action:none}
+.viewer canvas{display:block;width:100%!important;height:100%!important}
+.simnote{position:absolute;left:10px;top:10px;font-size:13px;font-weight:600;background:#3a2c08e6;border:1px solid #e0b93a;color:#f3d77a;border-radius:8px;padding:3px 10px;pointer-events:none}
+.hint{position:absolute;right:10px;top:10px;font-size:12px;color:#c9d1d8;background:#161b21cc;border-radius:8px;padding:3px 8px;pointer-events:none}
+.camrow{position:absolute;left:10px;right:10px;bottom:10px;display:flex;flex-wrap:wrap;gap:6px}
+.btn{font:600 14px var(--display);color:var(--fg);background:#232822;border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-height:44px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn[aria-pressed="true"]{border-color:var(--unit);color:var(--unit)}
+.btn.primary{background:var(--unit);border-color:var(--unit);color:#1a1a12}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.camrow .btn{background:#161b21e6}
+.chk{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 10px;border-radius:10px;background:#161b21e6;border:1px solid var(--line);font-size:14px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--unit)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.cust{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.cust .t{font-size:13px;color:var(--muted)}
+.lights{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.light{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px;text-align:center;color:var(--muted);line-height:1.3}
+.light i{width:30px;height:30px;border-radius:50%;background:#2a2e28;border:2px solid #3b4036;transition:background .3s,box-shadow .3s}
+.light.on{color:var(--fg);font-weight:600}
+.light.on i{background:var(--c);border-color:var(--c);box-shadow:0 0 16px var(--c)}
+.result{font-size:20px;font-weight:700;min-height:1.5em}
+.result small{display:block;font-size:13px;font-weight:500;color:var(--muted)}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:13px}
+.steps span{border-top:3px solid #3b4036;padding-top:4px;color:var(--muted)}
+.steps span.on{border-color:var(--unit);color:var(--unit);font-weight:600}
+.steps span.done{border-color:#6b6f63}
+.bar{height:6px;border-radius:3px;background:#2a2e28;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--unit)}
+.desc{font-size:14px;color:var(--muted);min-height:2.6em}
+canvas#chart{width:100%;height:150px;display:block;background:var(--panel-2);border-radius:10px;border:1px solid var(--line)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--muted)}
+.legend b{display:inline-block;width:12px;height:3px;vertical-align:middle;margin-right:4px}
+.fp{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;font-size:14px}
+.fp .track{height:10px;border-radius:5px;background:#2a2e28;position:relative;overflow:hidden}
+.fp .track i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);width:0;transition:width .4s}
+.fp code{font-family:var(--mono);font-size:13px;color:var(--fg)}
+.note{font-size:14px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--panel);font-weight:600}
+td:first-child{color:var(--muted);white-space:nowrap}
+.tbl{overflow-x:auto;border-radius:10px}
+ol,ul{margin:0;padding-left:22px}
+li{margin:3px 0}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+footer.own{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.err{padding:30px;color:var(--muted);text-align:center}
+@media (max-width:860px){
+  .stage{grid-template-columns:1fr}
+  .viewer{height:52vh;min-height:300px}
+  td:first-child{white-space:normal}
+}
+@media (max-width:420px){.lights{gap:2px}.light{font-size:12.5px}.camrow .btn{padding:8px 9px}}
+</style>
+</head>
+<body>
+<style id="enh-nav-css">nav.enh-nav{all:initial;box-sizing:border-box;display:flex;align-items:center;gap:6px 16px;width:100%;padding:8px max(14px,env(safe-area-inset-left,0px));background:#14170f;border-bottom:1px solid #33392a;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7eadc;position:relative;z-index:1}nav.enh-nav *{box-sizing:border-box}nav.enh-nav .enh-brand{all:unset;cursor:pointer;font-weight:600;color:#b6cf6a;white-space:nowrap;flex:none}nav.enh-nav .enh-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}nav.enh-nav .enh-links::-webkit-scrollbar{display:none}nav.enh-nav .enh-links a{all:unset;cursor:pointer;white-space:nowrap;padding:6px 10px;border-radius:8px;color:#a3a993;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,sans-serif}nav.enh-nav .enh-links a:hover{color:#e7eadc;background:#1d2117}nav.enh-nav .enh-links a:focus-visible{outline:2px solid #b6cf6a;outline-offset:1px}nav.enh-nav .enh-links a[aria-current="page"]{color:#14170f;background:#b6cf6a}@media (max-width:560px){nav.enh-nav .enh-brand{display:none}}footer.enh-foot{all:initial;display:block;box-sizing:border-box;width:100%;padding:14px 16px 22px;text-align:center;font:12px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;color:#8d93ab}footer.enh-foot a{color:#b6cf6a;text-decoration:none}footer.enh-foot a:hover{text-decoration:underline}</style><nav class="enh-nav" aria-label="เมนู e-nose hub"><a class="enh-brand" href="./index.html">e-nose hub</a><div class="enh-links"><a href="./index.html">หน้ารวม</a><a href="./simulation.html">Simulation</a><a href="./hamsterhub-project.html">โมเดล 3D</a><a href="./e-nose-wiring-diagram.html">Wiring</a><a href="./ds-300-grader.html">DS-300 เครื่องคัด</a><a href="./e-100.html" aria-current="page">E-100 หน้าร้าน</a><a href="./docs.html">เอกสาร</a></div></nav><script>(function(){var l=document.querySelector("nav.enh-nav .enh-links"),a=l&&l.querySelector("[aria-current]");if(a)l.scrollLeft=a.offsetLeft-l.offsetLeft-(l.clientWidth-a.offsetWidth)/2;})();</script>
+<div class="wrap">
+<header>
+  <div class="eyebrow">E-NOSE · E-100 · POINT-OF-SALE CONCEPT</div>
+  <h1>E-100 เครื่องดมหน้าร้าน</h1>
+  <p class="sub">เครื่องเล็กวางบนเคาน์เตอร์หรือแผงขาย ให้ลูกค้าเลือกทุเรียนพรีเมียมแล้วดมเช็กทีละลูกก่อนซื้อ ไฟเกรดและผลหันไปทางลูกค้า เพื่อให้ผู้ซื้อมั่นใจขึ้น ใช้ชุดเซนเซอร์เดียวกับ DS-300</p>
+  <div class="badges"><span class="badge">แนวคิด ยังไม่ได้สร้างจริง</span><span class="badge">ค่าทั้งหมดเป็นการจำลอง ไม่ใช่ข้อมูลวัดจริง</span><span class="badge c">ไม่ระบุน้ำหนัก แบตเตอรี่ หรือราคา</span></div>
+</header>
+
+<section class="stage">
+  <div class="viewer" id="scene" aria-label="ภาพ 3 มิติของ E-100 บนแผงขายทุเรียน">
+    <div class="simnote">⚠ จำลอง · แนวคิด</div>
+    <div class="hint">ลากเพื่อหมุน · บีบ/เลื่อนเพื่อซูม</div>
+    <div class="camrow">
+      <button class="btn" data-cam="all" aria-pressed="true">ภาพรวม</button>
+      <button class="btn" data-cam="cust" aria-pressed="false">ฝั่งลูกค้า</button>
+      <button class="btn" data-cam="dome" aria-pressed="false">ห้องดม</button>
+      <label class="chk"><input type="checkbox" id="cut"> ดูภายในฐาน</label>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="cust" aria-live="polite">
+      <div class="t">จอและไฟที่หันไปทางลูกค้า</div>
+      <div class="lights" id="lights"></div>
+      <div class="result" id="result">วางทุเรียนแล้วกด "ดมลูกนี้"</div>
+    </div>
+    <div class="ctrls">
+      <button class="btn" id="place">วางลูกใหม่</button>
+      <button class="btn primary" id="sniff">ดมลูกนี้</button>
+      <label class="chk"><input type="checkbox" id="auto" checked> เล่นอัตโนมัติ</label>
+    </div>
+    <div class="steps" id="steps"><span>1. วัดเส้นฐาน</span><span>2. ดม</span><span>3. ล้าง</span></div>
+    <div class="bar"><i id="fill"></i></div>
+    <p class="desc" id="desc">ลูกค้าเลือกลูก คนขายวางในห้องดมแล้วปิดฝา</p>
+    <canvas id="chart" width="600" height="190" aria-label="กราฟ Rs/R0 ของเซนเซอร์ 3 ตัว (จำลอง)"></canvas>
+    <div class="legend"><span><b style="background:#f2b705"></b>TGS2602</span><span><b style="background:#e8833a"></b>TGS2603</span><span><b style="background:#7fb2d9"></b>BME688</span><span>แถบสี = ช่วงดม · ต่ำลง = สัญญาณ VOC รวมแรงขึ้น</span></div>
+    <div>
+      <div class="note" style="margin-bottom:6px"><b style="color:var(--fg)">ลายนิ้วมือกลิ่นของลูกนี้</b> (ค่าที่ลดลงของ Rs/R0 ตอนจบขั้นดม · หน่วยสมมติ)</div>
+      <div class="fp" id="fp"></div>
+    </div>
+    <p class="note" id="why">เครื่องจะเทียบลายนิ้วมือกลิ่นกับค่าอ้างอิงจากการสอบเทียบ (ในหน้านี้เป็นค่าอ้างอิงจำลอง)</p>
+  </div>
+</section>
+
+<section class="box">
+  <h2>E-100 ต่างจาก DS-300 อย่างไร</h2>
+  <div class="tbl"><table>
+    <tr><th>หัวข้อ</th><th>DS-300 เครื่องคัดแบบพกพา</th><th>E-100 เครื่องดมหน้าร้าน</th></tr>
+    <tr><td>ใช้ที่ไหน</td><td>สายคัดบรรจุ ล้ง โรงคัด</td><td>หน้าร้าน แผงตลาด เคาน์เตอร์ขายทุเรียนพรีเมียม</td></tr>
+    <tr><td>ใครใช้</td><td>พนักงานคัด</td><td>คนขายกับลูกค้า ลูกค้าเห็นผลเอง</td></tr>
+    <tr><td>การทำงาน</td><td>ทุเรียนต่อคิว ตรวจทีละลูกต่อเนื่อง</td><td>ดมเฉพาะลูกที่ลูกค้าเลือก ทีละลูก</td></tr>
+    <tr><td>ผลลัพธ์</td><td>คัดลงลัง 4 ช่อง และบันทึกผล</td><td>ไฟเกรด 4 สีกับข้อความบนจอที่หันหาลูกค้า</td></tr>
+    <tr><td>เป้าหมาย</td><td>คัดลูกก่อนบรรจุส่ง</td><td>สร้างความมั่นใจให้ผู้ซื้อก่อนจ่ายเงิน</td></tr>
+    <tr><td>รูปร่าง (แนวคิด)</td><td>ตู้ขนาดกระเป๋าเดินทาง มีล้อลากและหูหิ้ว</td><td>เครื่องเล็กพอวางบนเคาน์เตอร์ มีโดมใสใส่ทุเรียน 1 ลูก</td></tr>
+    <tr><td>ชุดเซนเซอร์</td><td colspan="2">เหมือนกัน: ESP32-S3 + ADS1115 + TGS2602 / TGS2603 + BME688 + ปั๊มลม + วาล์ว 3 ทาง ตามผังต่อสาย</td></tr>
+  </table></div>
+  <p class="note">ทั้งสองเครื่องเป็นแนวคิด ยังไม่ได้สร้างจริง ไม่ระบุขนาดจริง น้ำหนัก แบตเตอรี่ หรือราคา · ดู <a href="./ds-300-grader.html">DS-300</a></p>
+</section>
+
+<section class="box">
+  <h2>ตัดสินผลอย่างไร (แผน)</h2>
+  <ol>
+    <li>วัดเส้นฐาน: ปั๊มดูดอากาศสะอาดผ่านไส้กรองเข้าห้องเซนเซอร์จนค่านิ่ง</li>
+    <li>ดม: วาล์วสลับให้อากาศจากโดมที่มีทุเรียนผ่านเซนเซอร์ ESP32-S3 อ่านค่าแล้วคิดเป็น Rs/R0 ของเซนเซอร์แต่ละตัว</li>
+    <li>รวมค่าที่ลดลงของเซนเซอร์ทั้ง 3 ตัวเป็น "ลายนิ้วมือกลิ่น"</li>
+    <li>เทียบลายนิ้วมือกลิ่นกับค่าอ้างอิงของแต่ละเกรดที่ได้จากการสอบเทียบ ถ้าใกล้เกรดใดชัดเจนจึงแสดงเกรดนั้น ถ้าก้ำกึ่งหรือห่างจากทุกเกรดให้แสดง "ไม่แน่ใจ" และให้คนขายตรวจเอง</li>
+    <li>ล้าง: ส่งอากาศสะอาดจนค่ากลับเส้นฐาน แล้วจึงดมลูกถัดไป</li>
+  </ol>
+  <p class="note">ทีมยังไม่มีข้อมูลวัดจริง ค่าอ้างอิงและเกณฑ์ในหน้านี้จึงเป็นค่าจำลองทั้งหมด เกณฑ์จริงต้องได้จากการเก็บข้อมูลทุเรียนจริงก่อน</p>
+</section>
+
+<section class="box">
+  <h2>ข้อจำกัด</h2>
+  <ul>
+    <li>เป็นแนวคิด ยังไม่ได้สร้างจริง และยังไม่ได้ทดสอบกับทุเรียนจริง จึงไม่อ้างความแม่นยำ</li>
+    <li>เซนเซอร์ MOS ตอบสนองต่อ VOC รวม เครื่องดู "รูปแบบสัญญาณ" ของ 3 ตัวร่วมกัน ไม่ได้วัดสารรายตัว และไม่แสดงค่าเป็น ppm</li>
+    <li>เกรด "อ่อน" เป็นการจำลองแนวคิด การแยกทุเรียนอ่อนจากกลิ่นยังไม่มีหลักฐานยืนยัน</li>
+    <li>"สภาพที่กำหนด" ในเดโมคือค่าที่แบบจำลองสุ่มให้ลูกนั้น ใช้ดูว่าเครื่องตัดสินตรงหรือพลาด</li>
+  </ul>
+</section>
+
+<footer class="own">ภาพ 3 มิติและตัวเลขทั้งหมดในหน้านี้เป็นการจำลองเพื่ออธิบายแนวคิด<br>© 2026 ณัฐพฤทธ์ เอกประเสริฐ — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต<br><a href="./ds-300-grader.html">DS-300 เครื่องคัดแบบพกพา</a> · <a href="./e-100.html">E-100 เครื่องดมหน้าร้าน</a></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+// ---------- gas model (same as DS-300 / Simulation) ----------
+const SENSORS=[
+  {name:'TGS2602',w:[0.30,0.20,0.15,0.10,0.02,0.05],tau:2.5,col:'#f2b705'},
+  {name:'TGS2603',w:[0.25,0.15,0.10,0.08,0.02,0.04],tau:3.0,col:'#e8833a'},
+  {name:'BME688', w:[0.20,0.15,0.15,0.15,0.03,0.08],tau:4.0,col:'#7fb2d9'}];
+const GROUP=[0,0,0,1,2,3], GCOL=[0xc98500,0xd65a8a,0x3987e5,0x199e70];
+const STATES=[
+  {key:'raw',  name:'อ่อน',     emit:[.02,.02,.01,0,.08,.08], body:0x5f7d2f,spike:0x4b6625,w:.2},
+  {key:'ripe', name:'สุก',      emit:[.08,.05,.06,0,.50,.60], body:0x7a8a34,spike:0x66722a,w:.4},
+  {key:'over', name:'สุกเกิน',  emit:[.30,.20,.25,.03,.55,.55],body:0x7c6a30,spike:0x655527,w:.25},
+  {key:'spoil',name:'เริ่มเสีย', emit:[.90,.55,.70,.45,.45,.30],body:0x5a4a2a,spike:0x46391f,w:.15}];
+const LANES=[
+  {key:'raw',   name:'อ่อน',            sub:'แนวคิด*',     css:'var(--raw)',   hex:0x62b04a},
+  {key:'ripe',  name:'สุก',             sub:'พร้อมกิน',    css:'var(--ripe)',  hex:0xe8c53c},
+  {key:'over',  name:'สุกเกิน/เริ่มเสีย', sub:'ไม่แนะนำ',   css:'var(--over)',  hex:0xc96a3e},
+  {key:'unsure',name:'ไม่แน่ใจ',         sub:'ให้คนขายตรวจ', css:'var(--unsure)',hex:0x7fb2d9}];
+const laneOf=s=>s.key==='spoil'?2:STATES.indexOf(s);
+const K=8;                 // chamber build-up factor (model units)
+const STAGES=[{k:'base',name:'วัดเส้นฐาน',dur:6,desc:'ปั๊มดูดอากาศสะอาดผ่านไส้กรองเข้าห้องเซนเซอร์จนค่านิ่ง'},
+              {k:'sniff',name:'ดม',dur:14,desc:'วาล์วสลับ อากาศจากโดมผ่านเซนเซอร์ ค่า Rs/R0 ลดลงตามสัญญาณ VOC รวม'},
+              {k:'purge',name:'ล้าง',dur:10,desc:'อากาศสะอาดล้างห้องเซนเซอร์จนค่ากลับเส้นฐาน'}];
+const TOTAL=STAGES.reduce((a,s)=>a+s.dur,0), RATE=3; // model seconds per real second
+const rsr0=x=>Math.pow(1+x,-0.6);
+// reference fingerprints = steady-state drop for the mean emission of each state (simulated calibration)
+const REF=STATES.map(s=>({s,lane:laneOf(s),D:SENSORS.map(n=>1-rsr0(n.w.reduce((a,w,i)=>a+w*K*s.emit[i],0)))}));
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function classify(D){
+  const r=REF.map(f=>({f,d:Math.hypot(...D.map((v,j)=>(v-f.D[j])/(f.D[j]+.05)))})).sort((a,b)=>a.d-b.d);
+  const best=r[0], alt=r.find(x=>x.f.lane!==best.f.lane);
+  const margin=(alt.d-best.d)/alt.d;
+  const unsure=margin<.25||best.d>1.2;
+  return {lane:unsure?3:best.f.lane,best,alt,margin,unsure};
+}
+
+// ---------- UI: customer lights ----------
+$('lights').innerHTML=LANES.map((l,i)=>`<div class="light" id="L${i}" style="--c:${l.css}"><i></i>${l.name}<br><span style="font-size:12px">${l.sub}</span></div>`).join('');
+$('fp').innerHTML=SENSORS.map((s,j)=>`<span>${s.name}</span><span class="track"><i id="fpb${j}" style="background:${s.col}"></i></span><code id="fpv${j}">—</code>`).join('');
+function setLights(k){LANES.forEach((l,i)=>$('L'+i).classList.toggle('on',i===k));}
+
+// ---------- 3D ----------
+const host=$('scene');
+let renderer;
+try{renderer=new THREE.WebGLRenderer({antialias:true});}catch(e){host.insertAdjacentHTML('beforeend','<div class="err">อุปกรณ์นี้ไม่รองรับ WebGL จึงแสดงภาพ 3 มิติไม่ได้ แต่เดโมการดมด้านข้างยังใช้ได้</div>');}
+const SMALL=Math.min(innerWidth,innerHeight)<600;
+let scene,camera,controls,lightMeshes=[],screenTex,screenDraw,dome,durian=null,parts,shell,points,pPos,pCol,pData=[];
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+const TOP=.9, UX=.35, BASE_H=.34, DOME_R=.36, DOME_H=.62;
+const DY=TOP+BASE_H+.06; // dome floor
+if(renderer){
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,SMALL?1.5:2));
+  renderer.shadowMap.enabled=!SMALL;
+  host.insertBefore(renderer.domElement,host.firstChild);
+  scene=new THREE.Scene(); scene.background=new THREE.Color(0x1c2127); scene.fog=new THREE.Fog(0x1c2127,14,40);
+  camera=new THREE.PerspectiveCamera(42,1,.05,100);
+  controls=new THREE.OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true; controls.dampingFactor=.08; controls.maxPolarAngle=Math.PI*.49; controls.minDistance=.8; controls.maxDistance=12;
+  scene.add(new THREE.HemisphereLight(0xe2ebf3,0x2c3137,.8));
+  const sun=new THREE.DirectionalLight(0xfff4e6,.8); sun.position.set(4,9,6); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024);
+  Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:1,far:25}); scene.add(sun);
+  const M=(c,r=.6,m=.1,x={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},x));
+  const box=(w,h,d,mat,x,y,z,p=scene)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;p.add(m);return m;};
+  const cyl=(r,h,mat,x,y,z,p=scene,seg=24)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,seg),mat);m.position.set(x,y,z);m.castShadow=true;p.add(m);return m;};
+  const canvasTex=(w,h,draw)=>{const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.anisotropy=4;t.userData={c,draw};return t;};
+  // floor
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(40,40),M(0x565d65,.95,0)); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+  const grid=new THREE.GridHelper(40,40,0x6d757e,0x6d757e); grid.material.transparent=true; grid.material.opacity=.15; grid.position.y=.003; scene.add(grid);
+  // market stall: counter table + awning
+  const wood=M(0x8a5a32,.8,0), woodD=M(0x5e3c22,.85,0);
+  box(3.4,.08,1.3,wood,0,TOP-.04,0);
+  box(3.4,.5,.04,woodD,0,TOP-.33,.63);
+  [[-1.62,-.58],[1.62,-.58],[-1.62,.58],[1.62,.58]].forEach(([x,z])=>box(.07,TOP-.08,.07,woodD,x,(TOP-.08)/2,z));
+  const pole=M(0x9aa1a8,.5,.6);
+  [-1.66,1.66].forEach(x=>{cyl(.03,2.5,pole,x,1.25,-.62);cyl(.03,2.3,pole,x,1.15,.9);});
+  const awn=new THREE.Group(); awn.position.set(0,2.36,.14); awn.rotation.x=.24; scene.add(awn);
+  for(let i=0;i<8;i++)box(3.5/8,.04,1.7,M(i%2?0xeae4d2:0xc9472f,.8,0),-3.5/2+3.5/16+i*3.5/8,0,0,awn);
+  // sign board on the awning front
+  const sign=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.3),new THREE.MeshBasicMaterial({map:canvasTex(640,120,(g,w,h)=>{g.fillStyle='#1d2125';g.fillRect(0,0,w,h);
+    g.fillStyle='#f2b705';g.font='700 56px "IBM Plex Sans Thai", sans-serif';g.textAlign='center';g.fillText('ทุเรียนพรีเมียม',w/2,80);})}));
+  sign.position.set(0,2.12,1.02); scene.add(sign);
+  // durian geometry (shared with DS-300 look)
+  const bodyGeo=new THREE.SphereGeometry(.3,22,16), spikeGeo=new THREE.ConeGeometry(.055,.15,5); spikeGeo.translate(0,.075,0);
+  const SP=64, up=V3(0,1,0), q=new THREE.Quaternion(), one=V3(1,1,1), mats=[];
+  for(let i=0;i<SP;i++){const y=1-(i+.5)/SP*2,r=Math.sqrt(1-y*y),th=i*2.39996,n=V3(Math.cos(th)*r,y,Math.sin(th)*r);q.setFromUnitVectors(up,n);mats.push(new THREE.Matrix4().compose(n.clone().multiplyScalar(.28),q.clone(),one));}
+  STATES.forEach(s=>{s.bm=M(s.body,.85,0);s.sm=M(s.spike,.8,0);});
+  window.__mkDurian=(st,scale)=>{const g=new THREE.Group(),inner=new THREE.Group();g.add(inner);inner.scale.set(1,.94,1.15);
+    const b=new THREE.Mesh(bodyGeo,st.bm);b.castShadow=true;inner.add(b);
+    const sp=new THREE.InstancedMesh(spikeGeo,st.sm,SP);mats.forEach((m,i)=>sp.setMatrixAt(i,m));sp.castShadow=true;inner.add(sp);
+    g.scale.setScalar(scale);g.rotation.y=Math.random()*6.28;scene.add(g);return g;};
+  // display basket of durians on the left of the counter
+  box(1.0,.16,.7,M(0x6b4a2a,.9,0),-1.1,TOP+.08,-.05);
+  [[-1.35,-.2],[-1.0,-.25],[-.8,.12],[-1.25,.15]].forEach(([x,z],i)=>{const d=__mkDurian(STATES[1+(i%2)],.62);d.position.set(x,TOP+.34,z);});
+  // ---- E-100 unit ----
+  const unit=new THREE.Group(); unit.position.set(UX,TOP,0); scene.add(unit);
+  const yellow=M(0xf2b705,.45,.15), dark=M(0x23272c,.6,.2);
+  shell=[];
+  const sh=(w,h,d,x,y,z)=>{const m=box(w,h,d,yellow.clone(),x,y,z,unit);shell.push(m);return m;};
+  sh(.86,.04,.74,0,.02,0);                  // floor plate
+  sh(.86,BASE_H-.04,.04,0,BASE_H/2,-.35);   // back wall
+  sh(.04,BASE_H-.04,.74,-.41,BASE_H/2,0);   // left wall
+  sh(.04,BASE_H-.04,.74,.41,BASE_H/2,0);    // right wall
+  sh(.86,.04,.74,0,BASE_H,0);               // top deck
+  const front=box(.86,BASE_H-.04,.04,dark.clone(),0,BASE_H/2,.35,unit); shell.push(front); // customer-facing panel
+  // customer screen + 4 grade lights on the front panel
+  screenDraw=(lines)=>(g,w,h)=>{g.fillStyle='#0d1013';g.fillRect(0,0,w,h);g.fillStyle='#e9edf0';g.textAlign='center';
+    g.font='700 54px "IBM Plex Sans Thai", sans-serif';g.fillText(lines[0],w/2,78);g.fillStyle='#9aa6b1';g.font='500 34px "IBM Plex Sans Thai", sans-serif';g.fillText(lines[1],w/2,130);};
+  screenTex=canvasTex(512,160,screenDraw(['E-100','พร้อมดม']));
+  const scr=new THREE.Mesh(new THREE.PlaneGeometry(.5,.156),new THREE.MeshBasicMaterial({map:screenTex}));scr.position.set(0,.235,.373);unit.add(scr);
+  LANES.forEach((l,i)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.032,16,12),M(0x2a2e28,.4,0,{emissive:new THREE.Color(l.hex),emissiveIntensity:0}));
+    m.position.set(-.21+i*.14,.09,.38);unit.add(m);lightMeshes.push(m);});
+  // dome plate + clear dome + lid
+  cyl(DOME_R+.03,.03,dark,0,BASE_H+.035,0,unit,40);
+  const glass=new THREE.MeshPhysicalMaterial({color:0xcfe8f2,transparent:true,opacity:.18,roughness:.05,metalness:0,side:THREE.DoubleSide,depthWrite:false});
+  dome=new THREE.Group(); dome.position.set(0,BASE_H+.05,0); unit.add(dome);
+  const wall=new THREE.Mesh(new THREE.CylinderGeometry(DOME_R,DOME_R,DOME_H,40,1,true),glass); wall.position.y=DOME_H/2; dome.add(wall);
+  const cap=new THREE.Mesh(new THREE.SphereGeometry(DOME_R,40,12,0,Math.PI*2,0,Math.PI/2),glass); cap.position.y=DOME_H; dome.add(cap);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(DOME_R,.012,8,48),M(0xf2b705,.4,.2)); ring.rotation.x=Math.PI/2; dome.add(ring);
+  const ring2=ring.clone(); ring2.position.y=DOME_H; dome.add(ring2);
+  const knob=cyl(.04,.05,dark,0,DOME_H+DOME_R+.02,0,dome,16);
+  // sampling tube from dome top back into the base
+  const tubePath=new THREE.CatmullRomCurve3([V3(0,BASE_H+.05+DOME_H+.05,-.1),V3(0,BASE_H+.05+DOME_H+.2,-.3),V3(0,BASE_H+.2,-.42),V3(0,BASE_H-.05,-.3)]);
+  const tube=new THREE.Mesh(new THREE.TubeGeometry(tubePath,40,.016,8,false),M(0xdde3e8,.3,0,{transparent:true,opacity:.85})); unit.add(tube);
+  // internals (visible in cutaway)
+  parts=new THREE.Group(); unit.add(parts);
+  box(.24,.12,.16,M(0x9fd0e0,.2,0,{transparent:true,opacity:.5}),-.18,.12,-.15,parts);           // sensor chamber
+  [-.24,-.18,-.12].forEach((x,i)=>cyl(.022,.05,M(i<2?0xc9c8bf:0x534ab7,.4,.4),x,.2,-.15,parts,12));
+  cyl(.05,.12,M(0x3d3d3a,.5,.3),.18,.1,-.15,parts);                                              // pump
+  cyl(.035,.14,M(0x2e2e2c,.8,0),.02,.1,-.2,parts).rotation.z=Math.PI/2;                           // carbon filter
+  box(.06,.06,.06,M(0x8f9aa3,.4,.5),.04,.1,-.05,parts);                                          // 3-way valve
+  box(.2,.015,.12,M(0x1f7a4d,.6,0),-.05,.06,.12,parts);                                          // ESP32-S3 board
+  box(.07,.012,.05,M(0x2c4a8a,.6,0),.15,.06,.12,parts);                                          // ADS1115
+  parts.visible=false;
+  // labels
+  const labelTex=(a,b,acc)=>canvasTex(512,200,(g,w,h)=>{g.fillStyle='rgba(22,27,33,.9)';g.fillRect(0,0,w,h);g.fillStyle=acc;g.fillRect(0,0,12,h);
+    g.fillStyle='#e9edf0';g.font='700 44px "IBM Plex Sans Thai", sans-serif';g.fillText(a,34,84);g.fillStyle='#9aa6b1';g.font='500 28px "IBM Plex Sans Thai", sans-serif';g.fillText(b,34,146);});
+  const sprite=(a,b,x,y,z,s=.42,acc='#f2b705')=>{const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTex(a,b,acc),depthTest:false}));sp.scale.set(2.3*s,.9*s,1);sp.position.set(x,y,z);sp.renderOrder=5;scene.add(sp);return sp;};
+  window.__labels=()=>{
+    sprite('E-100 · ห้องดมโดมใส','ใส่ทุเรียนได้ครั้งละ 1 ลูก',UX-1.0,DY+.5,.55);
+    sprite('จอ + ไฟเกรด 4 สี','หันไปทางลูกค้า',UX+.95,TOP+.12,.75);
+    sprite('ในฐาน: เซนเซอร์ · ปั๊ม · วาล์ว','ESP32-S3 + ADS1115 ตามผังต่อสาย',UX+1.1,TOP+.62,-.2);
+    sprite('ขนาดโดยประมาณ (แนวคิด)','พอวางบนเคาน์เตอร์ ยังไม่ได้สร้างจริง',UX+1.0,DY+.72,-.45,.42,'#e0b93a');
+  };
+  // gas particles inside the dome
+  const PN=SMALL?40:90; const pg=new THREE.BufferGeometry(); pPos=new Float32Array(PN*3); pCol=new Float32Array(PN*3);
+  pg.setAttribute('position',new THREE.BufferAttribute(pPos,3)); pg.setAttribute('color',new THREE.BufferAttribute(pCol,3));
+  points=new THREE.Points(pg,new THREE.PointsMaterial({size:.035,vertexColors:true,transparent:true,opacity:.9,depthWrite:false}));
+  points.position.set(UX,0,0); scene.add(points);
+  for(let i=0;i<PN;i++){pData.push({life:0});pPos[i*3+1]=-10;}
+}
+
+// ---------- camera presets ----------
+const CAMS={all:[[2.1,2.05,3.5],[.3,1.2,0]],cust:[[UX,1.55,2.05],[UX,1.25,0]],dome:[[UX+1.15,1.95,1.05],[UX,1.45,0]]};
+if(SMALL)CAMS.all=[[2.6,2.4,4.3],[.3,1.2,0]];
+let camGoal=null;
+if(camera){camera.position.set(...CAMS.all[0]);controls.target.set(...CAMS.all[1]);}
+document.querySelectorAll('[data-cam]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-cam]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+  const [p,t]=CAMS[b.dataset.cam];camGoal={p:V3(...p),t:V3(...t)};}));
+$('cut').addEventListener('change',e=>{if(!shell)return;const on=e.target.checked;parts.visible=on;
+  shell.forEach(m=>{m.material.transparent=on;m.material.opacity=on?.18:1;m.material.depthWrite=!on;});});
+
+// ---------- demo state ----------
+let fruit=null, phase='empty', t=0, hist=[], domeLift=0, waitT=0, serial=0;
+const C=[0,0,0,0,0,0], X=[0,0,0];
+function pickState(){let r=Math.random();for(const s of STATES){if((r-=s.w)<0)return s;}return STATES[1];}
+function placeFruit(){
+  if(durian&&scene)scene.remove(durian);
+  const st=pickState(), mAll=Math.exp(gauss()*.3);
+  fruit={st,E:st.emit.map(v=>v*mAll*Math.exp(gauss()*.18)),id:++serial};
+  if(scene){durian=__mkDurian(st,.62);durian.position.set(UX,DY+1.2,0);}
+  phase='placing'; t=0; hist=[]; C.fill(0); X.fill(0); domeLift=1;
+  setLights(-1); $('result').innerHTML='ลูก #'+String(fruit.id).padStart(3,'0')+' อยู่ในห้องดม<small>กด "ดมลูกนี้" เพื่อเริ่ม</small>';
+  $('desc').textContent='คนขายเปิดฝาโดม วางทุเรียนที่ลูกค้าเลือก แล้วปิดฝา';
+  resetFP(); drawScreen(['ลูก #'+String(fruit.id).padStart(3,'0'),'พร้อมดม']); syncButtons();
+}
+function startSniff(){if(phase!=='ready')return;phase='run';t=0;hist=[];setLights(-1);
+  $('result').innerHTML='กำลังดม…<small>ผลจะขึ้นเมื่อจบขั้นดม</small>';drawScreen(['กำลังดม…','โปรดรอสักครู่']);syncButtons();}
+function syncButtons(){$('place').disabled=phase==='run'||phase==='placing';$('sniff').disabled=phase!=='ready';}
+function drawScreen(lines){if(!screenTex)return;screenDraw(lines)(screenTex.userData.c.getContext('2d'),512,160);screenTex.needsUpdate=true;}
+function resetFP(){SENSORS.forEach((s,j)=>{$('fpb'+j).style.width='0';$('fpv'+j).textContent='—';});
+  $('why').textContent='เครื่องจะเทียบลายนิ้วมือกลิ่นกับค่าอ้างอิงจากการสอบเทียบ (ในหน้านี้เป็นค่าอ้างอิงจำลอง)';}
+function stageAt(tt){let a=0;for(let i=0;i<STAGES.length;i++){if(tt<a+STAGES[i].dur)return {i,s:STAGES[i],p:(tt-a)/STAGES[i].dur};a+=STAGES[i].dur;}return {i:3,s:null,p:1};}
+let decided=null;
+function decide(){
+  const D=X.map(x=>1-rsr0(x));
+  const r=classify(D); decided=r;
+  SENSORS.forEach((s,j)=>{$('fpb'+j).style.width=Math.min(100,D[j]/.6*100)+'%';$('fpv'+j).textContent=D[j].toFixed(2);});
+  const L=LANES[r.lane]; setLights(r.lane);
+  $('result').innerHTML=`ผลจำลอง: <span style="color:${L.css}">${L.name}</span><small>${L.sub} · สภาพที่กำหนดในแบบจำลอง: ${fruit.st.name}</small>`;
+  $('why').textContent=r.unsure
+    ?`ลายนิ้วมือกลิ่นก้ำกึ่งระหว่างค่าอ้างอิง "${r.best.f.s.name}" กับ "${r.alt.f.s.name}" จึงแสดง "ไม่แน่ใจ" ให้คนขายตรวจเอง · ค่าอ้างอิงจำลอง ไม่ได้รับรองความแม่นยำ`
+    :`ใกล้ค่าอ้างอิง "${r.best.f.s.name}" มากที่สุด และห่างจากกลุ่มอื่นพอ · ค่าอ้างอิงจำลอง ไม่ได้รับรองความแม่นยำ`;
+  drawScreen([L.name,'ผลจำลอง · '+L.sub]);
+}
+$('place').addEventListener('click',placeFruit);
+$('sniff').addEventListener('click',startSniff);
+
+// ---------- chart ----------
+const cv=$('chart'), cx=cv.getContext('2d');
+function drawChart(){
+  const w=cv.width,h=cv.height,pad=26; cx.clearRect(0,0,w,h);
+  const X0=pad,X1=w-8,Y0=8,Y1=h-22, xs=tt=>X0+(X1-X0)*tt/TOTAL, ys=v=>Y0+(Y1-Y0)*(1.02-v)/(1.02-.4);
+  cx.fillStyle='rgba(242,183,5,.12)';cx.fillRect(xs(STAGES[0].dur),Y0,xs(STAGES[0].dur+STAGES[1].dur)-xs(STAGES[0].dur),Y1-Y0);
+  cx.strokeStyle='#33392a';cx.lineWidth=1;cx.font='12px "IBM Plex Mono", monospace';cx.fillStyle='#8d93ab';
+  [1,.8,.6,.4].forEach(v=>{cx.beginPath();cx.moveTo(X0,ys(v));cx.lineTo(X1,ys(v));cx.stroke();cx.fillText(v.toFixed(1),0,ys(v)+4);});
+  cx.fillText('เวลาจำลอง (ย่อ)',X0,h-5);
+  SENSORS.forEach((s,j)=>{cx.strokeStyle=s.col;cx.lineWidth=2;cx.beginPath();hist.forEach((p,i)=>{const x=xs(p.t),y=ys(p.v[j]);i?cx.lineTo(x,y):cx.moveTo(x,y);});cx.stroke();});
+}
+
+// ---------- particles ----------
+function stepParticles(dt,emitting){
+  if(!points)return;const share=fruit?fruit.E:[0,0,0,0,0,1];const tot=share.reduce((a,b)=>a+b,0)||1;
+  pData.forEach((p,i)=>{
+    if(p.life<=0){
+      if(!emitting||Math.random()>dt*6*Math.min(1,tot*1.6))return;
+      let r=Math.random()*tot,g=0;for(let k=0;k<6;k++){if((r-=share[k])<0){g=GROUP[k];break;}}
+      const a=Math.random()*6.28,rad=.12+Math.random()*.12;
+      p.x=Math.cos(a)*rad;p.z=Math.sin(a)*rad;p.y=DY+.1+Math.random()*.2;p.life=2+Math.random()*1.5;
+      const c=new THREE.Color(GCOL[g]);pCol[i*3]=c.r;pCol[i*3+1]=c.g;pCol[i*3+2]=c.b;
+    }
+    p.life-=dt; p.y+=dt*.17; p.x*=1-dt*.5; p.z*=1-dt*.5;
+    if(p.y>DY+DOME_H+.25||p.life<=0){p.life=0;p.y=-10;}
+    pPos[i*3]=p.x;pPos[i*3+1]=p.y;pPos[i*3+2]=p.z;
+  });
+  points.geometry.attributes.position.needsUpdate=true;points.geometry.attributes.color.needsUpdate=true;
+}
+
+// ---------- main loop ----------
+function step(dt){
+  if(phase==='placing'){
+    // dome opens, fruit drops in, dome closes
+    if(durian){const target=DY+.2;durian.position.y=Math.max(target,durian.position.y-dt*1.4);}
+    if(!durian||durian.position.y<=DY+.2+1e-3){domeLift=Math.max(0,domeLift-dt*1.5);if(domeLift<=0){phase='ready';syncButtons();if($('auto').checked)waitT=1.2;}}
+  }
+  if(phase==='ready'&&$('auto').checked){waitT-=dt;if(waitT<=0)startSniff();}
+  if(phase==='run'){
+    const md=dt*RATE; t+=md; const st=stageAt(t);
+    const sniffing=st.s&&st.s.k==='sniff';
+    for(let i=0;i<6;i++){const target=sniffing?K*fruit.E[i]:0;C[i]+=(target-C[i])*(1-Math.exp(-md/(sniffing?3:2.5)));}
+    SENSORS.forEach((s,j)=>{const x=s.w.reduce((a,w,i)=>a+w*C[i],0);X[j]+=(x-X[j])*(1-Math.exp(-md/s.tau));});
+    hist.push({t:Math.min(t,TOTAL),v:X.map(rsr0)});
+    if(!decided&&t>=STAGES[0].dur+STAGES[1].dur)decide();
+    document.querySelectorAll('#steps span').forEach((e,i)=>{e.classList.toggle('on',i===st.i);e.classList.toggle('done',i<st.i);});
+    $('fill').style.width=Math.min(100,t/TOTAL*100)+'%';
+    if(st.s)$('desc').textContent=st.s.desc+' · เวลาย่อเพื่อการจำลอง';
+    if(t>=TOTAL){phase='done';decided=null;$('desc').textContent='ล้างเสร็จ ค่ากลับเส้นฐาน พร้อมดมลูกถัดไป';syncButtons();waitT=4;}
+    drawChart();
+  }else if(phase==='done'&&$('auto').checked){waitT-=dt;if(waitT<=0)placeFruit();}
+  stepParticles(dt,phase==='run'&&stageAt(t).s&&stageAt(t).s.k==='sniff');
+  if(dome){dome.position.y=BASE_H+.05+domeLift*.5;}
+  // light glow mirrors the customer panel
+  lightMeshes.forEach((m,i)=>{const on=$('L'+i).classList.contains('on');m.material.emissiveIntensity+=((on?1.6:0)-m.material.emissiveIntensity)*Math.min(1,dt*6);});
+}
+function resize(){if(!renderer)return;const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<700?55:42;camera.updateProjectionMatrix();}
+let last=performance.now();
+function tick(now){
+  let dt=Math.min(1,(now-last)/1000); last=now;
+  while(dt>0){const s=Math.min(dt,.05);step(s);dt-=s;}
+  if(renderer){
+    if(camGoal){camera.position.lerp(camGoal.p,.08);controls.target.lerp(camGoal.t,.08);if(camera.position.distanceTo(camGoal.p)<.01)camGoal=null;}
+    controls.update();renderer.render(scene,camera);
+  }
+  requestAnimationFrame(tick);
+}
+if(renderer){addEventListener('resize',resize);resize();
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>{__labels();drawScreen(['E-100','พร้อมดม']);});
+  renderer.domElement.addEventListener('pointerdown',()=>{camGoal=null;});}
+drawChart(); placeFruit(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
