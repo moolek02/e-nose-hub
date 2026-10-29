@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PoC เครื่องดมทุเรียนอัจฉริยะ</title>
+<meta name="description" content="เอกสาร Proof of Concept 6 หน้า เครื่องดมทุเรียนอัจฉริยะ ทีม พี่จร้าาา · IoTE KMITL 2026 Showcase (สาย IoT & Innovation)">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: shared nav, intro + big download, embedded PDF, 6-page summary, related pages, footer */
+:root{color-scheme:dark;--bg:#14170f;--panel:#1d2117;--panel-2:#101309;--fg:#e7eadc;--muted:#a3a993;--line:#33392a;--accent:#b6cf6a;--accent-bg:#2b3419;
+  --display:"IBM Plex Sans Thai",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--display);font-size:15px;line-height:1.6}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 48px;display:flex;flex-direction:column;gap:18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent)}
+h1{font-size:clamp(24px,4vw,32px);font-weight:600;margin:0;line-height:1.25}
+h2{font-size:18px;font-weight:600;margin:0}
+p{margin:0}
+.sub{color:var(--muted);max-width:72ch}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.doc .hd{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px}
+.doc .meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.viewer{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.viewer object{display:block;width:100%;height:min(80vh,760px);border:0;background:#fff}
+.pending{padding:32px 16px;text-align:center;color:var(--muted);font-size:14px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;text-decoration:none;color:var(--fg);background:var(--accent-bg);border:1px solid var(--accent);border-radius:10px;padding:8px 14px;font-size:14px}
+.btn:hover{background:#34401e}
+.btn small{font-family:var(--mono);color:var(--muted);font-size:11px}
+.btn.big{background:var(--accent);color:#14170f;font-weight:600;font-size:16px;padding:12px 20px}
+.btn.big small{color:#2b3419}
+.btn.big:hover{background:#c5dc7c}
+ol.pages{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+ol.pages li{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--muted)}
+ol.pages b{display:block;color:var(--fg);font-weight:600}
+ol.pages .n{font-family:var(--mono);color:var(--accent);font-size:12px}
+.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.links a{display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);text-decoration:none;color:var(--fg);font-size:14px}
+.links a span{color:var(--muted);font-size:12px}
+.links a:hover{border-color:var(--accent)}
+.note{font-size:12.5px;color:var(--muted)}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<style id="enh-nav-css">nav.enh-nav{all:initial;box-sizing:border-box;display:flex;align-items:center;gap:6px 16px;width:100%;padding:8px max(14px,env(safe-area-inset-left,0px));background:#14170f;border-bottom:1px solid #33392a;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7eadc;position:relative;z-index:1}nav.enh-nav *{box-sizing:border-box}nav.enh-nav .enh-brand{all:unset;cursor:pointer;font-weight:600;color:#b6cf6a;white-space:nowrap;flex:none}nav.enh-nav .enh-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}nav.enh-nav .enh-links::-webkit-scrollbar{display:none}nav.enh-nav .enh-links a{all:unset;cursor:pointer;white-space:nowrap;padding:6px 10px;border-radius:8px;color:#a3a993;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,sans-serif}nav.enh-nav .enh-links a:hover{color:#e7eadc;background:#1d2117}nav.enh-nav .enh-links a:focus-visible{outline:2px solid #b6cf6a;outline-offset:1px}nav.enh-nav .enh-links a[aria-current="page"]{color:#14170f;background:#b6cf6a}@media (max-width:560px){nav.enh-nav .enh-brand{display:none}}footer.enh-foot{all:initial;display:block;box-sizing:border-box;width:100%;padding:14px 16px 22px;text-align:center;font:12px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;color:#8d93ab}footer.enh-foot a{color:#b6cf6a;text-decoration:none}footer.enh-foot a:hover{text-decoration:underline}</style><nav class="enh-nav" aria-label="เมนู เครื่องดมทุเรียนอัจฉริยะ"><a class="enh-brand" href="./index.html">เครื่องดมทุเรียนอัจฉริยะ</a><div class="enh-links"><a href="./index.html">หน้ารวม</a><a href="./poc.html" aria-current="page">PoC</a><a href="./simulation.html">Simulation</a><a href="./hamsterhub-project.html">โมเดล 3D</a><a href="./e-nose-wiring-diagram.html">Wiring</a><a href="./ds-300-grader.html">DS-300 เครื่องคัด</a><a href="./e-100.html">E-100 หน้าร้าน</a><a href="./durian-ripening-room.html">ห้องบ่มทุเรียน</a><a href="./docs.html">เอกสาร</a></div></nav><script>(function(){var l=document.querySelector("nav.enh-nav .enh-links"),a=l&&l.querySelector("[aria-current]");if(a)l.scrollLeft=a.offsetLeft-l.offsetLeft-(l.clientWidth-a.offsetWidth)/2;})();</script>
+<div class="wrap">
+<header>
+  <div class="eyebrow">IoTE KMITL 2026 SHOWCASE · สาย IoT &amp; INNOVATION · PROOF OF CONCEPT</div>
+  <h1>PoC เครื่องดมทุเรียนอัจฉริยะ</h1>
+  <p class="sub">เอกสาร Proof of Concept 6 หน้าของทีม พี่จร้าาา: จมูกอิเล็กทรอนิกส์ (e-nose) บน ESP32-S3 ดมทุเรียนทีละลูกเพื่อบอกระดับความสุกและการเสีย เอกสารนี้เป็นแนวคิดและผังออกแบบ ทีมยังไม่มีข้อมูลวัดจริงจากเครื่อง จึงไม่อ้างความแม่นยำ</p>
+</header>
+
+<div class="btns">
+  <a class="btn big" href="./docs/e-nose-poc.pdf" download>ดาวน์โหลด PoC (PDF) <small>6 หน้า · 1.1 MB</small></a>
+  <a class="btn" href="./docs/e-nose-poc.pdf" target="_blank" rel="noopener">เปิดเต็มจอ</a>
+</div>
+
+<section class="doc" id="pdf">
+  <div class="hd"><h2>เอกสาร PoC</h2><span class="meta">PDF · 6 หน้า</span></div>
+  <div class="viewer"><object data="./docs/e-nose-poc.pdf#view=FitH" type="application/pdf" aria-label="เอกสาร PoC เครื่องดมทุเรียนอัจฉริยะ 6 หน้า"><p class="pending">เบราว์เซอร์นี้แสดง PDF ในหน้าไม่ได้ <a href="./docs/e-nose-poc.pdf" target="_blank" rel="noopener">เปิด PDF ในแท็บใหม่</a></p></object></div>
+</section>
+
+<section class="doc" id="summary">
+  <div class="hd"><h2>ในเอกสารมีอะไรบ้าง</h2><span class="meta">6 หน้า</span></div>
+  <ol class="pages">
+    <li><span class="n">หน้า 1</span><b>สรุปและปัญหา</b>แนวคิดเครื่องดม ตัวเลขปัญหาทุเรียนอ่อนจากแหล่งอ้างอิง และผลิตภัณฑ์ DS-300 / E-100</li>
+    <li><span class="n">หน้า 2</span><b>แนวคิดและหลักการทำงาน</b>แผนภาพบล็อกทางลมและสัญญาณ และขั้นของหนึ่งรอบการดม (แผน)</li>
+    <li><span class="n">หน้า 3</span><b>ผังต่อสายไฟ</b>ESP32-S3, ADS1115 (PGA ±4.096 V), TGS2602 / TGS2603, BME688 ×2, ปั๊ม วาล์ว และไฟเกรด (ข้อเสนอ)</li>
+    <li><span class="n">หน้า 4</span><b>ซอฟต์แวร์และตรรกะการตัดสิน</b>Rs/R0 → ลายนิ้วมือกลิ่น → เทียบเกณฑ์จากการสอบเทียบ → ไฟเกรดและ MQTT (แผน)</li>
+    <li><span class="n">หน้า 5</span><b>แผนทดสอบและงบประมาณ</b>ขั้นทดสอบ การตั้งเกณฑ์ ตัวแปรที่ต้องคุม และราคาชุดเซนเซอร์โดยประมาณ</li>
+    <li><span class="n">หน้า 6</span><b>ข้อจำกัดและข้อมูลทีม</b>สิ่งที่เครื่องยังทำไม่ได้ บอกตรง ๆ และข้อมูลผลงาน</li>
+  </ol>
+</section>
+
+<section class="doc" id="related">
+  <div class="hd"><h2>ดูประกอบบนเว็บ</h2><span class="meta">ค่าจำลองทั้งหมด</span></div>
+  <div class="links">
+    <a href="./simulation.html">Simulation<span>จำลองตัวเครื่องและแก๊สที่จะวัด</span></a>
+    <a href="./durian-ripening-room.html">ห้องบ่มทุเรียน<span>ห้องบ่ม 3D + เครื่องตรวจติดผนัง</span></a>
+    <a href="./ds-300-grader.html">DS-300 เครื่องคัดแบบพกพา<span>ห้องดมตรวจทีละลูก</span></a>
+    <a href="./e-100.html">E-100 เครื่องดมหน้าร้าน<span>แนวคิดสำหรับหน้าร้าน</span></a>
+    <a href="./e-nose-wiring-diagram.html">ผังต่อสาย<span>ตารางต่อขาและเช็กลิสต์</span></a>
+  </div>
+</section>
+
+<p class="note">บนมือถือบางรุ่นแสดง PDF ในหน้าไม่ได้ ให้กด "เปิดเต็มจอ" หรือดาวน์โหลดแทน</p>
+<footer>© 2026 ณัฐพฤทธ์ เอกประเสริฐ — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต<br><a href="./ds-300-grader.html">DS-300 เครื่องคัดแบบพกพา</a> · <a href="./e-100.html">E-100 เครื่องดมหน้าร้าน</a> · <a href="./durian-ripening-room.html">ห้องบ่มทุเรียน</a></footer>
+</div>
+</body>
+</html>
