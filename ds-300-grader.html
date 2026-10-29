@@ -309,7 +309,7 @@ const laneOfState=s=>LANES[s.key==='spoil'?2:STATES.indexOf(s)];
 // sniff cycle (model seconds) per the v6 deck; real-world times shown next to each stage
 const STAGES=[
   {k:'base', name:'วัดเส้นฐาน',       dur:10, real:'จริง: จนค่านิ่ง',          desc:'อากาศสะอาดผ่านไส้กรองเข้าห้องเซนเซอร์'},
-  {k:'accum',name:'ปิดห้องสะสมกลิ่น', dur:40, real:'จริง: 5–10 นาที',          desc:'ฝาปิด ปั๊มหยุด ให้กลิ่นสะสมในห้องดม'},
+  {k:'accum',name:'ปิดห้องสะสมกลิ่น', dur:40, real:'จริง: ปิดห้องให้กลิ่นสะสม',          desc:'ฝาปิด ปั๊มหยุด ให้กลิ่นสะสมในห้องดม'},
   {k:'sniff',name:'ดม',              dur:30, real:'จริง: 60–90 วินาที',       desc:'ปั๊มดูดอากาศห้องดมผ่านห้องเซนเซอร์'},
   {k:'purge',name:'ล้าง',             dur:null,real:'จริง: จนค่ากลับเส้นฐาน', desc:'วาล์ว 3 ทางสลับ ส่งอากาศสะอาดจนค่ากลับเส้นฐาน'}];
 const EMIT_K=.15, PURGE_MIN=8, PURGE_MAX=70;
