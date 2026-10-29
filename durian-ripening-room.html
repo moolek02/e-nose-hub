@@ -98,7 +98,7 @@ input[type=range]{width:100%;accent-color:var(--sensor);margin:4px 0 0}
       <h1>ห้องบ่มทุเรียน + เครื่องตรวจ</h1>
       <div class="clock"><b id="hrs">0 ชม.</b><span id="phase">เริ่มบ่ม</span></div>
       <div class="readings">
-        <div class="rd"><span class="k">เอทิลีน C₂H₄</span><span class="v" id="vEth">0<small>ppm</small></span><span class="s" id="sEth"></span></div>
+        <div class="rd"><span class="k">เอทิลีน C₂H₄</span><span class="v" id="vEth">0<small>หน่วยสมมติ</small></span><span class="s" id="sEth"></span></div>
         <div class="rd"><span class="k">CO₂</span><span class="v" id="vCo2">0<small>%</small></span><span class="s" id="sCo2"></span></div>
         <div class="rd"><span class="k">อุณหภูมิ</span><span class="v" id="vTmp">0<small>°C</small></span><span class="s" id="sTmp"></span></div>
         <div class="rd"><span class="k">ความชื้นสัมพัทธ์</span><span class="v" id="vRh">0<small>%RH</small></span><span class="s" id="sRh"></span></div>
@@ -129,7 +129,7 @@ input[type=range]{width:100%;accent-color:var(--sensor);margin:4px 0 0}
     <section class="panel chart">
       <h2>ค่าที่เครื่องตรวจวัดได้ (72 ชม.)</h2>
       <svg id="chart" viewBox="0 0 340 120" aria-label="กราฟเอทิลีนและ CO2 ตามเวลา"></svg>
-      <div class="lgd"><span style="--c:var(--gas)">เอทิลีน ppm</span><span style="--c:var(--warn)">CO₂ % ×20</span><span style="--c:var(--muted)">เส้นประ = เกณฑ์เปิดพัดลม</span></div>
+      <div class="lgd"><span style="--c:var(--gas)">เอทิลีน (หน่วยสมมติ)</span><span style="--c:var(--warn)">CO₂ % ×20</span><span style="--c:var(--muted)">เส้นประ = เกณฑ์เปิดพัดลม</span></div>
     </section>
     <section class="panel legend">
       <h2>เทียบกับภาพร่าง</h2>
@@ -342,7 +342,7 @@ function updateHud(){
   $('hrs').textContent=Math.floor(S.t)+' ชม.';
   const g=[0,0,0]; durians.forEach(d=>g[d.r<.85?0:d.r<1.25?1:2]++);
   $('phase').textContent=S.t<3?'ปล่อยก๊าซเอทิลีน':g[2]>0?'มีลูกสุกเกิน ควรนำออก':g[1]>=5?'พร้อมนำออกขาย':'กำลังบ่ม';
-  $('vEth').innerHTML=S.eth.toFixed(0)+'<small>ppm</small>';
+  $('vEth').innerHTML=S.eth.toFixed(0)+'<small>หน่วยสมมติ</small>';
   status($('sEth'),S.eth>150?2:S.eth<10&&S.t<36?1:0,S.eth>150?'สูงเกิน':S.eth<10&&S.t<36?'ต่ำ':'ปกติ');
   $('vCo2').innerHTML=S.co2.toFixed(2)+'<small>%</small>';
   status($('sCo2'),S.co2>1?2:S.co2>.7?1:0,S.fan?'พัดลมทำงาน':S.co2>.7?'เริ่มสูง':'ปกติ');
@@ -356,7 +356,7 @@ function updateHud(){
   // LCD on the device
   const c=lcdTex.getContext('2d');c.fillStyle='#0f2a22';c.fillRect(0,0,256,160);
   c.fillStyle='#9ff5c8';c.font='600 26px "IBM Plex Mono", monospace';
-  c.fillText('C2H4 '+S.eth.toFixed(0).padStart(4)+'ppm',12,36);
+  c.fillText('C2H4 '+S.eth.toFixed(0).padStart(4)+' a.u.',12,36);
   c.fillText('CO2  '+S.co2.toFixed(2).padStart(4)+' %',12,70);
   c.fillText('T '+S.temp.toFixed(1)+'C  '+S.rh.toFixed(0)+'%',12,104);
   c.fillStyle=alarm?'#ff9a7a':'#6fd3ff';c.font='600 20px "IBM Plex Mono", monospace';
