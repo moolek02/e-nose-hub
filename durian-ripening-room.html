@@ -1,0 +1,422 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><style id="enh-nav-css">nav.enh-nav{all:initial;box-sizing:border-box;display:flex;align-items:center;gap:6px 16px;width:100%;padding:8px max(14px,env(safe-area-inset-left,0px));background:#14170f;border-bottom:1px solid #33392a;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7eadc;position:relative;z-index:1}nav.enh-nav *{box-sizing:border-box}nav.enh-nav .enh-brand{all:unset;cursor:pointer;font-weight:600;color:#b6cf6a;white-space:nowrap;flex:none}nav.enh-nav .enh-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}nav.enh-nav .enh-links::-webkit-scrollbar{display:none}nav.enh-nav .enh-links a{all:unset;cursor:pointer;white-space:nowrap;padding:6px 10px;border-radius:8px;color:#a3a993;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,sans-serif}nav.enh-nav .enh-links a:hover{color:#e7eadc;background:#1d2117}nav.enh-nav .enh-links a:focus-visible{outline:2px solid #b6cf6a;outline-offset:1px}nav.enh-nav .enh-links a[aria-current="page"]{color:#14170f;background:#b6cf6a}@media (max-width:560px){nav.enh-nav .enh-brand{display:none}}footer.enh-foot{all:initial;display:block;box-sizing:border-box;width:100%;padding:14px 16px 22px;text-align:center;font:12px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;color:#8d93ab}footer.enh-foot a{color:#b6cf6a;text-decoration:none}footer.enh-foot a:hover{text-decoration:underline}</style><nav class="enh-nav" aria-label="เมนู e-nose hub"><a class="enh-brand" href="./index.html">e-nose hub</a><div class="enh-links"><a href="./index.html">หน้ารวม</a><a href="./simulation.html">Simulation</a><a href="./hamsterhub-project.html">โมเดล 3D</a><a href="./e-nose-wiring-diagram.html">Wiring</a><a href="./ds-300-grader.html">DS-300 เครื่องคัด</a><a href="./e-100.html">E-100 หน้าร้าน</a><a href="./durian-ripening-room.html" aria-current="page">ห้องบ่มทุเรียน</a><a href="./docs.html">เอกสาร</a></div></nav><script>(function(){var l=document.querySelector("nav.enh-nav .enh-links"),a=l&&l.querySelector("[aria-current]");if(a)l.scrollLeft=a.offsetLeft-l.offsetLeft-(l.clientWidth-a.offsetWidth)/2;})();</script><style id="enh-dr-css">nav.enh-nav{position:fixed!important;top:0;left:0;right:0;z-index:20}footer.enh-foot{position:fixed!important;left:0;right:0;bottom:0;z-index:20;padding:3px 12px!important;background:#14170f;border-top:1px solid #33392a;font-size:11px!important}#scene,.hud{top:var(--enh-nav-h,42px)!important;bottom:var(--enh-foot-h,24px)!important}@media (max-width:760px){.hud{padding-top:8px!important;padding-bottom:8px!important;gap:8px!important}.brand .stage{margin-top:8px}.brand .clock{margin-bottom:6px}.hud button{min-height:44px}.controls{display:grid!important;grid-template-columns:repeat(3,1fr);gap:8px!important}.controls>div,.controls>.seg{grid-column:1/-1}.check{min-height:44px;font-size:11px!important;line-height:1.25;gap:5px!important}.check input{flex:none}footer.enh-foot{font-size:10px!important;line-height:1.35!important}}</style>
+<title>ห้องบ่มทุเรียน · e-nose (จำลอง)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+/* layout: full-bleed 3D ripening room, control-room panels pinned to the corners */
+:root{
+  --bg:#1b2026;
+  --panel:rgba(21,26,32,.88);
+  --line:#38414b;
+  --fg:#e9edf0;
+  --muted:#9aa6b1;
+  --sensor:#f2c230;
+  --room:#6f8fe0;
+  --ok:#62b04a;
+  --warn:#e0a32c;
+  --alert:#d85a3c;
+  --gas:#8fe8dc;
+  --f-ui:"IBM Plex Sans Thai",system-ui,"Leelawadee UI","Tahoma",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-ui);overflow:hidden;font-size:14px;line-height:1.45}
+#scene{position:fixed;inset:0}
+#scene canvas{display:block;width:100%;height:100%;touch-action:none}
+.hud{position:fixed;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;gap:12px;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.row.bottom{align-items:flex-end}
+.panel{pointer-events:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);min-width:0}
+.eyebrow{margin:0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sensor);font-family:var(--f-mono)}
+h1{margin:2px 0 10px;font-size:19px;font-weight:700;line-height:1.25;text-wrap:balance}
+h2{margin:0 0 8px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.brand{width:320px}
+.clock{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.clock b{font-family:var(--f-mono);font-size:26px;font-variant-numeric:tabular-nums}
+.clock span{color:var(--muted);font-size:12px}
+.readings{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rd{border:1px solid var(--line);border-radius:4px;padding:7px 9px;display:flex;flex-direction:column;gap:1px}
+.rd .k{font-size:11px;color:var(--muted)}
+.rd .v{font-family:var(--f-mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.rd .v small{font-size:11px;color:var(--muted);font-weight:500;margin-left:3px}
+.rd .s{font-size:11px;font-weight:600}
+.stage{margin-top:12px}
+.stagebar{display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px}
+.stagebar i{display:block;height:100%;transition:flex-grow .5s}
+.stagelg{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stagelg b{font-family:var(--f-mono);color:var(--fg)}
+.controls{width:260px;display:flex;flex-direction:column;gap:12px}
+button{font:inherit;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:4px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--sensor);outline-offset:2px}
+.btnrow{display:flex;gap:6px}
+.btnrow button{flex:1}
+#play{background:var(--sensor);color:#1c1a12;border-color:var(--sensor);font-weight:600}
+.lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.lbl output{font-family:var(--f-mono);color:var(--fg)}
+input[type=range]{width:100%;accent-color:var(--sensor);margin:4px 0 0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;font-size:12px;padding:5px 6px}
+.seg button[aria-pressed=true]{border-color:var(--sensor);color:var(--sensor)}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
+.check input{accent-color:var(--sensor);width:16px;height:16px}
+.chart{width:360px}
+.chart svg{display:block;width:100%;height:auto}
+.chart .ax{stroke:var(--line);stroke-width:1}
+.chart text{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+.chart .lgd{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:4px}
+.chart .lgd span::before{content:"";display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle;background:var(--c)}
+.legend{width:250px;font-size:12px}
+.legend ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.legend li{display:flex;gap:10px;align-items:center}
+.legend .sw{width:22px;height:5px;border-radius:3px;flex:none}
+.note{margin:8px 0 0;color:var(--muted);font-size:11px}
+.err{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
+@media (max-width:760px){
+  .legend,.chart{display:none}
+  .brand{width:auto;padding:10px 12px}
+  h1{font-size:15px;margin-bottom:6px}
+  .clock b{font-size:20px}
+  .rd{padding:5px 7px}.rd .v{font-size:14px}
+  .controls{width:auto;padding:10px 12px;gap:8px}
+  .row.top{flex-direction:column;align-items:stretch;height:100%;justify-content:space-between}
+  .hud{justify-content:flex-start}
+}
+</style>
+
+<div id="scene" role="img" aria-label="โมเดล 3 มิติของห้องบ่มทุเรียน มีทุเรียนวางสองชั้นบนพาเลท และเครื่องตรวจติดผนังด้านขวา วัดก๊าซเอทิลีน อุณหภูมิ และความชื้น"></div>
+
+<div class="hud">
+  <div class="row top">
+    <section class="panel brand">
+      <p class="eyebrow">Ripening room · RR-01 · simulation</p>
+      <h1>ห้องบ่มทุเรียน + เครื่องตรวจ</h1>
+      <div class="clock"><b id="hrs">0 ชม.</b><span id="phase">เริ่มบ่ม</span></div>
+      <div class="readings">
+        <div class="rd"><span class="k">เอทิลีน C₂H₄</span><span class="v" id="vEth">0<small>ppm</small></span><span class="s" id="sEth"></span></div>
+        <div class="rd"><span class="k">CO₂</span><span class="v" id="vCo2">0<small>%</small></span><span class="s" id="sCo2"></span></div>
+        <div class="rd"><span class="k">อุณหภูมิ</span><span class="v" id="vTmp">0<small>°C</small></span><span class="s" id="sTmp"></span></div>
+        <div class="rd"><span class="k">ความชื้นสัมพัทธ์</span><span class="v" id="vRh">0<small>%RH</small></span><span class="s" id="sRh"></span></div>
+      </div>
+      <div class="stage">
+        <h2 style="margin:0 0 6px">ระดับความสุกในห้อง (10 ลูก)</h2>
+        <div class="stagebar"><i id="g0" style="background:#5b8a34"></i><i id="g1" style="background:#c9b23a"></i><i id="g2" style="background:#c97a3a"></i></div>
+        <div class="stagelg"><span>ดิบ <b id="c0">0</b></span><span>พร้อมขาย <b id="c1">0</b></span><span>สุกเกิน <b id="c2">0</b></span></div>
+      </div>
+    </section>
+    <section class="panel controls">
+      <div class="btnrow"><button id="play" type="button">หยุดเวลา</button><button id="reset" type="button">เริ่มรอบใหม่</button></div>
+      <div>
+        <label class="lbl" for="speed">เร่งเวลา <output id="speedOut">1.5 ชม./วินาที</output></label>
+        <input type="range" id="speed" min="0.25" max="6" step="0.25" value="1.5">
+      </div>
+      <div class="seg" role="group" aria-label="มุมกล้อง">
+        <button type="button" data-cam="all" aria-pressed="true">ภาพรวม</button>
+        <button type="button" data-cam="pile" aria-pressed="false">กองทุเรียน</button>
+        <button type="button" data-cam="sensor" aria-pressed="false">เครื่องตรวจ</button>
+      </div>
+      <label class="check"><input type="checkbox" id="cut" checked> ผ่าผนังหน้าดูภายใน</label>
+      <label class="check"><input type="checkbox" id="gas" checked> แสดงการไหลของก๊าซ</label>
+      <label class="check"><input type="checkbox" id="fan" checked> เปิดพัดลมระบายอากาศอัตโนมัติ</label>
+    </section>
+  </div>
+  <div class="row bottom">
+    <section class="panel chart">
+      <h2>ค่าที่เครื่องตรวจวัดได้ (72 ชม.)</h2>
+      <svg id="chart" viewBox="0 0 340 120" aria-label="กราฟเอทิลีนและ CO2 ตามเวลา"></svg>
+      <div class="lgd"><span style="--c:var(--gas)">เอทิลีน ppm</span><span style="--c:var(--warn)">CO₂ % ×20</span><span style="--c:var(--muted)">เส้นประ = เกณฑ์เปิดพัดลม</span></div>
+    </section>
+    <section class="panel legend">
+      <h2>เทียบกับภาพร่าง</h2>
+      <ul>
+        <li><span class="sw" style="background:var(--room)"></span>กรอบน้ำเงิน → ห้องบ่ม</li>
+        <li><span class="sw" style="background:var(--gas)"></span>วงฟ้า → ทุเรียน 2 ชั้น</li>
+        <li><span class="sw" style="background:var(--sensor)"></span>สีเหลือง → เครื่องตรวจติดผนัง</li>
+      </ul>
+      <p class="note">ลากเพื่อหมุน · เลื่อนเพื่อซูม · ค่าทั้งหมดเป็นข้อมูลจำลอง</p>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+if(!window.THREE){document.body.insertAdjacentHTML('beforeend','<div class="err">โหลดไลบรารี 3D ไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</div>');return;}
+
+const host=document.getElementById('scene');
+let renderer;
+try{renderer=new THREE.WebGLRenderer({antialias:true});}catch(e){host.innerHTML='<div class="err">อุปกรณ์นี้ไม่รองรับ WebGL จึงแสดงโมเดล 3 มิติไม่ได้</div>';return;}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+host.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x1b2026); scene.fog=new THREE.Fog(0x1b2026,28,60);
+const camera=new THREE.PerspectiveCamera(42,1,.1,200);
+camera.position.set(4,8.5,14);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.target.set(0,1.2,0); controls.enableDamping=true; controls.dampingFactor=.08;
+controls.maxPolarAngle=Math.PI*.49; controls.minDistance=2.5; controls.maxDistance=36;
+
+scene.add(new THREE.HemisphereLight(0xe2ebf3,0x2c3137,.6));
+const sun=new THREE.DirectionalLight(0xfff4e6,.55); sun.position.set(6,14,10); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-10,right:10,top:8,bottom:-8,near:1,far:40});
+scene.add(sun);
+const roomLight=new THREE.PointLight(0xffe7c2,.8,14); roomLight.position.set(0,3.3,0); roomLight.castShadow=true; scene.add(roomLight);
+
+const M=(c,r=.6,m=.2,extra={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},extra));
+function box(w,h,d,mat,x,y,z,parent=scene){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;parent.add(m);return m;}
+function canvasTex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;}
+
+// ---------- floor outside ----------
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,40),M(0x535a62,.95,0));
+floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+const grid=new THREE.GridHelper(60,30,0x6d757e,0x6d757e); grid.material.transparent=true; grid.material.opacity=.15; grid.position.y=.003; scene.add(grid);
+
+// ---------- room (sketch: blue box) — insulated sandwich panels ----------
+const RW=8, RD=4.6, RH=3.6;           // inner width (x), depth (z), height
+const T=.14;                           // panel thickness
+const panelTex=canvasTex(256,256,(g,w,h)=>{g.fillStyle='#dfe5ee';g.fillRect(0,0,w,h);g.fillStyle='#c9d1dd';for(let x=0;x<w;x+=32)g.fillRect(x,0,2,h);});
+panelTex.wrapS=panelTex.wrapT=THREE.RepeatWrapping; panelTex.repeat.set(3,1);
+const wallMat=M(0xffffff,.7,.05,{map:panelTex});
+const trimMat=M(0x6f8fe0,.45,.35);
+const inFloor=box(RW,.06,RD,M(0x8f979f,.85,.05),0,.03,0);
+const back=box(RW+2*T,RH,T,wallMat,0,RH/2,-RD/2-T/2);
+const left=box(T,RH,RD,wallMat,-RW/2-T/2,RH/2,0);
+const right=box(T,RH,RD,wallMat,RW/2+T/2,RH/2,0);
+const roof=box(RW+2*T,T,RD+2*T,wallMat,0,RH+T/2,0);
+const frontMat=wallMat.clone(); frontMat.transparent=true;
+const front=box(RW+2*T,RH,T,frontMat,0,RH/2,RD/2+T/2);
+// door cut into front panel (visual)
+const door=box(1.4,2.4,.04,M(0x9fb2d6,.4,.4),-2.6,1.2,RD/2+T+.02);
+// blue edge trim — the sketch's outline
+const edges=[];
+function trim(w,h,d,x,y,z){edges.push(box(w,h,d,trimMat,x,y,z));}
+const ex=RW/2+T, ez=RD/2+T, e=.1;
+[[-ex,ez],[ex,ez],[-ex,-ez],[ex,-ez]].forEach(([x,z])=>trim(e,RH+T,e,x,(RH+T)/2,z));
+[ez,-ez].forEach(z=>{trim(2*ex,e,e,0,RH+T,z);trim(2*ex,e,e,0,.05,z);});
+[ex,-ex].forEach(x=>{trim(e,e,2*ez,x,RH+T,0);trim(e,e,2*ez,x,.05,0);});
+// roof unit: circulation fan + ethylene dosing nozzle
+const fanBox=box(1.1,.5,.9,M(0x3a4048,.5,.5),2.4,RH+T+.25,-1);
+const fanBlades=new THREE.Group(); fanBlades.position.set(2.4,RH+T+.51,-1); scene.add(fanBlades);
+for(let i=0;i<4;i++){const b=new THREE.Mesh(new THREE.BoxGeometry(.38,.02,.1),M(0x9aa3ab,.3,.7));b.position.x=.19;const p=new THREE.Group();p.rotation.y=i*Math.PI/2;p.add(b);fanBlades.add(p);}
+const nozzle=new THREE.Mesh(new THREE.CylinderGeometry(.06,.1,.3,12),M(0x8b949d,.35,.75)); nozzle.position.set(-2.5,RH-.1,-1.6); scene.add(nozzle);
+box(.12,.12,1.6,M(0x8b949d,.35,.75),-2.5,RH+.02,-.9);
+const tank=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,1.3,20),M(0x2f7d5b,.45,.35)); tank.position.set(-RW/2-T-.4,.65,-1.4); tank.castShadow=true; scene.add(tank);
+box(.06,.06,1,M(0x8b949d,.35,.75),-RW/2-T-.4,1.35,-1.4+.5);
+
+// ---------- pallets ----------
+const woodMat=M(0x9b7b52,.85,0);
+function pallet(x,z){const g=new THREE.Group();g.position.set(x,.06,z);scene.add(g);
+  for(let i=0;i<5;i++)box(1.2,.04,.18,woodMat,0,.13,-.5+i*.25,g);
+  [-.5,0,.5].forEach(xx=>box(.14,.1,1.2,woodMat,xx,.05,0,g));}
+pallet(-2.4,.2); pallet(-1.1,.2); pallet(.2,.2); pallet(1.5,.2);
+
+// ---------- durians: 2 rows like the sketch (6 back-top, 5 front-bottom per sketch → 10 total) ----------
+const bodyGeo=new THREE.SphereGeometry(.3,22,16);
+const spikeGeo=new THREE.ConeGeometry(.055,.15,5); spikeGeo.translate(0,.075,0);
+const SPIKES=64, up=new THREE.Vector3(0,1,0), one=new THREE.Vector3(1,1,1), q=new THREE.Quaternion();
+const spikeMatrices=[];
+for(let i=0;i<SPIKES;i++){const y=1-(i+.5)/SPIKES*2,r=Math.sqrt(1-y*y),th=i*2.39996;
+  const n=new THREE.Vector3(Math.cos(th)*r,y,Math.sin(th)*r);q.setFromUnitVectors(up,n);
+  spikeMatrices.push(new THREE.Matrix4().compose(n.clone().multiplyScalar(.28),q.clone(),one));}
+// ripeness colours: green → golden-olive → brown
+const C_RAW=new THREE.Color(0x587a2d), C_RIPE=new THREE.Color(0x9a8f36), C_OVER=new THREE.Color(0x6e5226);
+function ripeColor(r,out){if(r<1)out.copy(C_RAW).lerp(C_RIPE,r);else out.copy(C_RIPE).lerp(C_OVER,Math.min(1,r-1));return out;}
+
+const durians=[];
+const layout=[ // [x,y,z] — front row on floor pallets, back row slightly raised (second layer)
+  [-2.7,.55,.75],[-1.7,.55,.75],[-.6,.55,.75],[.5,.55,.75],[1.6,.55,.75],
+  [-2.3,.92,-.1],[-1.2,.92,-.1],[-.1,.92,-.1],[1.0,.92,-.1],[2.1,.92,-.1]];
+layout.forEach((p,i)=>{
+  const g=new THREE.Group(); g.position.set(...p); g.rotation.set(Math.random()*.4,Math.random()*6.3,Math.random()*.4);
+  g.scale.set(1.25,1.15,1.4); scene.add(g);
+  const bm=M(C_RAW.getHex(),.85,0), sm=M(C_RAW.getHex(),.8,0);
+  const b=new THREE.Mesh(bodyGeo,bm);b.castShadow=true;g.add(b);
+  const sp=new THREE.InstancedMesh(spikeGeo,sm,SPIKES);spikeMatrices.forEach((m,k)=>sp.setMatrixAt(k,m));sp.castShadow=true;g.add(sp);
+  const stem=new THREE.Mesh(new THREE.CylinderGeometry(.03,.04,.18,8),M(0x5a4a2a,.8,0));stem.position.y=.36;g.add(stem);
+  durians.push({g,bm,sm,rate:.9+Math.random()*.25,lag:Math.random()*6,r:0});
+});
+// shelf under back layer (support for second tier)
+box(5.2,.06,.9,woodMat,-.1,.54,-.1); [-2.6,2.4].forEach(x=>[-.5,.2].forEach(z=>box(.08,.5,.08,woodMat,x,.27,z)));
+
+// ---------- sensor unit (sketch: yellow bracket on right wall) ----------
+const sensor=new THREE.Group(); sensor.position.set(RW/2-.02,1.6,.3); scene.add(sensor);
+const yel=M(0xf2c230,.45,.3), darkM=M(0x22272d,.5,.5);
+box(.12,.9,.7,yel,-.06,0,0,sensor);
+const housing=box(.28,.8,.62,yel,-.24,0,0,sensor);
+const lcdTex=document.createElement('canvas'); lcdTex.width=256; lcdTex.height=160;
+const lcdT=new THREE.CanvasTexture(lcdTex);
+const lcd=new THREE.Mesh(new THREE.PlaneGeometry(.46,.29),new THREE.MeshBasicMaterial({map:lcdT}));
+lcd.rotation.y=-Math.PI/2; lcd.position.set(-.385,.12,0); sensor.add(lcd);
+for(let i=0;i<4;i++){box(.02,.03,.3,darkM,-.39,-.16-i*.055,0,sensor);} // vent grille
+const led=new THREE.Mesh(new THREE.SphereGeometry(.035,12,10),new THREE.MeshStandardMaterial({color:0x62b04a,emissive:0x62b04a,emissiveIntensity:1.2}));
+led.position.set(-.39,.33,.22); sensor.add(led);
+const ant=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.35,8),darkM); ant.position.set(-.24,.57,.22); sensor.add(ant);
+// wifi rings above antenna
+const rings=[];for(let i=0;i<3;i++){const r=new THREE.Mesh(new THREE.TorusGeometry(.1+i*.07,.008,6,24,Math.PI*.7),new THREE.MeshBasicMaterial({color:0xf2c230,transparent:true,opacity:0}));
+  r.rotation.set(0,-Math.PI/2,Math.PI*.15);r.position.set(-.24,.78,.22);sensor.add(r);rings.push(r);}
+// sensing cone (sampling zone)
+const coneMat=new THREE.MeshBasicMaterial({color:0xf2c230,transparent:true,opacity:.07,depthWrite:false,side:THREE.DoubleSide});
+const cone=new THREE.Mesh(new THREE.ConeGeometry(.9,2.4,28,1,true),coneMat); cone.rotation.z=-Math.PI/2; cone.position.set(-1.6,-.2,0); sensor.add(cone);
+// outside: cable to gateway box
+box(.06,.06,.06,darkM,RW/2+T+.05,1.6,.3);
+box(.5,.7,.25,M(0x2b3036,.6,.4),RW/2+T+.32,1.6,.3);
+const gwLed=new THREE.Mesh(new THREE.SphereGeometry(.03,10,8),new THREE.MeshBasicMaterial({color:0x6fd3ff})); gwLed.position.set(RW/2+T+.58,1.8,.3); scene.add(gwLed);
+
+// ---------- labels ----------
+function labelTex(lines,accent){return canvasTex(512,200,(g,w,h)=>{g.fillStyle='rgba(21,26,32,.9)';g.fillRect(0,0,w,h);
+  g.fillStyle=accent;g.fillRect(0,0,12,h);g.fillStyle='#e9edf0';g.font='700 60px "IBM Plex Sans Thai", sans-serif';g.fillText(lines[0],40,90);
+  g.fillStyle='#9aa6b1';g.font='500 32px "IBM Plex Mono", monospace';g.fillText(lines[1],40,150);});}
+function addLabel(lines,accent,pos,s=1){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTex(lines,accent),depthTest:false}));sp.scale.set(2.2*s,.86*s,1);sp.position.set(...pos);sp.renderOrder=5;scene.add(sp);return sp;}
+function makeLabels(){
+  addLabel(['เครื่องตรวจ','C₂H₄ · CO₂ · T · RH'],'#f2c230',[RW/2+1.4,3.0,.3]);
+  addLabel(['ห้องบ่ม','8 × 4.6 × 3.6 m'],'#6f8fe0',[-RW/2+1,RH+1.1,-RD/2]);
+  addLabel(['ทุเรียน','2 ชั้น · 10 ลูก'],'#8fe8dc',[-.6,2.1,.3],.85);
+}
+Promise.race([Promise.all([document.fonts.load('700 60px "IBM Plex Sans Thai"'),document.fonts.load('500 32px "IBM Plex Mono"')]),new Promise(r=>setTimeout(r,1800))]).then(makeLabels,makeLabels);
+
+// ---------- gas particles (ethylene from fruit → sensor / fan) ----------
+const NP=260, pGeo=new THREE.BufferGeometry(), pPos=new Float32Array(NP*3), pVel=[];
+function resetP(i){const d=durians[(Math.random()*durians.length)|0].g.position;
+  pPos[i*3]=d.x+(Math.random()-.5)*.4;pPos[i*3+1]=d.y+.3;pPos[i*3+2]=d.z+(Math.random()-.5)*.4;
+  pVel[i]={x:(Math.random()-.5)*.2,y:.15+Math.random()*.25,z:(Math.random()-.5)*.2,age:0,life:4+Math.random()*5};}
+for(let i=0;i<NP;i++){resetP(i);pVel[i].age=Math.random()*pVel[i].life;}
+pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+const dotTex=canvasTex(64,64,(g)=>{const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);});
+const pMat=new THREE.PointsMaterial({size:.16,map:dotTex,color:0x8fe8dc,transparent:true,opacity:.55,depthWrite:false,blending:THREE.AdditiveBlending});
+const particles=new THREE.Points(pGeo,pMat); scene.add(particles);
+
+// ---------- simulation model (illustrative values) ----------
+// Ethylene dosed at start to ~100 ppm, decays with ventilation; fruit adds its own ethylene as it ripens.
+// CO2 rises from respiration; fan opens when CO2 > 1%.
+const S={t:0,eth:0,co2:.04,temp:24,rh:80,fan:false};
+const hist=[];
+let paused=false, speed=1.5;
+function reset(){Object.assign(S,{t:0,eth:0,co2:.04,temp:24,rh:80,fan:false});hist.length=0;durians.forEach(d=>{d.r=0;d.lag=Math.random()*6;d.rate=.9+Math.random()*.25;});}
+const fanAuto=document.getElementById('fan');
+function step(h){ // h = simulated hours
+  S.t+=h;
+  const dosing=S.t<3;
+  const ripeAvg=durians.reduce((a,d)=>a+Math.min(d.r,1.6),0)/durians.length;
+  const fruitEth=6*Math.max(0,1-Math.abs(ripeAvg-1)*1.3);      // climacteric peak around ready-to-eat
+  const vent=S.fan?.35:.03;
+  S.eth+= (dosing?45:0)*h + fruitEth*h - S.eth*vent*h;
+  S.eth=Math.max(0,S.eth);
+  S.co2+= (.045*(.4+ripeAvg))*h - (S.co2-.04)*(S.fan?.6:.02)*h;
+  S.temp+= ((26.5+ripeAvg*1.2)-S.temp)*.25*h;
+  S.rh+= ((S.fan?84:90)-S.rh)*.3*h;
+  if(fanAuto.checked){ if(S.co2>1)S.fan=true; else if(S.co2<.5)S.fan=false; } else S.fan=false;
+  durians.forEach(d=>{ if(S.t>d.lag){ const boost=S.eth>20?1:.55; d.r+= h*d.rate*boost/40; } });
+  if(!hist.length||S.t-hist[hist.length-1].t>=.5)hist.push({t:S.t,eth:S.eth,co2:S.co2});
+  if(S.t>=72)reset();
+}
+
+// ---------- HUD ----------
+const $=id=>document.getElementById(id);
+function status(el,level,text){el.textContent=text;el.style.color=level===0?'var(--ok)':level===1?'var(--warn)':'var(--alert)';}
+const chart=$('chart');
+function drawChart(){
+  const W=340,H=120,L=26,R=6,Tp=6,B=18,pw=W-L-R,ph=H-Tp-B, X=t=>L+t/72*pw, Y=v=>Tp+ph-Math.min(v,120)/120*ph;
+  let s=`<line class="ax" x1="${L}" y1="${Tp+ph}" x2="${W-R}" y2="${Tp+ph}"/>`;
+  [0,40,80,120].forEach(v=>{s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" opacity=".35"/><text x="${L-4}" y="${Y(v)+3}" text-anchor="end">${v}</text>`;});
+  [0,24,48,72].forEach(t=>{s+=`<text x="${X(t)}" y="${H-4}" text-anchor="middle">${t}h</text>`;});
+  s+=`<line x1="${L}" x2="${W-R}" y1="${Y(20)}" y2="${Y(20)}" stroke="var(--muted)" stroke-dasharray="3 3" opacity=".7"/>`;
+  if(hist.length>1){
+    const pe=hist.map(p=>`${X(p.t).toFixed(1)},${Y(p.eth).toFixed(1)}`).join(' ');
+    const pc=hist.map(p=>`${X(p.t).toFixed(1)},${Y(p.co2*20).toFixed(1)}`).join(' ');
+    s+=`<polygon points="${X(hist[0].t)},${Tp+ph} ${pe} ${X(hist[hist.length-1].t)},${Tp+ph}" fill="var(--gas)" opacity=".12"/>`;
+    s+=`<polyline points="${pe}" fill="none" stroke="var(--gas)" stroke-width="1.8"/>`;
+    s+=`<polyline points="${pc}" fill="none" stroke="var(--warn)" stroke-width="1.6"/>`;
+    const last=hist[hist.length-1]; s+=`<circle cx="${X(last.t)}" cy="${Y(last.eth)}" r="3" fill="var(--gas)"/>`;
+  }
+  chart.innerHTML=s;
+}
+let alarm=0;
+function updateHud(){
+  $('hrs').textContent=Math.floor(S.t)+' ชม.';
+  const g=[0,0,0]; durians.forEach(d=>g[d.r<.85?0:d.r<1.25?1:2]++);
+  $('phase').textContent=S.t<3?'ปล่อยก๊าซเอทิลีน':g[2]>0?'มีลูกสุกเกิน ควรนำออก':g[1]>=5?'พร้อมนำออกขาย':'กำลังบ่ม';
+  $('vEth').innerHTML=S.eth.toFixed(0)+'<small>ppm</small>';
+  status($('sEth'),S.eth>150?2:S.eth<10&&S.t<36?1:0,S.eth>150?'สูงเกิน':S.eth<10&&S.t<36?'ต่ำ':'ปกติ');
+  $('vCo2').innerHTML=S.co2.toFixed(2)+'<small>%</small>';
+  status($('sCo2'),S.co2>1?2:S.co2>.7?1:0,S.fan?'พัดลมทำงาน':S.co2>.7?'เริ่มสูง':'ปกติ');
+  $('vTmp').innerHTML=S.temp.toFixed(1)+'<small>°C</small>';
+  status($('sTmp'),S.temp>30?2:S.temp>28?1:0,S.temp>28?'ร้อน':'ปกติ');
+  $('vRh').innerHTML=S.rh.toFixed(0)+'<small>%RH</small>';
+  status($('sRh'),S.rh<80?1:0,S.rh<80?'แห้ง':'ปกติ');
+  g.forEach((n,i)=>{$('g'+i).style.flexGrow=n||.0001;$('c'+i).textContent=n;});
+  alarm=(S.co2>1||S.eth>150||g[2]>0)?1:0;
+  drawChart();
+  // LCD on the device
+  const c=lcdTex.getContext('2d');c.fillStyle='#0f2a22';c.fillRect(0,0,256,160);
+  c.fillStyle='#9ff5c8';c.font='600 26px "IBM Plex Mono", monospace';
+  c.fillText('C2H4 '+S.eth.toFixed(0).padStart(4)+'ppm',12,36);
+  c.fillText('CO2  '+S.co2.toFixed(2).padStart(4)+' %',12,70);
+  c.fillText('T '+S.temp.toFixed(1)+'C  '+S.rh.toFixed(0)+'%',12,104);
+  c.fillStyle=alarm?'#ff9a7a':'#6fd3ff';c.font='600 20px "IBM Plex Mono", monospace';
+  c.fillText(alarm?'! ALERT':'LINK OK  '+Math.floor(S.t)+'h',12,140);
+  lcdT.needsUpdate=true;
+}
+
+// ---------- controls ----------
+const speedEl=$('speed');
+if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)speedEl.value=.5;
+function setSpeed(){speed=+speedEl.value;$('speedOut').textContent=speed+' ชม./วินาที';}
+speedEl.addEventListener('input',setSpeed); setSpeed();
+$('play').addEventListener('click',()=>{paused=!paused;$('play').textContent=paused?'เดินเวลา':'หยุดเวลา';});
+$('reset').addEventListener('click',reset);
+function applyCut(){const on=$('cut').checked;frontMat.opacity=on?.08:1;frontMat.depthWrite=!on;door.visible=!on;roof.visible=!on;}
+$('cut').addEventListener('change',applyCut); applyCut();
+$('gas').addEventListener('change',e=>{particles.visible=e.target.checked;});
+const CAMS={all:[[4,8.5,14],[0,1.2,0]],pile:[[-1,3,5],[-.5,.7,.2]],sensor:[[1.6,2.4,3.4],[3.7,1.6,.3]]};
+let camGoal=null;
+document.querySelectorAll('[data-cam]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-cam]').forEach(o=>o.setAttribute('aria-pressed',o===b));
+  const [p,t]=CAMS[b.dataset.cam];camGoal={p:new THREE.Vector3(...p),t:new THREE.Vector3(...t)};}));
+controls.addEventListener('start',()=>{camGoal=null;});
+function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<700?60:42;camera.updateProjectionMatrix();}
+window.addEventListener('resize',resize); resize();
+
+// ---------- loop ----------
+const clock=new THREE.Clock(); let hudAcc=0, sampleT=0;
+const tmpC=new THREE.Color();
+function tick(){
+  const dt=Math.min(clock.getDelta(),.05), now=clock.elapsedTime;
+  if(!paused){let h=dt*speed;while(h>0){const s=Math.min(h,.1);step(s);h-=s;}}
+  durians.forEach(d=>{ripeColor(d.r,tmpC);d.bm.color.copy(tmpC);d.sm.color.copy(tmpC).multiplyScalar(.82);});
+  // gas: drift up, toward sensor, out through fan when on
+  if(particles.visible){
+    const sx=RW/2-.4,sy=1.6,sz=.3, fx=2.4,fy=RH,fz=-1, dens=Math.min(1,S.eth/80+.15);
+    pMat.opacity=.15+.5*dens;
+    for(let i=0;i<NP;i++){const v=pVel[i];v.age+=dt*(paused?0:1);
+      let x=pPos[i*3],y=pPos[i*3+1],z=pPos[i*3+2];
+      const tx=S.fan?fx:sx, ty=S.fan?fy:sy, tz=S.fan?fz:sz, pull=S.fan?.5:.12;
+      if(!paused){x+=(v.x+(tx-x)*pull*.2)*dt*1.4;y+=(v.y*.4+(ty-y)*pull*.2)*dt*1.4;z+=(v.z+(tz-z)*pull*.2)*dt*1.4;}
+      x=Math.max(-RW/2+.1,Math.min(RW/2-.1,x));y=Math.max(.1,Math.min(RH-.05,y));z=Math.max(-RD/2+.1,Math.min(RD/2-.1,z));
+      pPos[i*3]=x;pPos[i*3+1]=y;pPos[i*3+2]=z;
+      if(v.age>v.life||(S.fan&&Math.hypot(x-fx,y-fy,z-fz)<.4))resetP(i);}
+    pGeo.attributes.position.needsUpdate=true;
+  }
+  if(S.fan&&!paused)fanBlades.rotation.y+=dt*14;
+  // sensor: sample pulse every ~1.2s, wifi rings
+  sampleT+=dt; const ph=(sampleT%1.2)/1.2;
+  coneMat.opacity=.04+.08*Math.max(0,1-ph*3);
+  rings.forEach((r,i)=>{const k=(ph*1.6-i*.22);r.material.opacity=k>0&&k<1?(1-k)*.8:0;});
+  led.material.color.setHex(alarm?0xd85a3c:0x62b04a);led.material.emissive.setHex(alarm?0xd85a3c:0x62b04a);
+  led.material.emissiveIntensity=alarm?(Math.sin(now*8)>0?1.6:.2):1.1;
+  gwLed.material.color.setHex(ph<.15?0xffffff:0x6fd3ff);
+  hudAcc+=dt; if(hudAcc>.2){hudAcc=0;updateHud();}
+  if(camGoal){const k=1-Math.exp(-dt*3.5);camera.position.lerp(camGoal.p,k);controls.target.lerp(camGoal.t,k);if(camera.position.distanceTo(camGoal.p)<.05)camGoal=null;}
+  controls.update(); renderer.render(scene,camera); requestAnimationFrame(tick);
+}
+updateHud(); requestAnimationFrame(tick);
+})();
+</script>
+
+<footer class="enh-foot">แนวคิด · ภาพและค่าทั้งหมดเป็นการจำลอง ยังไม่มีข้อมูลวัดจริง<br><a href="./ds-300-grader.html">DS-300 เครื่องคัดแบบพกพา</a> · <a href="./e-100.html">E-100 เครื่องดมหน้าร้าน</a> · <a href="./durian-ripening-room.html">ห้องบ่มทุเรียน</a> · © 2026 ณัฐพฤทธ์ เอกประเสริฐ — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต</footer><script>(function(){function f(){var n=document.querySelector("nav.enh-nav"),o=document.querySelector("footer.enh-foot"),r=document.documentElement.style;if(n)r.setProperty("--enh-nav-h",n.offsetHeight+"px");if(o)r.setProperty("--enh-foot-h",o.offsetHeight+"px");window.dispatchEvent(new Event("resize"));}addEventListener("load",f);setTimeout(f,300);if(window.ResizeObserver){var o=new ResizeObserver(f);document.querySelectorAll("nav.enh-nav,footer.enh-foot").forEach(function(e){o.observe(e)});}})();</script></body></html>
