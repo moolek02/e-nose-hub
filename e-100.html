@@ -7,7 +7,7 @@
 <meta name="description" content="เครื่องดมทุเรียนอัจฉริยะ · E-100 แนวคิดเครื่องดมวางบนเคาน์เตอร์ ให้ลูกค้าดมเช็กทุเรียนพรีเมียมทีละลูกก่อนซื้อ ค่าทั้งหมดเป็นการจำลอง">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: shared nav, header, [3D stall viewer | customer display + sniff demo], DS-300 vs E-100 table, method, limits, footer */
+/* Layout: shared nav, header, [3D stall viewer | customer display + sniff demo], DS-301 vs E-100 table, method, limits, footer */
 :root{color-scheme:dark;--bg:#14170f;--panel:#1d2117;--panel-2:#101309;--fg:#e7eadc;--muted:#a3a993;--line:#33392a;--accent:#b6cf6a;--accent-bg:#2b3419;
   --unit:#f2b705;--raw:#62b04a;--ripe:#e8c53c;--over:#c96a3e;--unsure:#7fb2d9;
   --display:"IBM Plex Sans Thai",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
@@ -82,12 +82,12 @@ footer.own{font-size:12px;color:var(--muted);border-top:1px solid var(--line);pa
 </style>
 </head>
 <body>
-<style id="enh-nav-css">nav.enh-nav{all:initial;box-sizing:border-box;display:flex;align-items:center;gap:6px 16px;width:100%;padding:8px max(14px,env(safe-area-inset-left,0px));background:#14170f;border-bottom:1px solid #33392a;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7eadc;position:relative;z-index:1}nav.enh-nav *{box-sizing:border-box}nav.enh-nav .enh-brand{all:unset;cursor:pointer;font-weight:600;color:#b6cf6a;white-space:nowrap;flex:none}nav.enh-nav .enh-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}nav.enh-nav .enh-links::-webkit-scrollbar{display:none}nav.enh-nav .enh-links a{all:unset;cursor:pointer;white-space:nowrap;padding:6px 10px;border-radius:8px;color:#a3a993;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,sans-serif}nav.enh-nav .enh-links a:hover{color:#e7eadc;background:#1d2117}nav.enh-nav .enh-links a:focus-visible{outline:2px solid #b6cf6a;outline-offset:1px}nav.enh-nav .enh-links a[aria-current="page"]{color:#14170f;background:#b6cf6a}@media (max-width:560px){nav.enh-nav .enh-brand{display:none}nav.enh-nav .enh-links a{display:inline-flex;align-items:center;box-sizing:border-box;min-height:44px}}footer.enh-foot{all:initial;display:block;box-sizing:border-box;width:100%;padding:14px 16px 22px;text-align:center;font:12px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;color:#8d93ab}footer.enh-foot a{color:#b6cf6a;text-decoration:none}footer.enh-foot a:hover{text-decoration:underline}</style><nav class="enh-nav" aria-label="เมนู เครื่องดมทุเรียนอัจฉริยะ"><a class="enh-brand" href="./index.html">เครื่องดมทุเรียนอัจฉริยะ</a><div class="enh-links"><a href="./index.html">หน้ารวม</a><a href="./poc.html">Proof of Concept</a><a href="./simulation.html">Simulation</a><a href="./hamsterhub-project.html">โมเดล 3D</a><a href="./e-nose-wiring-diagram.html">Wiring</a><a href="./ds-300-grader.html">DS-300 เครื่องคัด</a><a href="./e-100.html" aria-current="page">E-100 หน้าร้าน</a><a href="./durian-ripening-room.html">ห้องบ่มทุเรียน</a><a href="./docs.html">เอกสาร</a></div></nav><script>(function(){var l=document.querySelector("nav.enh-nav .enh-links"),a=l&&l.querySelector("[aria-current]");if(a)l.scrollLeft=a.offsetLeft-l.offsetLeft-(l.clientWidth-a.offsetWidth)/2;})();</script>
+<style id="enh-nav-css">nav.enh-nav{all:initial;box-sizing:border-box;display:flex;align-items:center;gap:6px 16px;width:100%;padding:8px max(14px,env(safe-area-inset-left,0px));background:#14170f;border-bottom:1px solid #33392a;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7eadc;position:relative;z-index:1}nav.enh-nav *{box-sizing:border-box}nav.enh-nav .enh-brand{all:unset;cursor:pointer;font-weight:600;color:#b6cf6a;white-space:nowrap;flex:none}nav.enh-nav .enh-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}nav.enh-nav .enh-links::-webkit-scrollbar{display:none}nav.enh-nav .enh-links a{all:unset;cursor:pointer;white-space:nowrap;padding:6px 10px;border-radius:8px;color:#a3a993;font:500 14px/1.4 "IBM Plex Sans Thai",system-ui,sans-serif}nav.enh-nav .enh-links a:hover{color:#e7eadc;background:#1d2117}nav.enh-nav .enh-links a:focus-visible{outline:2px solid #b6cf6a;outline-offset:1px}nav.enh-nav .enh-links a[aria-current="page"]{color:#14170f;background:#b6cf6a}@media (max-width:560px){nav.enh-nav .enh-brand{display:none}nav.enh-nav .enh-links a{display:inline-flex;align-items:center;box-sizing:border-box;min-height:44px}}footer.enh-foot{all:initial;display:block;box-sizing:border-box;width:100%;padding:14px 16px 22px;text-align:center;font:12px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;color:#8d93ab}footer.enh-foot a{color:#b6cf6a;text-decoration:none}footer.enh-foot a:hover{text-decoration:underline}</style><nav class="enh-nav" aria-label="เมนู เครื่องดมทุเรียนอัจฉริยะ"><a class="enh-brand" href="./index.html">เครื่องดมทุเรียนอัจฉริยะ</a><div class="enh-links"><a href="./index.html">หน้ารวม</a><a href="./poc.html">Proof of Concept</a><a href="./simulation.html">Simulation</a><a href="./hamsterhub-project.html">โมเดล 3D</a><a href="./e-nose-wiring-diagram.html">Wiring</a><a href="./ds-301-grader.html">DS-301 เครื่องคัด</a><a href="./e-100.html" aria-current="page">E-100 หน้าร้าน</a><a href="./durian-ripening-room.html">ห้องบ่มทุเรียน</a><a href="./docs.html">เอกสาร</a></div></nav><script>(function(){var l=document.querySelector("nav.enh-nav .enh-links"),a=l&&l.querySelector("[aria-current]");if(a)l.scrollLeft=a.offsetLeft-l.offsetLeft-(l.clientWidth-a.offsetWidth)/2;})();</script>
 <div class="wrap">
 <header>
   <div class="eyebrow">E-NOSE · E-100 · POINT-OF-SALE CONCEPT</div>
   <h1>E-100 เครื่องดมหน้าร้าน</h1>
-  <p class="sub">เครื่องเล็กวางบนเคาน์เตอร์หรือแผงขาย ให้ลูกค้าเลือกทุเรียนพรีเมียมแล้วดมเช็กทีละลูกก่อนซื้อ ไฟเกรดและผลหันไปทางลูกค้า เพื่อให้ผู้ซื้อมั่นใจขึ้น ใช้ชุดเซนเซอร์เดียวกับ DS-300</p>
+  <p class="sub">เครื่องเล็กวางบนเคาน์เตอร์หรือแผงขาย ให้ลูกค้าเลือกทุเรียนพรีเมียมแล้วดมเช็กทีละลูกก่อนซื้อ ไฟเกรดและผลหันไปทางลูกค้า เพื่อให้ผู้ซื้อมั่นใจขึ้น ใช้ชุดเซนเซอร์เดียวกับ DS-301</p>
   <div class="badges"><span class="badge">แนวคิด ยังไม่ได้สร้างจริง</span><span class="badge">ค่าทั้งหมดเป็นการจำลอง ไม่ใช่ข้อมูลวัดจริง</span><span class="badge c">ไม่ระบุน้ำหนัก แบตเตอรี่ หรือราคา</span></div>
 </header>
 
@@ -128,18 +128,18 @@ footer.own{font-size:12px;color:var(--muted);border-top:1px solid var(--line);pa
 </section>
 
 <section class="box">
-  <h2>E-100 ต่างจาก DS-300 อย่างไร</h2>
+  <h2>E-100 ต่างจาก DS-301 อย่างไร</h2>
   <div class="tbl"><table>
-    <tr><th>หัวข้อ</th><th>DS-300 เครื่องคัดแบบพกพา</th><th>E-100 เครื่องดมหน้าร้าน</th></tr>
+    <tr><th>หัวข้อ</th><th>DS-301 สายพานคัดเกรด</th><th>E-100 เครื่องดมหน้าร้าน</th></tr>
     <tr><td>ใช้ที่ไหน</td><td>สายคัดบรรจุ ล้ง โรงคัด</td><td>หน้าร้าน แผงตลาด เคาน์เตอร์ขายทุเรียนพรีเมียม</td></tr>
     <tr><td>ใครใช้</td><td>พนักงานคัด</td><td>คนขายกับลูกค้า ลูกค้าเห็นผลเอง</td></tr>
     <tr><td>การทำงาน</td><td>ทุเรียนต่อคิว ตรวจทีละลูกต่อเนื่อง</td><td>ดมเฉพาะลูกที่ลูกค้าเลือก ทีละลูก</td></tr>
     <tr><td>ผลลัพธ์</td><td>คัดลงลัง 4 ช่อง และบันทึกผล</td><td>ไฟเกรด 4 สีกับข้อความบนจอที่หันหาลูกค้า</td></tr>
     <tr><td>เป้าหมาย</td><td>คัดลูกก่อนบรรจุส่ง</td><td>สร้างความมั่นใจให้ผู้ซื้อก่อนจ่ายเงิน</td></tr>
-    <tr><td>รูปร่าง (แนวคิด)</td><td>ตู้ขนาดกระเป๋าเดินทาง มีล้อลากและหูหิ้ว</td><td>เครื่องเล็กพอวางบนเคาน์เตอร์ มีโดมใสใส่ทุเรียน 1 ลูก</td></tr>
+    <tr><td>รูปร่าง (แนวคิด)</td><td>สายพานลำเลียงผ่านตู้ห้องดม ราว 70 × 55 × 65 ซม.</td><td>เครื่องเล็กพอวางบนเคาน์เตอร์ มีโดมใสใส่ทุเรียน 1 ลูก</td></tr>
     <tr><td>ชุดเซนเซอร์</td><td colspan="2">เหมือนกัน: ESP32-S3 + ADS1115 + TGS2602 / TGS2603 + BME688 + ปั๊มลม + วาล์ว 3 ทาง ตามผังต่อสาย</td></tr>
   </table></div>
-  <p class="note">ทั้งสองเครื่องเป็นแนวคิด ยังไม่ได้สร้างจริง ไม่ระบุขนาดจริง น้ำหนัก แบตเตอรี่ หรือราคา · ดู <a href="./ds-300-grader.html">DS-300</a></p>
+  <p class="note">ทั้งสองเครื่องเป็นแนวคิด ยังไม่ได้สร้างจริง ไม่ระบุขนาดจริง น้ำหนัก แบตเตอรี่ หรือราคา · ดู <a href="./ds-301-grader.html">DS-301</a></p>
 </section>
 
 <section class="box">
@@ -164,7 +164,7 @@ footer.own{font-size:12px;color:var(--muted);border-top:1px solid var(--line);pa
   </ul>
 </section>
 
-<footer class="own">ภาพ 3 มิติและตัวเลขทั้งหมดในหน้านี้เป็นการจำลองเพื่ออธิบายแนวคิด<br>ทีม พี่จร้าาา · © 2026 ณัฐพฤทธ์ เอกประเสริฐ — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต<br><a href="./ds-300-grader.html">DS-300 เครื่องคัดแบบพกพา</a> · <a href="./e-100.html">E-100 เครื่องดมหน้าร้าน</a> · <a href="./durian-ripening-room.html">ห้องบ่มทุเรียน</a></footer>
+<footer class="own">ภาพ 3 มิติและตัวเลขทั้งหมดในหน้านี้เป็นการจำลองเพื่ออธิบายแนวคิด<br>ทีม พี่จร้าาา · © 2026 ณัฐพฤทธ์ เอกประเสริฐ — All rights reserved. ห้ามนำไปใช้โดยไม่ได้รับอนุญาต<br><a href="./ds-301-grader.html">DS-301 สายพานคัดเกรด</a> · <a href="./e-100.html">E-100 เครื่องดมหน้าร้าน</a> · <a href="./durian-ripening-room.html">ห้องบ่มทุเรียน</a></footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -172,7 +172,7 @@ footer.own{font-size:12px;color:var(--muted);border-top:1px solid var(--line);pa
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-// ---------- gas model (same as DS-300 / Simulation) ----------
+// ---------- gas model (same as DS-301 / Simulation) ----------
 const SENSORS=[
   {name:'TGS2602',w:[0.30,0.20,0.15,0.10,0.02,0.05],tau:2.5,col:'#f2b705'},
   {name:'TGS2603',w:[0.25,0.15,0.10,0.08,0.02,0.04],tau:3.0,col:'#e8833a'},
@@ -251,7 +251,7 @@ if(renderer){
   const sign=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.3),new THREE.MeshBasicMaterial({map:canvasTex(640,120,(g,w,h)=>{g.fillStyle='#1d2125';g.fillRect(0,0,w,h);
     g.fillStyle='#f2b705';g.font='700 56px "IBM Plex Sans Thai", sans-serif';g.textAlign='center';g.fillText('ทุเรียนพรีเมียม',w/2,80);})}));
   sign.position.set(0,2.12,1.02); scene.add(sign);
-  // durian geometry (shared with DS-300 look)
+  // durian geometry (shared with DS-301 look)
   const bodyGeo=new THREE.SphereGeometry(.3,22,16), spikeGeo=new THREE.ConeGeometry(.055,.15,5); spikeGeo.translate(0,.075,0);
   const SP=64, up=V3(0,1,0), q=new THREE.Quaternion(), one=V3(1,1,1), mats=[];
   for(let i=0;i<SP;i++){const y=1-(i+.5)/SP*2,r=Math.sqrt(1-y*y),th=i*2.39996,n=V3(Math.cos(th)*r,y,Math.sin(th)*r);q.setFromUnitVectors(up,n);mats.push(new THREE.Matrix4().compose(n.clone().multiplyScalar(.28),q.clone(),one));}
