@@ -1,0 +1,106 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>Business Model Canvas · เครื่องดมทุเรียนอัจฉริยะ</title>
+<style>
+@page{size:297mm 210mm;margin:0}
+:root{--bg:#0f1914;--ink:#1b2a22;--line:#c8d1bf;--lime:#5f7d12;--amb:#9a6400;--blue:#1f5f99;--red:#b23b30;--mut:#5b6b61}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:297mm;height:210mm;font-family:"Leelawadee UI",Tahoma,sans-serif;color:var(--ink);background:#fff}
+.page{width:297mm;height:210mm;padding:7mm 8mm 6mm;display:flex;flex-direction:column;overflow:hidden}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #2c4639;padding-bottom:1.6mm;margin-bottom:2mm}
+.hd h1{font-size:16pt;line-height:1.1}.hd h1 span{color:var(--lime)}
+.hd .r{font-size:7.6pt;color:var(--mut);text-align:right;line-height:1.35}
+.grid{flex:1;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:1fr 1fr 0.72fr;gap:1.6mm;min-height:0}
+.c{border:1.2px solid var(--line);border-radius:2.2mm;padding:1.8mm 2.2mm;overflow:hidden;background:#fbfcf8;display:flex;flex-direction:column}
+.c h2{font-size:9.4pt;color:#2c4639;margin-bottom:1mm;display:flex;justify-content:space-between;align-items:baseline;gap:2mm}
+.c h2 small{font-size:6.4pt;color:var(--mut);font-weight:normal;white-space:nowrap}
+.c ul{list-style:none;font-size:7.9pt;line-height:1.34}
+.c li{padding-left:2.6mm;position:relative;margin-bottom:.7mm}
+.c li:before{content:"•";position:absolute;left:0;color:var(--lime);font-weight:bold}
+.c li.q:before{content:"?";color:var(--amb)}
+.kp{grid-column:1/3;grid-row:1/3}.ka{grid-column:3/5;grid-row:1/2}.kr{grid-column:3/5;grid-row:2/3}
+.vp{grid-column:5/7;grid-row:1/3;background:#f4f8e8;border-color:#9fb86a}.cr{grid-column:7/9;grid-row:1/2}.ch{grid-column:7/9;grid-row:2/3}
+.cs{grid-column:9/11;grid-row:1/3}.cost{grid-column:1/6;grid-row:3/4}.rev{grid-column:6/11;grid-row:3/4}
+.t{display:inline-block;font-size:5.9pt;font-weight:bold;border-radius:1mm;padding:0 1mm;line-height:1.45;vertical-align:1px;white-space:nowrap}
+.src{color:#3c5a10;background:#e6f0cc}.hyp{color:#8a5a00;background:#fbe9c4}.con{color:#1f5f99;background:#dceafa}.lim{color:var(--red);background:#f8dcd8}.calc{color:#5a3d8a;background:#e8def6}
+b{color:#13241a}
+.need{margin-top:auto;font-size:7.1pt;color:var(--amb);border-top:1px dashed #e0c48a;padding-top:.8mm;line-height:1.3}
+.ft{display:flex;justify-content:space-between;font-size:6.6pt;color:var(--mut);margin-top:1.6mm;line-height:1.3;gap:4mm}
+</style></head><body><div class="page">
+<div class="hd"><h1>Business Model Canvas · <span>เครื่องดมทุเรียนอัจฉริยะ</span></h1>
+<div class="r">ทีม พี่จร้าาา · IoTE KMITL 2026 Showcase · สาย IoT &amp; Innovation · ฉบับร่าง 7 พ.ย. 2026<br>สถานะ: ทุกเครื่อง (DS-301 · E-100 · R-100) เป็น<b>แนวคิด</b> ยังไม่ได้สร้างจริง ยังไม่มีข้อมูลวัดจริง ไม่อ้างความแม่นยำ</div></div>
+<div class="grid">
+
+<div class="c kp"><h2>พันธมิตรหลัก <small>Key Partners</small></h2><ul>
+<li><b>ผู้เชี่ยวชาญทุเรียน / ล้ง</b> ให้เฉลยความสุกรายลูก สำหรับตั้งเกณฑ์ <span class="t src">PoC หน้า 5</span></li>
+<li><b>ล้ง 1 แห่ง + ร้าน 1 แห่ง</b> สำหรับทดลองนำร่อง <span class="t hyp">ยังไม่มี</span></li>
+<li><b>ห้องแล็บ GC-MS / NIR</b> เป็นเฉลยในระดับ C <span class="t src">PoC หน้า 5</span></li>
+<li><b>NETPIE</b> (แดชบอร์ด/Node-RED) และ <b>LINE Messaging API</b> <span class="t src">PoC หน้า 4</span></li>
+<li><b>ผู้ขายชิ้นส่วน</b>: Lazada, allnewstep, RS Thailand <span class="t src">ราคาเช็ก 26 ต.ค. 2026</span></li>
+<li class="q">อาจารย์ที่ปรึกษา / มหาวิทยาลัย / หน่วยงานด้านทุเรียนส่งออก <span class="t hyp">ต้องหา</span></li>
+<li class="q">ผู้ประกอบการห้องบ่มทุเรียน ร่วมออกแบบ R-100 <span class="t hyp">ต้องหา</span></li>
+</ul><div class="need">ต้องการ: รายชื่อล้ง/ร้าน/ห้องบ่มที่ยอมให้ทดลอง และผู้เชี่ยวชาญที่ให้เฉลยได้</div></div>
+
+<div class="c ka"><h2>กิจกรรมหลัก <small>Key Activities</small></h2><ul>
+<li>สร้างต้นแบบระดับ A: ชุดเซนเซอร์ + ห้องดมเดี่ยว <span class="t src">PoC หน้า 5</span></li>
+<li>เก็บข้อมูลทุเรียนจริง ดมลูกเดิมทุกวันจนสุกเกิน แบ่ง 3 คลาส</li>
+<li>ตั้งเกณฑ์และช่วง "ไม่แน่ใจ" ด้วย cross-validation แยกตามลูก/สวน · เทียบ 2 ชุดเซนเซอร์</li>
+<li>ทดลองนำร่อง วัดผลกระทบตามตารางในหน้า 5</li>
+<li>ออกแบบกลไก DS-301 (สายพาน ประตู ตัวแยกเลน) <span class="t lim">ยังไม่ได้ออกแบบ</span></li>
+</ul></div>
+
+<div class="c kr"><h2>ทรัพยากรหลัก <small>Key Resources</small></h2><ul>
+<li>ผังต่อสาย ESP32-S3 + ADS1115 + TGS2602/TGS2603 + BME688 ×2 <span class="t con">ผังออกแบบ</span></li>
+<li>ตรรกะตัดสินเกรด 4 ระดับ รวม "ไม่แน่ใจ" · เก็บข้อมูลออฟไลน์ <span class="t con">แผน</span></li>
+<li>แบบจำลองบนเว็บ: Simulation · DS-301 · E-100 · R-100 <span class="t con">ค่าจำลอง</span></li>
+<li><b>ชุดข้อมูลกลิ่นทุเรียนที่มีเฉลย</b> = สินทรัพย์สำคัญที่สุด <span class="t lim">ยังไม่มี</span></li>
+<li>ทีม พี่จร้าาา (ณัฐพฤทธ์ เอกประเสริฐ)</li>
+</ul></div>
+
+<div class="c vp"><h2>คุณค่าที่ส่งมอบ <small>Value Propositions</small></h2><ul>
+<li><b>ดมได้ทุกลูกที่ผ่านห้องดม ไม่ต้องผ่า</b> แทนการดูแค่ลูกที่สุ่ม เพื่อคัดลูก<b>สุกเกิน/เริ่มเสีย</b>ก่อนบรรจุ <span class="t con">แนวคิด</span></li>
+<li><b>ระดับ "ไม่แน่ใจ"</b> ส่งให้คนตรวจซ้ำ แทนการบังคับเกรด (จุดต่างจาก Chiu et al. 2025) <span class="t src">PoC หน้า 5</span></li>
+<li><b>บันทึกเกรดรายลูก</b> ผ่าน MQTT ไว้ตรวจย้อนหลัง · แจ้ง LINE · ไฟเกรดทำงานแม้ไม่มีเน็ต</li>
+<li>ลดโอกาสลูกสุกเกินหลุดลงตู้ ซึ่งมีมูลค่าเฉลี่ยราว <b>2.6 ล้านบาท/ชิปเมนต์</b> <span class="t calc">คำนวณโดยทีม · มูลค่าที่เสี่ยง ไม่ใช่ความเสียหาย</span></li>
+<li><b>E-100</b>: ผู้ซื้อเห็นเกรดความสุกก่อนซื้อ ไม่ต้องผ่าหรือเดา</li>
+<li><b>R-100</b>: ผู้ดูแลห้องบ่มเห็นสภาพในห้องและคุมพัดลม ตามที่แบบจำลองแสดง <span class="t con">ค่าจำลอง</span></li>
+<li>ชุดเซนเซอร์ต้นแบบหลักพันบาท ≈ ฿1,400–3,500 <span class="t src">ราคาเช็ก 26 ต.ค. 2026</span></li>
+<li><b>ขอบเขต:</b> ไม่แทนการผ่าวัดน้ำหนักแห้ง (มกษ.) · กลิ่นแยกอ่อน/แก่ไม่ได้ <span class="t lim">ข้อจำกัด</span></li>
+</ul></div>
+
+<div class="c cr"><h2>ความสัมพันธ์กับลูกค้า <small>Customer Relationships</small></h2><ul>
+<li>ทดลองนำร่องร่วมกับลูกค้า: สอบเทียบเกณฑ์กับทุเรียนของล้งนั้น</li>
+<li>ดูแลต่อเนื่อง: ตรวจ R0 จากลมสะอาดทุกเช้า + ดมกลิ่นมาตรฐาน ถ้าเพี้ยนเกินเกณฑ์ ล็อกเกรดและนัดสอบเทียบใหม่ <span class="t src">PoC หน้า 4</span></li>
+<li>แดชบอร์ด NETPIE + แจ้งเตือน LINE</li>
+<li class="q">ดูแลรายฤดูพร้อมสมาชิก <span class="t hyp">สมมติฐาน</span></li>
+</ul></div>
+
+<div class="c ch"><h2>ช่องทาง <small>Channels</small></h2><ul>
+<li>ติดต่อล้ง/ร้านโดยตรงเพื่อทดลองนำร่อง</li>
+<li>แบบจำลองบนเว็บ moolek02.github.io/e-nose-hub ใช้สาธิต <span class="t src">มีแล้ว</span></li>
+<li>งานประกวด/มหาวิทยาลัย (IoTE KMITL 2026)</li>
+<li class="q">เครือข่ายผู้ประกอบการล้ง / หน่วยงานรัฐด้านส่งออก <span class="t hyp">ต้องตรวจสอบ</span></li>
+</ul><div class="need">ถามกรรมการ: ล้งหรือหน่วยงานไหนที่ควรติดต่อเก็บข้อมูลจริง</div></div>
+
+<div class="c cs"><h2>กลุ่มลูกค้า <small>Customer Segments</small></h2><ul>
+<li><b>หลัก: ล้ง / โรงคัดบรรจุทุเรียนส่งออก</b> → DS-301 เครื่องคัดบนสายพาน <span class="t src">PoC · สไลด์ 12 ในเด็ค</span></li>
+<li><b>ผู้ส่งออก</b> ได้ประโยชน์จากบันทึกเกรดรายลูก</li>
+<li><b>ร้านผลไม้พรีเมียม</b> → E-100 (กลุ่มทดลองตลาด)</li>
+<li><b>ผู้ประกอบการห้องบ่มทุเรียน</b> → R-100 <span class="t con">แนวคิด</span></li>
+<li>อนาคต: มะม่วง · ห้องบ่มกล้วย · โรงรมลำไย (เพิ่มโมดูล) <span class="t con">แผน</span></li>
+<li>บริบท: ทุเรียนสดไปจีนปี 2568 ราว <b>939,892 ตัน</b> · <b>150,279 ล้านบาท</b> · 58,072 ชิปเมนต์ <span class="t src">Nation Thailand</span></li>
+</ul><div class="need">ยังไม่ได้สัมภาษณ์ลูกค้า · ไม่มีจำนวนล้ง/ร้าน/ห้องบ่ม (ขนาดตลาด) → ต้องหาข้อมูล</div></div>
+
+<div class="c cost"><h2>โครงสร้างต้นทุน <small>Cost Structure</small></h2><ul>
+<li><b>ระดับ A ต้นแบบ</b> ชุดเซนเซอร์ + ระบบท่อ ≈ <b>฿1,400–3,500</b> (ชุดเดิม ≈฿3,500 · ชุดประหยัด ≈฿1,400–2,100) + ESP32-S3 ≈฿200 <span class="t src">ราคาเช็ก 26 ต.ค. 2026</span></li>
+<li>ไม่รวม: ค่าส่ง ไส้กรอง กล่อง ท่อ PTFE สายพาน/ประตู/ตัวแยกเลน · ค่าทุเรียนที่ใช้ทดลอง</li>
+<li><b>ระดับ B</b> 60,000–100,000 บาท · <b>ระดับ C</b> 1–3 แสนบาทขึ้นไป <span class="t calc">ประมาณการของทีม ยังไม่ขอใบเสนอราคา</span></li>
+<li>ยังไม่มีราคาเครื่องเต็มของ DS-301 / E-100 / R-100 · ค่าแรง ค่าติดตั้ง ค่าดูแล <span class="t lim">ยังไม่มีข้อมูล</span></li>
+</ul></div>
+
+<div class="c rev"><h2>กระแสรายได้ <small>Revenue Streams</small></h2><ul>
+<li><b>ขายหรือให้เช่าเครื่อง</b> + <b>ค่าสมาชิกรายฤดู</b> (แดชบอร์ด บันทึกรายลูก การสอบเทียบ) <span class="t hyp">ข้อเสนอ ยังไม่ได้ทดสอบตลาด</span></li>
+<li>ยังไม่กำหนดราคาขาย ค่าเช่า หรือรายได้ เพราะยังไม่มีต้นทุนเครื่องเต็มและข้อมูลว่าลูกค้ายอมจ่ายเท่าไร</li>
+</ul><div class="need">ต้องหาข้อมูล: ค่าใช้จ่ายตรวจคุณภาพปัจจุบันของล้ง · ค่าเสียหายเมื่อสินค้าถูกตีกลับ · ราคาเครื่องทางเลือก (data logger, NIR, เครื่องวัดเอทิลีน) · ลูกค้ายอมจ่ายแบบซื้อ เช่า หรือสมาชิก</div></div>
+
+</div>
+<div class="ft"><span>ป้าย: <span class="t src">แหล่งอ้างอิง/PoC</span> <span class="t calc">คำนวณ/ประมาณการโดยทีม</span> <span class="t con">แนวคิด/จำลอง</span> <span class="t hyp">สมมติฐานที่ต้องตรวจสอบ</span> <span class="t lim">ข้อจำกัด/ยังไม่มี</span> · ตัวเลขทั้งหมดมาจากเอกสาร Proof of Concept (moolek02.github.io/e-nose-hub/docs/e-nose-poc.pdf)</span><span>Business Model Canvas · 1 หน้า</span></div>
+</div></body></html>
