@@ -27,6 +27,7 @@ p{margin:0}
 .viewer video{display:block;width:100%;max-height:75vh;background:#000}
 .pending{padding:32px 16px;text-align:center;color:var(--muted);font-size:14px}
 .btns{display:flex;flex-wrap:wrap;gap:8px}
+.mob-only{display:none}@media (max-width:720px){#bmc .desk-only{display:none}#bmc .mob-only{display:block}}
 .btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--fg);background:var(--accent-bg);border:1px solid var(--accent);border-radius:10px;padding:8px 14px;font-size:14px}
 .btn:hover{background:#34401e}
 .btn small{font-family:var(--mono);color:var(--muted);font-size:11px}
@@ -56,9 +57,11 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 </section>
 
 <section class="doc" id="bmc">
-  <div class="hd"><h2>Business Model Canvas และแผนต่อยอด</h2><span class="meta">3 หน้า · PDF · HTML</span></div>
+  <div class="hd"><h2>Business Model Canvas และแผนต่อยอด</h2><span class="meta">3 หน้า · PDF · HTML · แผนผลไม้อื่น 5 หน้า</span></div>
   <div class="viewer"><object data="./docs/e-nose-bmc-roadmap.pdf#view=FitH" type="application/pdf" aria-label="Business Model Canvas และแผนต่อยอด 3 หน้า"><p class="pending">เบราว์เซอร์นี้แสดง PDF ในหน้าไม่ได้ <a href="./docs/e-nose-bmc-roadmap.pdf" target="_blank" rel="noopener">เปิด PDF ในแท็บใหม่</a></p></object></div>
-  <div class="btns"><a class="btn" href="./bmc.html" target="_blank" rel="noopener">หน้า BMC</a><a class="btn" href="./roadmap.html" target="_blank" rel="noopener">หน้าแผนต่อยอด</a><a class="btn" href="./docs/e-nose-bmc-roadmap.pdf" download>ดาวน์โหลด PDF รวม <small>0.2 MB</small></a><a class="btn" href="./docs/e-nose-bmc.pdf" download>BMC PDF <small>0.1 MB</small></a><a class="btn" href="./docs/e-nose-roadmap.pdf" download>แผนต่อยอด PDF <small>0.1 MB</small></a></div>
+  <div class="btns"><a class="btn" href="./docs/e-nose-bmc-roadmap.pdf" target="_blank" rel="noopener">เปิดเต็มจอ</a><a class="btn desk-only" href="./bmc.html" target="_blank" rel="noopener">หน้า BMC</a><a class="btn desk-only" href="./roadmap.html" target="_blank" rel="noopener">หน้าแผนต่อยอด</a><a class="btn" href="./docs/e-nose-bmc-roadmap.pdf" download>ดาวน์โหลด PDF รวม <small>0.2 MB</small></a><a class="btn" href="./docs/e-nose-bmc.pdf" download>BMC PDF <small>0.1 MB</small></a><a class="btn" href="./docs/e-nose-roadmap.pdf" download>แผนต่อยอด PDF <small>0.1 MB</small></a></div>
+  <div class="btns"><a class="btn" href="./fruit-plan.html" target="_blank" rel="noopener">แผนพัฒนาสำหรับผลไม้อื่น</a><a class="btn" href="./docs/e-nose-fruit-plan.pdf" download>แผนผลไม้อื่น PDF <small>0.2 MB</small></a></div>
+  <p class="note mob-only">บนมือถือ หน้า BMC และแผนต่อยอดอ่านง่ายที่สุดแบบ PDF กด "เปิดเต็มจอ" หรือดาวน์โหลด</p>
 </section>
 
 <section class="doc" id="report">

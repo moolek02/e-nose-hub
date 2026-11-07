@@ -1,0 +1,152 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>แผนพัฒนาสำหรับผลไม้อื่น · เครื่องดมทุเรียนอัจฉริยะ</title>
+<style>
+:root{--ink:#1b2a22;--line:#c8d1bf;--lime:#5f7d12;--amb:#9a6400;--red:#b23b30;--mut:#5b6b61;--blue:#1f5f99;--bg:#fbfcf8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Leelawadee UI","Noto Sans Thai",Tahoma,sans-serif;color:var(--ink);background:#fff;font-size:16px;line-height:1.6}
+main{max-width:920px;margin:0 auto;padding:20px 16px 40px}
+header{border-bottom:3px solid #2c4639;padding-bottom:10px;margin-bottom:16px}
+h1{font-size:1.65rem;line-height:1.25}h1 span{color:var(--lime)}
+.sub{color:var(--mut);font-size:.9rem;margin-top:4px}
+h2{font-size:1.25rem;color:#2c4639;margin:22px 0 8px;line-height:1.3}
+h3{font-size:1.05rem;margin:10px 0 4px}
+p,li{font-size:.95rem}
+ul{padding-left:1.2em;margin:4px 0}li{margin-bottom:3px}
+.box{border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);margin:10px 0;break-inside:avoid}
+.warn{border-color:#e3b7b1;background:#fdf3f1}
+.gate{border-color:#9fb86a;background:#f4f8e8}
+.t{display:inline-block;font-size:.72rem;font-weight:bold;border-radius:4px;padding:0 5px;line-height:1.55;vertical-align:1px;white-space:nowrap}
+.src{color:#3c5a10;background:#e6f0cc}.chk{color:#8a5a00;background:#fbe9c4}.nf{color:var(--red);background:#f8dcd8}.view{color:#5a3d8a;background:#e8def6}.poc{color:var(--blue);background:#dceafa}
+.rank{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.rk{border:1.5px solid var(--line);border-radius:10px;padding:8px;text-align:center;background:var(--bg)}
+.rk b{display:block;font-size:1.05rem}.rk small{display:block;color:var(--mut);font-size:.78rem;line-height:1.35}
+.rk.a{border-color:var(--lime);background:#f4f8e8}.rk.b{border-color:#d9b46a;background:#fdf7ea}.rk.c{border-color:#e3b7b1;background:#fdf3f1}
+.fruit{border:1.5px solid var(--line);border-radius:12px;margin:16px 0;overflow:hidden;break-inside:avoid}
+.fh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 14px;color:#fff;font-weight:bold;font-size:1.1rem}
+.fh small{font-weight:normal;font-size:.8rem;opacity:.95;text-align:right}
+.fa .fh{background:var(--lime)}.fb .fh{background:var(--amb)}.fc .fh{background:#8c4a42}
+.fb2{padding:6px 14px 12px}
+.row{display:grid;grid-template-columns:150px 1fr;gap:10px;padding:6px 0;border-bottom:1px dashed #d7dece}
+.row:last-child{border-bottom:none}.row>b{color:#2c4639;font-size:.9rem}
+.go{color:var(--lime);font-weight:bold}
+table{width:100%;border-collapse:collapse;font-size:.88rem;margin:8px 0}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#eef2e6}
+.ref{font-size:.8rem;color:var(--mut);line-height:1.5}
+footer{margin-top:24px;border-top:1px solid var(--line);padding-top:8px;font-size:.8rem;color:var(--mut)}
+@media (max-width:640px){
+ body{font-size:15px}h1{font-size:1.35rem}
+ .rank{grid-template-columns:1fr 1fr}
+ .row{grid-template-columns:1fr;gap:2px}
+ .fh{flex-direction:column;align-items:flex-start}.fh small{text-align:left}
+ table,thead,tbody,tr,th,td{display:block}thead tr{display:none}
+ tr{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;padding:4px 0}
+ td{border:none;padding:3px 10px}td:before{content:attr(data-h);display:block;font-size:.75rem;color:var(--mut);font-weight:bold}
+}
+@media print{
+ @page{size:A4;margin:12mm 12mm 14mm}
+ body{font-size:10.5pt}main{max-width:none;padding:0}
+ h2{break-after:avoid}.fruit,.box,tr{break-inside:avoid}
+}
+</style></head><body><main>
+
+<header>
+<h1>แผนพัฒนาสำหรับผลไม้อื่น · <span>เครื่องดมทุเรียนอัจฉริยะ</span></h1>
+<p class="sub">ทีม พี่จร้าาา · ผู้จัดทำ ณัฐพฤทธ์ เอกประเสริฐ · ฉบับร่าง 7 พ.ย. 2026 · เอกสารประกอบ Business Model Canvas และแผนต่อยอด (ขั้น 9)</p>
+</header>
+
+<div class="box warn"><b>อ่านก่อน:</b> เครื่องของเรายังไม่ได้สร้างจริง และ<b>ยังไม่มีค่าวัดจริงแม้แต่กับทุเรียน</b> แผนนี้จึงเป็นขั้นที่มาหลังจากพิสูจน์กับทุเรียนแล้วเท่านั้น ไม่ได้อ้างว่าเครื่องตรวจผลไม้ชนิดใดได้ ตัวเลขความแม่นยำในเอกสารนี้เป็นของงานวิจัยอื่นที่ใช้เครื่องและวิธีต่างจากเรา ไม่ใช่ของเครื่องเรา</div>
+
+<div class="box gate"><b>เริ่มแผนนี้เมื่อ:</b> ขั้น 1–3 ของแผนต่อยอดผ่านแล้ว คือประกอบชุดเซนเซอร์ วัดค่าจริงกับทุเรียน และวิธีตั้งเกณฑ์กับทุเรียนผ่านเกณฑ์ที่ตั้งไว้ก่อนทดลอง <span class="t poc">แผนต่อยอด ขั้น 9 · PoC หน้า 5</span><br>
+PoC เขียนไว้ว่าจะ "ต่อยอดไปมะม่วง ห้องบ่มกล้วย โรงรมลำไย โดยเพิ่มโมดูล" และแผนทดสอบขั้นแรกใช้กล้วยกับมะม่วงเป็น "กลิ่นง่าย" ตรวจว่าเครื่องตอบสนองอยู่แล้ว <span class="t poc">PoC หน้า 5</span></div>
+
+<p><b>ป้ายในเอกสาร:</b> <span class="t src">เปิดอ่านแล้ว</span> แหล่งที่ผู้วิจัยเปิดอ่านต้นฉบับหรือบทคัดย่อแล้ว · <span class="t chk">ต้องตรวจก่อน</span> ยังไม่ได้เปิดต้นฉบับ จึงไม่ใช้เป็นข้อเท็จจริงหรือตัวเลข · <span class="t nf">ยังไม่พบข้อมูล</span> · <span class="t view">ข้อสรุปของทีม</span> ความเห็น ไม่ใช่ข้อเท็จจริงจากแหล่ง · <span class="t poc">PoC</span></p>
+
+<h2>ลำดับความเหมาะสม</h2>
+<div class="rank">
+ <div class="rk a"><b>1 · กล้วย</b><small>ห้องบ่ม · มีงานวิจัยมากสุด</small></div>
+ <div class="rk a"><b>2 · มะม่วง</b><small>มีงานวิจัย + ตัวเลขส่งออก</small></div>
+ <div class="rk b"><b>3 · มะละกอ</b><small>ข้อมูลน้อย · ตัวเลือกรอง</small></div>
+ <div class="rk c"><b>4 · ลำไย</b><small>โจทย์ต่าง · วิจัยก่อน</small></div>
+ <div class="rk c"><b>5 · มังคุด</b><small>ยังไม่พบข้อมูลกลิ่น</small></div>
+</div>
+<p>ไม่รวมอะโวคาโด เพราะยังไม่พบงาน e-nose หรือข้อมูลสารระเหยที่ใช้อ้างได้ <span class="t nf">ยังไม่พบข้อมูล</span> · ลำดับนี้เป็น<span class="t view">ข้อสรุปของทีม</span>จากปริมาณหลักฐานที่พบ ไม่ใช่ผลทดลอง</p>
+
+<h2>ข้อจำกัดร่วม (ใช้กับทุกผลไม้)</h2>
+<div class="box"><ul>
+<li>เซนเซอร์ MOS ราคาถูกวัดสารรายชนิดไม่ได้ และไม่มีรุ่นที่ดาต้าชีตระบุ ethylene <span class="t poc">PoC หน้า 6</span> จึงดูได้แค่ "รูปแบบกลิ่นรวม" ของเซนเซอร์หลายตัว ต้องยืนยันด้วย GC-MS ไม่โยงเซนเซอร์ตัวใดกับสารตัวใด</li>
+<li>งานวิจัยหนึ่งใช้ BME688 ปรับอุณหภูมิฮีตเตอร์ แยก<b>การมี/ไม่มีเอทิลีน</b>ในอากาศเหนือผลไม้ climacteric 7 ชนิด ได้ 92.9% (macro F1 91.9%) บนชุดตรวจสอบ ผู้เขียนเรียกว่าการศึกษาความเป็นไปได้ และยังต้องสอบเทียบตามความเข้มข้นต่อ — นี่คือการจำแนก 2 กลุ่ม <b>ไม่ใช่ระดับความสุก</b> <span class="t src">เปิดอ่านแล้ว · Palmer et al. 2026</span></li>
+<li>งาน e-nose ทุเรียนรายงานว่าเซนเซอร์ตระกูล MQ ค่าเพี้ยนมากหลัง 3 เดือน ต้องสอบเทียบหรือเปลี่ยนบ่อย ซึ่งเกี่ยวกับชุดประหยัดของเรา (MQ-3 + MQ-135) <span class="t src">เปิดอ่านแล้ว · Chiu et al. 2025</span></li>
+<li>ยังไม่พบงานที่ใช้ชุดเซนเซอร์เดียวกับเรา (TGS2602/TGS2603 + BME688) กับผลไม้เหล่านี้ และไม่พบงานที่วัดในล้งหรือห้องบ่มจริง ทุกอย่างด้านล่างจึงเป็นสมมติฐานที่ต้องทดสอบ <span class="t view">ข้อสรุปของทีม</span></li>
+</ul></div>
+
+<h2>รายผลไม้</h2>
+
+<div class="fruit fa"><div class="fh">1 · กล้วย (ห้องบ่ม)<small>ห้องบ่มกล้วยเป็นตลาดอนาคตใน PoC ไม่ใช่ R-100</small></div><div class="fb2">
+<div class="row"><b>กลิ่น / สาร</b><div>กล้วยเป็นผลไม้ climacteric ที่ทีมคาดว่าสัญญาณเอทิลีนและกลิ่นสุกชัด <span class="t view">ข้อสรุปของทีม</span> · ชื่อสารกลิ่นเฉพาะของกล้วย <span class="t nf">ยังไม่พบแหล่งยืนยัน</span> · รายชื่อเอสเทอร์จาก GC-MS ในงาน Chen 2018 <span class="t chk">ต้องตรวจก่อน</span></div></div>
+<div class="row"><b>หลักฐานงานวิจัย</b><div><ul>
+<li>e-nose MOS 7 เซนเซอร์ + กล้องสีเปลือก จำแนกกล้วย 4 ระยะ (ดิบ/กึ่งสุก/สุก/สุกเกิน) ได้ครบในชุดทดสอบของงานนั้น <span class="t src">เปิดอ่านแล้ว · Chen et al. 2018</span></li>
+<li>ระบบ IoT MQ-3 + MQ-135 + ESP32 รายงานกล้วย 95% (cross-validated) จากตัวอย่าง 25 ผลในห้องปฏิบัติการ เป้าหมายคือตรวจการบ่มด้วยสารเคมี — ตัวอย่างน้อย ใช้เป็นแนวโน้มเท่านั้น <span class="t src">เปิดอ่านแล้ว · Welekar et al.</span></li>
+</ul></div></div>
+<div class="row"><b>ตลาด</b><div>ตัวเลขส่งออกกล้วยสดจากหน่วยงานทางการ และจำนวนห้องบ่มกล้วยในไทย <span class="t nf">ยังไม่พบข้อมูล</span></div></div>
+<div class="row"><b>ข้อจำกัด</b><div>กล้วยดิบปล่อยกลิ่นน้อย · สีเปลือกเป็นตัวชี้วัดที่ถูกและใช้อยู่แล้ว (Chen 2018 เองก็ใช้กล้องคู่กับ e-nose) จึงต้องพิสูจน์ว่ากลิ่นเพิ่มคุณค่าเหนือการดูสี · มูลค่าต่อลูกต่ำ เหมาะกับการวัดทั้งห้องบ่มมากกว่าดมทีละลูก <span class="t view">ข้อสรุปของทีม</span></div></div>
+<div class="row"><b>สิ่งที่ต้องทดลอง</b><div>วัดกล้วยล็อตเดียวกันทุกวันจนสุกเกิน คู่กับภาพสีเปลือกเป็นเฉลย · เทียบว่าการใช้กลิ่น + สี ดีกว่าสีอย่างเดียวหรือไม่ · ทดลองวางเซนเซอร์ในพื้นที่ปิดขนาดเล็กแทนห้องบ่ม</div></div>
+<div class="row"><b class="go">ไปต่อเมื่อ</b><div>กลิ่นแยกระยะสุกได้ดีกว่าการดูสีอย่างเดียวบนชุดตรวจสอบ และมีผู้ประกอบการห้องบ่มกล้วยยืนยันว่าต้องการ</div></div>
+</div></div>
+
+<div class="fruit fa"><div class="fh">2 · มะม่วง<small>มีงานวิจัยกลิ่นตามระยะสุก + ตัวเลขส่งออก</small></div><div class="fb2">
+<div class="row"><b>กลิ่น / สาร</b><div>มีงานวัดสารระเหยของมะม่วง 'Tommy Atkins' ระหว่างสุกแบบเรียลไทม์ด้วย PTR-ToF-MS พบสัญญาณหลายช่องที่สัมพันธ์กับการสุก แยกพันธุ์ได้ และระบุสาร 22 ช่องด้วย GC-MS ผู้เขียนเสนอว่านำไปสู่เครื่องวิเคราะห์ headspace หรือ e-nose ได้ <span class="t src">เปิดอ่านแล้ว · White et al. 2016</span> · ข้ออ้างว่า "เอสเทอร์ที่เพิ่มขึ้นบอกผลสุกเกิน" มาจากข่าวมหาวิทยาลัย <span class="t chk">ต้องตรวจก่อน</span></div></div>
+<div class="row"><b>หลักฐานงานวิจัย</b><div><ul>
+<li>ระบบ MQ-3 + MQ-135 + ESP32 รายงานมะม่วง 92% จากตัวอย่าง 25 ผลในห้องปฏิบัติการ <span class="t src">เปิดอ่านแล้ว · Welekar et al.</span></li>
+<li>มีงาน e-nose MQ + PCA + SVM จำแนกความสุกมะม่วงพันธุ์ Gold Susu <span class="t src">เปิดอ่านแล้ว (ชื่อเรื่อง) · Fakhrul Anwar et al. 2024</span> ตัวเลขความแม่นยำ <span class="t chk">ต้องตรวจก่อน</span></li>
+<li>งานที่ใช้ BME688 กับมะม่วงโดยตรง <span class="t nf">ยังไม่พบข้อมูล</span></li>
+</ul></div></div>
+<div class="row"><b>ตลาด</b><div>ปี 2567 ไทยส่งออกมะม่วงสด <b>4,716 ล้านบาท</b> เพิ่ม 45.68% · ตลาดหลักเกาหลีใต้ 2,931 ล้านบาท (62.2%) และมาเลเซีย 1,191 ล้านบาท (25.3%) <span class="t src">เปิดอ่านแล้ว · The Nation อ้างกระทรวงพาณิชย์</span> · ตัวเลขปี 2568 ทั้งปี <span class="t nf">ยังไม่พบข้อมูล</span></div></div>
+<div class="row"><b>ข้อจำกัด</b><div>กลิ่นต่างกันตามพันธุ์ (White 2016 ระบุว่าสารระเหยแยกพันธุ์ได้) จึงต้องมีเกณฑ์แยกต่อพันธุ์ ทำให้งานสอบเทียบมากขึ้น <span class="t view">ข้อสรุปของทีม</span></div></div>
+<div class="row"><b>สิ่งที่ต้องทดลอง</b><div>เลือกพันธุ์ส่งออกหลัก 1 พันธุ์ก่อน · ดมผลเดิมทุกวันจนสุกเกิน มีผู้เชี่ยวชาญให้เฉลย 3 คลาส · ใช้ cross-validation แยกตามผลและสวนเหมือนทุเรียน · ส่ง GC-MS บางตัวอย่างเพื่อดูว่ากลิ่นที่เปลี่ยนคือสารอะไร (ระดับ C)</div></div>
+<div class="row"><b class="go">ไปต่อเมื่อ</b><div>แยกดิบ/สุก/สุกเกินได้ในพันธุ์แรกตามเกณฑ์ที่ตั้งไว้ก่อนทดลอง และมีผู้ส่งออกมะม่วงยอมให้ทดลองนำร่อง</div></div>
+</div></div>
+
+<div class="fruit fb"><div class="fh">3 · มะละกอ<small>ตัวเลือกรอง · ข้อมูลน้อย</small></div><div class="fb2">
+<div class="row"><b>กลิ่น / สาร</b><div>สารระเหยหลักของมะละกอ <span class="t nf">ยังไม่พบข้อมูล</span></div></div>
+<div class="row"><b>หลักฐานงานวิจัย</b><div>ระบบ MQ-3 + MQ-135 + ESP32 รายงานมะละกอ 90% จากตัวอย่าง 25 ผล <span class="t src">เปิดอ่านแล้ว · Welekar et al.</span> · วิทยานิพนธ์ที่กล่าวถึง e-nose กับมะละกอ <span class="t chk">ต้องตรวจก่อน</span></div></div>
+<div class="row"><b>ตลาด</b><div>ตัวเลขส่งออกมะละกอสด <span class="t nf">ยังไม่พบข้อมูล</span></div></div>
+<div class="row"><b>ข้อจำกัด</b><div>มีงานเดียวที่มีตัวเลข และตัวอย่างน้อย จึงไม่ใช่เป้าหมายแรก <span class="t view">ข้อสรุปของทีม</span></div></div>
+<div class="row"><b class="go">ไปต่อเมื่อ</b><div>กล้วยหรือมะม่วงผ่านแล้ว และหาข้อมูลสารระเหยกับตลาดได้</div></div>
+</div></div>
+
+<div class="fruit fc"><div class="fh">4 · ลำไย<small>โจทย์ไม่ใช่ความสุก · ต้องวิจัยก่อน</small></div><div class="fb2">
+<div class="row"><b>โจทย์</b><div>PoC ใช้คำว่า "โรงรมลำไย" <span class="t poc">PoC หน้า 5</span> โจทย์ที่คาดว่าเกี่ยวข้องคือกลิ่นกำมะถันจากการรม SO₂ และการเน่าเสียหลังเก็บ ไม่ใช่การบอกความสุก <span class="t view">ข้อสรุปของทีม</span> · มีงานปี 2024 ศึกษากลิ่นกำมะถันในลำไย <span class="t src">เปิดอ่านแล้ว (ชื่อเรื่อง) · Mahfuzur et al. 2024</span> เนื้อหา <span class="t chk">ต้องตรวจก่อน</span></div></div>
+<div class="row"><b>หลักฐานงานวิจัย</b><div>งาน e-nose MOS จำแนกความสุกลำไย <span class="t nf">ยังไม่พบข้อมูล</span> · งาน e-nose กับลำไยพันธุ์ 'Shixia' (Horticulturae 2024) <span class="t chk">ต้องตรวจก่อน</span> ยังไม่ทราบผู้เขียน เซนเซอร์ หรือผล</div></div>
+<div class="row"><b>ตลาด</b><div>ตัวเลขส่งออกที่พบยังไม่ได้เปิดต้นทาง และไม่ชัดว่ารวมลำไยแปรรูปหรือไม่ <span class="t chk">ต้องตรวจก่อน</span> จึงไม่ใส่ตัวเลข</div></div>
+<div class="row"><b>ข้อจำกัด</b><div><b>ห้ามอ้างว่าเครื่องตรวจ SO₂ ได้</b> · เซนเซอร์ของเราอาจตอบสนองต่อสารกำมะถัน แต่ยังไม่พบแหล่งยืนยัน · ลำไยไม่ใช่ climacteric จึงต้องออกแบบเกณฑ์ใหม่ทั้งหมด <span class="t view">ข้อสรุปของทีม</span></div></div>
+<div class="row"><b>สิ่งที่ต้องทดลอง</b><div>ทดสอบในห้องปฏิบัติการก่อนว่าเซนเซอร์ตอบสนองต่อลำไยที่รม SO₂ ต่างจากที่ไม่รมหรือไม่ โดยมีวิธีวัดมาตรฐานเป็นเฉลย</div></div>
+<div class="row"><b class="go">ไปต่อเมื่อ</b><div>มีหลักฐานจากการทดลองว่าเซนเซอร์แยกได้ และมีผู้เชี่ยวชาญ/ห้องแล็บที่วัดค่าเฉลยให้</div></div>
+</div></div>
+
+<div class="fruit fc"><div class="fh">5 · มังคุด<small>ยังไม่พบข้อมูลกลิ่น · ไม่ให้คำมั่น</small></div><div class="fb2">
+<div class="row"><b>กลิ่น / สาร</b><div>งาน e-nose หรือข้อมูลสารระเหยของมังคุดตามระยะสุก <span class="t nf">ยังไม่พบข้อมูล</span></div></div>
+<div class="row"><b>ตลาด</b><div>ตัวเลขส่งออกที่พบยังไม่ได้เปิดต้นทาง <span class="t chk">ต้องตรวจก่อน</span> จึงไม่ใส่ตัวเลข</div></div>
+<div class="row"><b>ข้อจำกัด</b><div>เปลือกหนาและกลิ่นเบา สัญญาณจากภายนอกผลอาจอ่อนมาก ยังไม่มีหลักฐาน <span class="t view">ข้อสรุปของทีม</span></div></div>
+<div class="row"><b>สิ่งที่ต้องทดลอง</b><div>ส่ง GC-MS ก่อน เพื่อถามว่ามีสารระเหยที่เปลี่ยนตามระยะสุกหรือไม่ (ระดับ C)</div></div>
+<div class="row"><b class="go">ไปต่อเมื่อ</b><div>GC-MS พบสารระเหยที่เปลี่ยนตามระยะสุกชัดเจน</div></div>
+</div></div>
+
+<h2>ข้อมูลที่ยังต้องหา / ต้องตรวจก่อนอ้าง</h2>
+<table><thead><tr><th style="width:28%">รายการ</th><th style="width:22%">ใช้กับ</th><th>สถานะในเอกสารนี้</th></tr></thead><tbody>
+<tr><td data-h="รายการ">ตัวเลขความแม่นยำของงาน Fakhrul Anwar et al. 2024</td><td data-h="ใช้กับ">มะม่วง</td><td data-h="สถานะ">ไม่ใส่ตัวเลข ต้องเปิดบทความต้นฉบับ</td></tr>
+<tr><td data-h="รายการ">ข้ออ้างว่าเอสเทอร์บอกผลสุกเกิน (ข่าว Leicester)</td><td data-h="ใช้กับ">มะม่วง</td><td data-h="สถานะ">ไม่ใช้เป็นข้อเท็จจริง ต้องตรวจในเปเปอร์ Metabolomics</td></tr>
+<tr><td data-h="รายการ">งาน e-nose ลำไย 'Shixia' (Horticulturae 2024)</td><td data-h="ใช้กับ">ลำไย</td><td data-h="สถานะ">ต้องตรวจ: ผู้เขียน เซนเซอร์ ผล</td></tr>
+<tr><td data-h="รายการ">เนื้อหางาน Mahfuzur et al. 2024 (กลิ่นกำมะถัน)</td><td data-h="ใช้กับ">ลำไย</td><td data-h="สถานะ">ใช้แค่ชื่อเรื่อง เนื้อหาต้องตรวจ</td></tr>
+<tr><td data-h="รายการ">ตัวเลขส่งออกลำไย มังคุด กล้วย (ปี 2566–2568)</td><td data-h="ใช้กับ">ลำไย · มังคุด · กล้วย</td><td data-h="สถานะ">ไม่ใส่ ต้องตรวจจากกรมการค้าต่างประเทศ/กระทรวงพาณิชย์ และแยกสด/แปรรูป</td></tr>
+<tr><td data-h="รายการ">ปีพิมพ์ของงาน Welekar et al.</td><td data-h="ใช้กับ">กล้วย · มะม่วง · มะละกอ</td><td data-h="สถานะ">อ้างเป็น IJ-AI ปีที่ 15 ฉบับที่ 3 โดยไม่ระบุปี</td></tr>
+<tr><td data-h="รายการ">สารระเหยหลักของกล้วยและมะละกอ</td><td data-h="ใช้กับ">กล้วย · มะละกอ</td><td data-h="สถานะ">ยังไม่พบ ไม่ระบุชื่อสาร</td></tr>
+<tr><td data-h="รายการ">จำนวนห้องบ่มกล้วย ผู้ส่งออกมะม่วง ล้งลำไย</td><td data-h="ใช้กับ">ทุกผลไม้</td><td data-h="สถานะ">ยังไม่พบ ไม่มีประมาณการตลาด ราคา หรือรายได้ในเอกสารนี้</td></tr>
+<tr><td data-h="รายการ">ข้อมูลสารระเหยของมังคุดและอะโวคาโด</td><td data-h="ใช้กับ">มังคุด · อะโวคาโด</td><td data-h="สถานะ">ยังไม่พบ</td></tr>
+</tbody></table>
+
+<h2>แหล่งอ้างอิงที่เปิดอ่านแล้ว</h2>
+<p class="ref">Palmer, Crew &amp; Bell 2026, <i>Gases</i> 6(2):21, doi:10.3390/gases6020021 (บทคัดย่อ) · Chiu et al. 2025, <i>PeerJ</i> 13:e19936, doi:10.7717/peerj.19936 · Chen et al. 2018, <i>Sensors</i> 18(10):3256, doi:10.3390/s18103256 (บทคัดย่อ) · Welekar et al., <i>IAES International Journal of Artificial Intelligence (IJ-AI)</i> ปีที่ 15 ฉบับที่ 3, ijai.iaescore.com/index.php/IJAI/article/view/29101 · White, Blake, Taylor &amp; Monks 2016, <i>Metabolomics</i>, doi:10.1007/s11306-016-0973-1 (บทคัดย่อ) · Fakhrul Anwar et al. 2024, <i>Asian Journal of Electrical and Electronic Engineering</i>, doi:10.69955/ajoeee.24.v4i2.65 (ชื่อเรื่อง) · Mahfuzur et al. 2024, <i>Plants</i> 13(21):3061, doi:10.3390/plants13213061 (ชื่อเรื่อง) · The Nation, 9 เม.ย. 2568, nationthailand.com/life/food/40048534 · เอกสาร Proof of Concept เครื่องดมทุเรียนอัจฉริยะ หน้า 5–6</p>
+
+<footer>เครื่องดมทุเรียนอัจฉริยะ · ทีม พี่จร้าาา · moolek02.github.io/e-nose-hub · เอกสารนี้ไม่มีราคาขาย รายได้ หรือประมาณการตลาด · ผลไม้ทุกชนิดในแผนยังไม่ได้ทดสอบกับเครื่องของเรา</footer>
+</main></body></html>
